@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByteZoneConnect - Tech Training & Solutions in Mzuzu</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; color: #333; line-height: 1.6; background: #fff; }
+
+        :root {
+            --red: #E10600; 
+            --green: #00A651; 
+            --dark: #0D0D0D; 
+            --light: #F5F5F5;
+        }
+
+        /* LOADING ANIMATION */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center;
+            animation: fadeOut 1s 2s forwards;
+        }
+        #loader img { width: 150px; animation: glow 1.5s infinite; }
+        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes glow { 0%,100% { filter: drop-shadow(0 0 10px var(--green)); } 50% { filter: drop-shadow(0 0 30px var(--red)); } }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+
+        /* NAVBAR */
+        nav {
+            background: rgba(13,13,13,0.95); backdrop-filter: blur(10px);
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3); position: fixed; width: 100%; top: 0; z-index: 1000;
+            border-bottom: 3px solid var(--green);
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
+        .logo { display: flex; align-items: center; gap: 15px; font-size: 28px; font-weight: 900; text-decoration: none; transition: 0.3s; }
+        .logo:hover { transform: scale(1.05); }
+        .logo img { height: 70px; animation: glow 3s infinite; }
+        .logo span:nth-child(2) { color: var(--red); }
+        .logo span:nth-child(3) { color: var(--green); }
+        .logo span:nth-child(4) { color: white; font-size: 18px; }
+        .nav-links { display: flex; gap: 25px; list-style: none; }
+        .nav-links a { text-decoration: none; color: white; font-weight: 700; transition: 0.3s; position: relative; }
+        .nav-links a::after { content: ''; position: absolute; width: 0; height: 3px; bottom: -5px; left: 0; background: var(--green); transition: 0.3s; }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* REAL TIME + DATE */
+        .datetime-box {
+            color: white;
+            text-align: right;
+            font-weight: 600;
+            margin-left: 20px;
+        }
+        #current-time {
+            font-size: 1.2rem;
+            color: var(--green);
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0,166,81,0.5);
+        }
+        #current-date {
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+        @media(max-width: 992px) {
+            .datetime-box { display: none; } /* hides on tablets/phones */
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--red) 100%);
+            color: white; padding: 200px 20px 120px; text-align: center; position: relative;
+        }
+        .hero h1 { font-size: 4rem; font-weight: 900; margin-bottom: 20px; }
+        .hero h1 span { color: var(--green); }
+        .btn-group { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            background: var(--green); color: white; padding: 18px 35px; border-radius: 50px;
+            text-decoration: none; font-weight: 800; display: inline-block; transition: 0.3s;
+            border: 2px solid var(--green);
+        }
+        .btn:hover { background: transparent; transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,166,81,0.4); }
+        .btn-red { background: var(--red); border-color: var(--red); }
+        .btn-red:hover { box-shadow: 0 15px 30px rgba(225,6,0,0.4); }
+
+        section { padding: 120px 20px; }
+        .section-title { text-align: center; font-size: 3rem; font-weight: 900; margin-bottom: 15px; color: var(--dark); }
+        .section-title span { color: var(--red); }
+        .section-subtitle { text-align: center; color: #666; margin-bottom: 60px; font-size: 1.1rem; }
+
+        /* SERVICES */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .service-card {
+            background: white; padding: 50px 30px; border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center; transition: 0.4s;
+            border-bottom: 5px solid var(--green);
+        }
+        .service-card:hover { transform: translateY(-20px); border-bottom-color: var(--red); }
+        .service-card i { font-size: 4rem; background: linear-gradient(135deg, var(--red), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
+
+        /* COURSES - NEW SECTION */
+        .courses { background: var(--dark); color: white; }
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .course-card {
+            background: #1a1a1a; padding: 40px 30px; border-radius: 20px;
+            border: 2px solid var(--green); transition: 0.4s; position: relative; overflow: hidden;
+        }
+        .course-card:hover { transform: translateY(-10px); border-color: var(--red); box-shadow: 0 0 30px rgba(0,166,81,0.3); }
+        .course-price { font-size: 2.5rem; color: var(--green); font-weight: 900; margin: 15px 0; }
+        .course-price span { font-size: 1rem; color: #aaa; }
+        .course-features { list-style: none; margin: 20px 0; }
+        .course-features li { padding: 8px 0; }
+        .course-features i { color: var(--green); margin-right: 10px; }
+        .btn-enroll { width: 100%; text-align: center; margin-top: 20px; }
+
+        /* TESTIMONIALS */
+        .testimonials { background: var(--light); }
+        .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .testimonial-card {
+            background: rgb(250, 250, 250); padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.361); border-left: 5px solid var(--green);
+        }
+        .testimonial-card .stars { color: #FFD700; margin-bottom: 10px; }
+        .testimonial-card h4 { color: var(--red); margin-top: 15px; }
+
+        /* CONTACT FORM */
+        .contact-form {
+            background: rgb(52, 135, 223); padding: 50px; border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 700px; margin: 40px auto 0;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px;
+            font-family: 'Poppins'; font-size: 1rem; transition: 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--green); outline: none;
+        }
+
+        /* GALLERY + SOCIALS + FOOTER - Same as before */
+        .gallery { background: var(--light); }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .gallery-item { border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); transition: 0.4s; }
+        .gallery-item:hover { transform: scale(1.08) rotate(2deg); }
+        .gallery-item img { width: 100%; height: 280px; object-fit: cover; }
+        
+        .socials { background: var(--dark); color: rgb(236, 236, 236); text-align: center; }
+        .social-icons { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-top: 40px; }
+        .social-icons a {
+            width: 70px; height: 70px; background: linear-gradient(135deg, var(--red), var(--green));
+            color: rgb(250, 247, 247); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; transition: 0.4s; text-decoration: none;
+        }
+        .social-icons a:hover { transform: rotate(360deg) scale(1.2); }
+
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; background: var(--green); color: rgb(248, 245, 245);
+            width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; box-shadow: 0 5px 30px rgba(0,166,81,0.5); z-index: 999; text-decoration: none;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,166,81,0.7); } 70% { box-shadow: 0 0 0 25px rgba(0,166,81,0); } 100% { box-shadow: 0 0 0 0 rgba(0,166,81,0); } }
+        footer { background: var(--dark); color: white; text-align: center; padding: 40px 20px; border-top: 3px solid var(--green); }
+        @media(max-width: 768px) { .nav-links { display: none; } .hero h1 { font-size: 2.5rem; } }
+        /* PORTFOLIO SECTION BLUE BG */
+#portfolio {
+    background: linear-gradient(135deg, #002d5b 0%, #0431c7 100%); /* Dark blue to ByteZone blue */
+    color: white;
+}
+#portfolio .section-title {
+    color: white;
+}
+#portfolio .section-title span {
+    color: var(--green); /* makes "Portfolio" green */
+}
+#portfolio .section-subtitle {
+    color: #ddd;
+}
+#portfolio .service-card {
+    background: rgba(255,255,255,0.08); /* semi-transparent glass effect */
+    color: white;
+    border-bottom: 5px solid var(--green);
+}
+#portfolio .service-card:hover {
+    background: rgba(255,255,255,0.15);
+    border-bottom-color: var(--red);
+}
+#portfolio .service-card h3, 
+#portfolio .service-card p {
+    color: white;
+}
+/* TESTIMONIAL HOVER EFFECT */
+.testimonial-card {
+    transition: 0.4s; /* this makes the animation smooth */
+}
+
+.testimonial-card:hover {
+    transform: translateY(-15px); /* card lifts up */
+    box-shadow: 0 20px 40px rgba(0,166,81,0.3); /* green glow shadow */
+    border-left: 5px solid var(--red); /* changes border from green to red on hover */
+}
+/* STARS GLOW GOLD ON HOVER */
+.testimonial-card .stars {
+    transition: 0.4s; /* smooth transition */
+}
+
+.testimonial-card:hover .stars i {
+    color: #FFD700; /* gold */
+    text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700; /* glow effect */
+    transform: scale(1.1); /* makes stars pop a bit */
+}
+    </style>
+</head>
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div id="loader">
+        <img src="images/bytezone logo.png" alt="Loading">
+    </div>
+
+    <a href="https://wa.me/265988367358" class="whatsapp-float" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+
+    <nav>
+        <div class="container nav-container">
+            <a href="#home" class="logo">
+                <img src="images/bytezone logo.png" alt="ByteZoneConnect Logo">
+                <span>Byte</span><span>Zone</span><span>CONNECT</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#courses">Courses</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="datetime-box">
+                <div id="current-time"></div>
+                <div id="current-date"></div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Building The Future, <span>One Byte</span> at a Time</h1>
+            <p>ByteZoneConnect is Mzuzu's leading tech company & training center. Learn skills that get you hired.</p>
+            <div class="btn-group">
+                <a href="#courses" class="btn">View Courses <i class="fa-solid fa-graduation-cap"></i></a>
+                <a href="#contact" class="btn btn-red">Get In Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <h2 class="section-title">Our <span>Services</span></h2>
+            <div class="services-grid">
+                <div class="service-card"><i class="fa-solid fa-code"></i><h3>Web Development</h3><p>Modern, fast, and responsive websites & web apps.</p></div>
+                <div class="service-card"><i class="fa-solid fa-laptop-code"></i><h3>Software Solutions</h3><p>Custom software, POS systems, and management systems.</p></div>
+                <div class="service-card"><i class="fa-solid fa-screwdriver-wrench"></i><h3>IT Support</h3><p>Computer repair, networking, CCTV installation.</p></div>
+                <div class="service-card"><i class="fa-solid fa-bullhorn"></i><h3>Digital Marketing</h3><p>Graphics Design, Social Media Management, Branding.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COURSES SECTION -->
+    <section class="courses" id="courses">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Our <span style="color:var(--green);">Tech Courses</span></h2>
+            <p class="section-subtitle" style="color: #ccc;">Learn In-Demand Skills. Get Certified. Get Hired.</p>
+            <div class="courses-grid">
+                <div class="course-card">
+                    <h3><i class="fa-solid fa-globe"></i> Web Development</h3>
+                    <p>Learn HTML, CSS, JavaScript, React. Build real websites.</p>
+                    <div class="course-price">MWK 50,000 <span>/month</span></div>
+                    <ul class="course-features">
+                        <li><i class="fa-solid fa-check"></i> 3 Months Training</li>
+                        <li><i class="fa-solid fa-check"></i> 5 Real Projects</li>
+                        <li><i class="fa-solid fa-check"></i> Certificate + Portfolio</li>
+                    </ul>
+                    <a href="https://docs.google.com" target="_blank" class="btn btn-enroll">REGISTER NOW</a>
+                </div>
+                <div class="course-card">
+                    <h3><i class="fa-solid fa-mobile-screen"></i> Mobile App Development</h3>
+                    <p>Build Android & iOS apps using Flutter.</p>
+                    <div class="course-price">MWK 50,000 <span>/month</span></div>
+                    <ul class="course-features">
+                        <li><i class="fa-solid fa-check"></i> 4 Months Training</li>
+                        <li><i class="fa-solid fa-check"></i> Publish to Play Store</li>
+                        <li><i class="fa-solid fa-check"></i> 1-on-1 Mentorship</li>
+                    </ul>
+                    <a href="https://docs.google.com" target="_blank" class="btn btn-enroll">REGISTER NOW</a>
+                </div>
+                <div class="course-card">
+                    <h3><i class="fa-solid fa-chart-line"></i> Graphics & Digital Marketing</h3>
+                    <p>Master Photoshop, Canva, Facebook Ads, TikTok Marketing.</p>
+                    <div class="course-price">MWK 50,000 <span>/month</span></div>
+                    <ul class="course-features">
+                        <li><i class="fa-solid fa-check"></i> 2 Months Training</li>
+                        <li><i class="fa-solid fa-check"></i> Client Projects</li>
+                        <li><i class="fa-solid fa-check"></i> Business Setup Guide</li>
+                    </ul>
+                    <a href="https://docs.google.com" target="_blank" class="btn btn-enroll">REGISTER NOW</a>
+                </div>
+            </div>
+            <p style="text-align:center; margin-top: 40px; color: #aaa;">* All courses available at Peace Building, Mzuzu. Limited seats per batch.</p>
+        </div>
+    </section>
+    <!-- PORTFOLIO SECTION -->
+    <section id="portfolio">
+        <div class="container">
+            <h2 class="section-title">Our <span>Portfolio</span></h2>
+            <p class="section-subtitle">Some of the projects we've built for clients in Mzuzu & beyond</p>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fa-solid fa-store"></i>
+                    <h3>E-Commerce Website</h3>
+                    <p>Full online store for a fashion boutique in Mzuzu. With M-Pesa & Airtel Money integration.</p>
+                    <a href="#" class="btn" style="margin-top:15px; padding:12px 25px;">View Project</a>
+                </div>
+                <div class="service-card">
+                    <i class="fa-solid fa-school"></i>
+                    <h3>School Management System</h3>
+                    <p>Custom system for student records, fees, and results. Used by 3 schools.</p>
+                    <a href="#" class="btn" style="margin-top:15px; padding:12px 25px;">View Project</a>
+                </div>
+                <div class="service-card">
+                    <i class="fa-solid fa-utensils"></i>
+                    <h3>Restaurant Website + App</h3>
+                    <p>Online ordering system with delivery tracking for a local restaurant.</p>
+                    <a href="#" class="btn" style="margin-top:15px; padding:12px 25px;">View Project</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery" id="gallery">
+        <div class="container">
+            <h2 class="section-title">Our <span>Work</span> & Office</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="images/image 1.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 2.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 3.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 4.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 5.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 6.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 7.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 8.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 9.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 10.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 11.jpeg" alt="ByteZone"></div>
+                <div class="gallery-item"><img src="images/image 12.jpeg" alt="ByteZone"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our <span>Students</span> Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p>"ByteZone taught me web development in 3 months. Now I have 2 clients. Best investment ever!"</p>
+                    <h4>- Chimwemwe K, Web Dev Student</h4>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p>"The trainers are patient and practical. The MWK 50k per month is worth every tambala."</p>
+                    <h4>- Grace M, Graphics Student</h4>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p>"Professional team. They built our company website and it looks amazing. Highly recommend!"</p>
+                    <h4>- John D, Business Client</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" style="background: var(--light);">
+        <div class="container">
+            <h2 class="section-title">Contact <span>Us</span></h2>
+            <div class="contact-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                <div style="text-align:center;"><i class="fa-solid fa-location-dot" style="font-size:3rem; color:var(--red);"></i><h3>Visit Us</h3><p>Peace Building, Mzuzu, Malawi</p></div>
+                <div style="text-align:center;"><i class="fa-solid fa-phone" style="font-size:3rem; color:var(--red);"></i><h3>Call Us</h3><p><a href="tel:+265988367358">+265 988 367 358</a></p></div>
+                <div style="text-align:center;"><i class="fa-solid fa-envelope" style="font-size:3rem; color:var(--red);"></i><h3>Email Us</h3><p><a href="mailto:info@bytezoneconnectmw.com">info@bytezoneconnectmw.com</a></p></div>
+            </div>
+
+            <!-- CONTACT FORM -->
+            <form class="contact-form" action="https://formspree.io/f/info@bytezoneconnectmw.com" method="POST">
+                <h3 style="text-align:center; margin-bottom:20px;">Send Us a Message</h3>
+                <div class="form-group"><input type="text" name="name" placeholder="Your Name" required></div>
+                <div class="form-group"><input type="email" name="email" placeholder="Your Email" required></div>
+                <div class="form-group"><textarea name="message" rows="5" placeholder="Your Message" required></textarea></div>
+                <button type="submit" class="btn" style="width:100%; border:none; cursor:pointer;">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="socials">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Follow <span style="color:var(--green);">Us</span></h2>
+            <div class="social-icons">
+                <a href="https://wa.me/265988367358" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/invites/contact/?utm_source=ig_contact_invite&utm_medium=copy_link&utm_content=40qt0as" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/share/1GkCvxEj6t/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://x.com/gomesavirgo" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://www.threads.com/@gomesavirgo?invite=0" target="_blank"><i class="fa-brands fa-threads"></i></a>
+                <a href="https://play.google.com/store/apps/details?id=org.thunderdog.challegram" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+                <a href="https://www.tiktok.com/@gomesavirgo?_r=1&_t=ZS-9839pzV0XjR" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 ByteZoneConnect. All Rights Reserved. | YOUR CARING TECH PARTNER</p>
+        </div>
+    </footer>
+
+<script>
+    function updateDateTime() {
+        const now = new Date();
+        const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+        document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', timeOptions);
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', dateOptions);
+    }
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+</script>
+</body>
+</html>
