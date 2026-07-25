@@ -58,6 +58,7 @@
         #moneyValue { font-family: 'Orbitron'; font-size: 1.4rem; font-weight: 900; transition: 0.3s; }
         #moneyValue.up { color: var(--green); }
         #moneyValue.down { color: var(--red); }
+        #moneyArrow { font-size: 1.2rem; margin-right: 5px; transition: 0.3s; }
         .ticker-flash { animation: tickerFlash 0.5s; }
 
         .hero { background: linear-gradient(-45deg, #07070D, #001F3F, #0F0F1A, #001F3F); background-size: 400% 400%; animation: gradientShift 15s ease infinite; min-height: 85vh; padding: 180px 30px 120px; display: flex; align-items: center; justify-content: center; color: white; text-align: center; position: relative; overflow: hidden; }
@@ -89,10 +90,10 @@
             <div class="nav-right">
                 <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
                 
-                <div class="money-ticker">
-                    <div class="money-label">LIVE REVENUE</div>
-                    <div id="moneyValue" class="up">MWK 500,000</div>
-                </div>
+               <div class="money-ticker">
+    <div class="money-label">LIVE REVENUE</div>
+    <div id="moneyValue" class="up"><span id="moneyArrow">↑</span> MWK 2,500,000</div>
+</div>
 
                 <div class="clock-wrapper">
                     <div class="digital-clock" id="digitalTime">00:00:00</div>
@@ -339,38 +340,73 @@
     updateDigitalClock();
     setInterval(updateDigitalClock, 50);
 
-    // LIVE MONEY TICKER - Updates every 6-10 seconds
-    let currentMoney = 500000;
+        // LIVE MONEY TICKER - 2-4 SECONDS + MORE PROFITS + ARROWS + SAVE OFFLINE
+    let currentMoney = 2500000; // NEW START
+    let lastUpdateTime = Date.now();
     const moneyEl = document.getElementById('moneyValue');
+    const arrowEl = document.getElementById('moneyArrow');
 
-    function updateMoneyTicker() {
+    // Load saved data
+    const savedMoney = localStorage.getItem('bytezone_money');
+    const savedTime = localStorage.getItem('bytezone_money_time');
+    
+    if(savedMoney && savedTime){
+        currentMoney = parseInt(savedMoney);
+        lastUpdateTime = parseInt(savedTime);
+        
+        // Simulate what happened while user was away
+        const timeDiff = Date.now() - lastUpdateTime;
+        const updatesMissed = Math.floor(timeDiff / 3000); // approx every 3 seconds
+        
+        for(let i = 0; i < updatesMissed; i++){
+            simulateMoneyChange(false);
+        }
+    } else {
+        moneyEl.innerHTML = `<span id="moneyArrow">↑</span> MWK ${currentMoney.toLocaleString()}`;
+    }
+
+    function simulateMoneyChange(shouldSave = true) {
         const now = new Date();
         const hour = now.getHours();
         const isDay = hour >= 6 && hour < 18; // 6AM to 6PM
 
-        const upChance = isDay? 0.70 : 0.45; // 70% day, 45% night
+        // MORE PROFIT BIAS kkkk 😂
+        const upChance = isDay? 0.85 : 0.65; // 85% day, 65% night. More greens!
         const shouldGoUp = Math.random() < upChance;
 
-        const changeAmount = Math.floor(Math.random() * 5000) + 500; // Random between 500 - 5500
+        const changeAmount = Math.floor(Math.random() * 8000) + 1000; // Bigger jumps: 1000 - 9000
 
         if(shouldGoUp) {
             currentMoney += changeAmount;
+            arrowEl.textContent = '↑';
+            arrowEl.style.color = 'var(--green)';
             moneyEl.className = 'up ticker-flash';
         } else {
-            currentMoney = Math.max(100000, currentMoney - changeAmount); // Don't go below 100k
+            currentMoney = Math.max(500000, currentMoney - changeAmount); // Don't go below 500k
+            arrowEl.textContent = '↓';
+            arrowEl.style.color = 'var(--red)';
             moneyEl.className = 'down ticker-flash';
         }
 
-        moneyEl.textContent = 'MWK ' + currentMoney.toLocaleString();
+        moneyEl.innerHTML = `<span id="moneyArrow">${arrowEl.textContent}</span> MWK ${currentMoney.toLocaleString()}`;
+        lastUpdateTime = Date.now();
+
+        if(shouldSave){
+            localStorage.setItem('bytezone_money', currentMoney);
+            localStorage.setItem('bytezone_money_time', lastUpdateTime);
+        }
 
         setTimeout(() => { moneyEl.classList.remove('ticker-flash'); }, 500);
+    }
 
-        // Schedule next update in 6-10 seconds
-        const nextUpdate = Math.random() * 4000 + 6000; // 6000ms to 10000ms
+    function updateMoneyTicker() {
+        simulateMoneyChange(true);
+
+        // Schedule next update in 2-4 seconds
+        const nextUpdate = Math.random() * 2000 + 2000; // 2000ms to 4000ms
         setTimeout(updateMoneyTicker, nextUpdate);
     }
     updateMoneyTicker(); // Start it
-
     // THEME TOGGLE
     const themeToggle = document.getElementById('themeToggle');
     if(localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>'; }
