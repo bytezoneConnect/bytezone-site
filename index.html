@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ByteZoneConnect - Tech Training & Solutions in Mzuzu</title>
+    <title>ByteZoneConnect - Premium Tech Solutions & Training | Mzuzu</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -12,55 +12,65 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Poppins', sans-serif; color: #E0E0E0; line-height: 1.6; background: #0A0A0F; transition: 0.4s; }
+        body { font-family: 'Poppins', sans-serif; color: #FFFFFF; line-height: 1.7; background: #07070D; transition: 0.4s; overflow-x: hidden; }
 
-        :root { --red: #E10600; --green: #00FF88; --blue: #00AFFF; --dark: #0A0A0F; --card: #12121A; --gold: #FFD700; --pink: #FF00FF; --purple: #9D4EDD; }
-        body.light-mode { --dark: #F5F5F7; --card: #FFFFFF; background: #F5F5F7; color: #12121A; }
-        body.light-mode p, body.light-mode.section-subtitle { color: #555; }
-        body.light-mode.service-card, body.light-mode.course-card, body.light-mode.testimonial-card { background: #FFF; }
+        :root { --red: #E10600; --green: #00FF88; --blue: #00AFFF; --yellow: #FFD700; --pink: #FF00FF; --purple: #9D4EDD; --orange: #FF8C00; --brown: #8B4513; --dark: #07070D; --card: #0F0F1A; --glass: rgba(15,15,26,0.7); }
+        body.light-mode { --dark: #F8F9FA; --card: #FFFFFF; --glass: rgba(255,255,255,0.8); background: #F8F9FA; color: #0F0F1A; }
 
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; animation: fadeOut 1s 1.5s forwards; }
-        #loader img { width: 150px; animation: glow 1.5s infinite; }
+        #loader img { width: 180px; animation: glow 1.5s infinite; }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
-        @keyframes glow { 0%,100% { filter: drop-shadow(0 0 10px var(--green)); } 50% { filter: drop-shadow(0 0 30px var(--blue)); } }
+        @keyframes glow { 0%,100% { filter: drop-shadow(0 0 15px var(--green)); } 50% { filter: drop-shadow(0 0 40px var(--blue)); } }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,255,136,0.7); } 70% { box-shadow: 0 0 0 25px rgba(0,255,136,0); } 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0); } }
-        @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 50px 50px; } }
-        @keyframes neon { 0%,100% { text-shadow: 0 0 5px var(--green), 0 0 20px var(--green); } 50% { text-shadow: 0 0 10px var(--blue), 0 0 40px var(--blue); } }
-        @keyframes moveLocation { 0% {top: 15%; left: 10%;} 25% {top: 15%; right: 10%;} 50% {bottom: 15%; right: 10%;} 75% {bottom: 15%; left: 10%;} 100% {top: 15%; left: 10%;} }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes inspireHover { 0% { transform: scale(1) rotate(0); } 50% { transform: scale(1.03) rotate(1deg); } 100% { transform: scale(1) rotate(0); } }
+        @keyframes tickerFlash { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
-       .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
-        nav { background: rgba(10,10,15,0.95); backdrop-filter: blur(10px); box-shadow: 0 5px 30px rgba(0,255,136,0.2); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 2px solid var(--green); }
-       .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
-       .logo { display: flex; align-items: center; gap: 15px; font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900; text-decoration: none; }
-       .logo img { height: 70px; animation: glow 3s infinite; }
-       .logo span:nth-child(2) { color: var(--red); }
-       .logo span:nth-child(3) { color: var(--green); animation: neon 2s infinite; }
-       .logo span:nth-child(4) { color: var(--blue); font-size: 18px; }
-       .nav-links { display: flex; gap: 25px; list-style: none; }
-       .nav-links a { text-decoration: none; color: white; font-weight: 700; transition: 0.3s; position: relative; }
-       .nav-links a::after { content: ''; position: absolute; width: 0; height: 3px; bottom: -5px; left: 0; background: var(--green); transition: 0.3s; }
-       .nav-links a:hover::after { width: 100%; }
-       .menu-toggle { display: none; font-size: 1.8rem; color: white; background: none; border: none; cursor: pointer; }
-       .theme-toggle { background: transparent; border: 2px solid var(--green); color: var(--green); padding: 10px 12px; border-radius: 50%; cursor: pointer; margin-left: 15px; }
-       .datetime-box { color: white; text-align: right; font-weight: 600; margin-left: 20px; }
-        #current-time { font-size: 1.2rem; color: var(--green); font-weight: 900; font-family: 'Orbitron'; }
-        #current-date { font-size: 0.85rem; color: #aaa; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 30px; }
+        nav { background: var(--glass); backdrop-filter: blur(20px); box-shadow: 0 5px 40px rgba(0,255,136,0.15); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,255,136,0.3); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 18px 30px; }
+        .nav-right { display: flex; align-items: center; gap: 30px; }
+        
+        .logo { display: flex; align-items: center; gap: 15px; font-family: 'Orbitron', sans-serif; font-size: 30px; font-weight: 900; text-decoration: none; }
+        .logo img { height: 85px; animation: glow 3s infinite; }
+        .logo span:nth-child(2) { color: var(--red); }
+        .logo span:nth-child(3) { color: var(--green); }
+        .logo span:nth-child(4) { color: var(--blue); font-size: 18px; letter-spacing: 2px; }
 
-       .hero { background: linear-gradient(135deg, #0A0A0F 0%, #001F3F 50%, #0A0A0F 100%); min-height: 70vh; padding: 150px 20px 80px; display: flex; align-items: center; justify-content: center; color: white; text-align: center; position: relative; border-bottom: 2px solid var(--green); overflow: hidden; }
-       .hero::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0,255,136,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,136,0.1) 1px, transparent 1px); background-size: 50px 50px; animation: gridMove 20s linear infinite; }
-       .hero.container { position: relative; z-index: 3; pointer-events: auto; }
-       .hero h1 { font-size: 3.5rem; font-weight: 900; font-family: 'Orbitron', sans-serif; margin-bottom: 20px; animation: neon 3s infinite; line-height: 1.2; }
-       .hero h1 span { color: var(--green); }
-       .hero p { font-size: 1.2rem; margin-bottom: 30px; color: #aaa; max-width: 700px; margin-left: auto; margin-right: auto; }
-       .btn-group { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 3; }
-       .btn { background: var(--green); color: var(--dark); padding: 18px 35px; border-radius: 10px; text-decoration: none; font-weight: 800; display: inline-block; transition: 0.4s; border: 2px solid var(--green); cursor: pointer; font-family: 'Orbitron'; position: relative; z-index: 3; pointer-events: auto; }
-       .btn:hover { background: transparent; color: var(--green); transform: translateY(-8px) scale(1.05); box-shadow: 0 0 30px var(--green); }
-       .btn-red { background: var(--red); border-color: var(--red); color: white; }
-       .btn-red:hover { color: var(--red); box-shadow: 0 0 30px var(--red); }
+        .nav-links-dropdown { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; max-height: 85vh; overflow-y: auto; background: var(--glass); backdrop-filter: blur(25px); padding: 25px; list-style: none; border-top: 1px solid rgba(0,255,136,0.3); }
+        .nav-links-dropdown.active { display: flex; animation: slideDown 0.4s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-links-dropdown li a { color: white; text-decoration: none; padding: 16px 0; display: block; font-weight: 600; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+        .nav-links-dropdown li a:hover { color: var(--green); padding-left: 15px; text-shadow: 0 0 10px var(--green); }
 
-       .location-pin { position: absolute; color: var(--red); font-size: 2rem; animation: moveLocation 12s linear infinite; z-index: 1; }
-       .location-pin span { font-family: 'Orbitron'; font-size: 1rem; color: var(--green); margin-left: 5px; }
-    </style>
+        .menu-toggle { font-size: 1rem; color: var(--green); background: transparent; border: 1px solid var(--green); padding: 12px 20px; border-radius: 12px; cursor: pointer; font-family: 'Orbitron'; transition: 0.3s; }
+        .menu-toggle:hover { background: var(--green); color: var(--dark); box-shadow: 0 0 20px var(--green); }
+        .theme-toggle { background: transparent; border: 1px solid var(--green); color: var(--green); padding: 12px 14px; border-radius: 50%; cursor: pointer; transition: 0.3s; font-size: 1.1rem; }
+        .theme-toggle:hover { background: var(--green); color: var(--dark); transform: rotate(180deg); }
+
+        .clock-wrapper { text-align: center; }
+        .digital-clock { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: 900; background: linear-gradient(90deg, var(--blue), var(--green), var(--pink), var(--yellow), var(--red), var(--purple), var(--orange)); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 5s ease infinite; }
+        #digital-ms { font-size: 1rem; color: var(--green); }
+        #current-date { font-size: 0.9rem; color: var(--yellow); font-weight: 600; letter-spacing: 1px; margin-top: 5px; }
+        
+        .money-ticker { text-align: center; border-left: 2px solid var(--green); padding-left: 20px; }
+        .money-label { font-size: 0.8rem; color: var(--yellow); font-weight: 700; letter-spacing: 1px; }
+        #moneyValue { font-family: 'Orbitron'; font-size: 1.4rem; font-weight: 900; transition: 0.3s; }
+        #moneyValue.up { color: var(--green); }
+        #moneyValue.down { color: var(--red); }
+        .ticker-flash { animation: tickerFlash 0.5s; }
+
+        .hero { background: linear-gradient(-45deg, #07070D, #001F3F, #0F0F1A, #001F3F); background-size: 400% 400%; animation: gradientShift 15s ease infinite; min-height: 85vh; padding: 180px 30px 120px; display: flex; align-items: center; justify-content: center; color: white; text-align: center; position: relative; overflow: hidden; }
+        .hero .container { position: relative; z-index: 3; }
+        .hero h1 { font-size: 4.5rem; font-weight: 900; font-family: 'Orbitron', sans-serif; margin-bottom: 30px; line-height: 1.2; }
+        .hero h1 span { color: var(--green); text-shadow: 0 0 20px var(--green); }
+        .hero p { font-size: 1.4rem; margin-bottom: 50px; color: #aaa; max-width: 800px; margin-left: auto; margin-right: auto; }
+        .btn-group { display: flex; gap: 25px; justify-content: center; flex-wrap: wrap; }
+        .btn { background: linear-gradient(135deg, var(--green), var(--blue)); color: var(--dark); padding: 22px 45px; border-radius: 15px; text-decoration: none; font-weight: 800; display: inline-block; transition: 0.4s; border: none; cursor: pointer; font-family: 'Orbitron'; font-size: 1.1rem; }
+        .btn:hover { transform: translateY(-10px) scale(1.05); box-shadow: 0 15px 50px rgba(0,255,136,0.6); }
+        .btn-red { background: linear-gradient(135deg, var(--red), var(--pink)); color: white; }
+        .btn-red:hover { box-shadow: 0 15px 50px rgba(225,6,0,0.6); }
+        </style>
 </head>
 <body>
 
@@ -69,91 +79,108 @@
 
     <nav>
         <div class="container nav-container">
+            <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i> Menu</button>
+            
             <a href="#home" class="logo">
                 <img src="images/bytezone logo.png" alt="ByteZoneConnect Logo">
                 <span>Byte</span><span>Zone</span><span>CONNECT</span>
             </a>
-            <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#courses">Courses</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <div style="display:flex; align-items:center;">
-                <div class="datetime-box">
-                    <div id="current-time"></div>
+
+            <div class="nav-right">
+                <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
+                
+                <div class="money-ticker">
+                    <div class="money-label">LIVE REVENUE</div>
+                    <div id="moneyValue" class="up">MWK 500,000</div>
+                </div>
+
+                <div class="clock-wrapper">
+                    <div class="digital-clock" id="digitalTime">00:00:00</div>
+                    <div id="digital-ms">000</div>
                     <div id="current-date"></div>
                 </div>
-                <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
             </div>
         </div>
+
+        <ul class="nav-links-dropdown" id="navLinks">
+            <li><a href="#home" onclick="closeMenu()">Home</a></li>
+            <li><a href="#services" onclick="closeMenu()">Services</a></li>
+            <li><a href="#inspire" onclick="closeMenu()">Inspire</a></li>
+            <li><a href="#courses" onclick="closeMenu()">Courses</a></li>
+            <li><a href="#portfolio" onclick="closeMenu()">Portfolio</a></li>
+            <li><a href="#about" onclick="closeMenu()">About</a></li>
+            <li><a href="#blog" onclick="closeMenu()">Blog</a></li>
+            <li><a href="#gallery" onclick="closeMenu()">Gallery</a></li>
+            <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
+            <li><a href="#team" onclick="closeMenu()">Our Team</a></li>
+        </ul>
     </nav>
 
     <section class="hero" id="home">
-        <div class="location-pin"><i class="fa-solid fa-location-dot"></i><span>MZUZU</span></div>
         <div class="container">
-            <h1>BUILDING THE FUTURE, <span>ONE BYTE</span> AT A TIME</h1>
-            <p>ByteZoneConnect is Mzuzu's leading tech company & training center. Code. Create. Dominate.</p>
+            <h1>BUILD THE FUTURE WITH <span>BYTEZONE</span></h1>
+            <p>ONE BYTE AT A TIME!! We Code. We Train. We Transform Businesses.</p>
             <div class="btn-group">
-                <a href="#courses" class="btn">EXPLORE COURSES <i class="fa-solid fa-graduation-cap"></i></a>
-                <a href="#contact" class="btn btn-red">START A PROJECT</a>
+                <a href="#courses" class="btn">JOIN ACADEMY <i class="fa-solid fa-graduation-cap"></i></a>
+                <a href="#contact" class="btn btn-red">LAUNCH PROJECT</a>
             </div>
         </div>
     </section>
-        <section id="services">
+
+    <section id="services">
         <div class="container">
-            <h2 class="section-title">Our <span>Services</span></h2>
+            <h2 class="section-title">Premium <span>Services</span></h2>
             <div class="services-grid">
-                <div class="service-card"><img src="images/service-web.jpg"><i class="fa-solid fa-code"></i><h3>Web Development</h3><div class="price-tag">From MWK 255,000</div><p>Modern, fast, and responsive websites & web apps.</p></div>
-                <div class="service-card"><img src="images/service-app.jpg"><i class="fa-solid fa-laptop-code"></i><h3>Software Solutions</h3><div class="price-tag">From MWK 500,000</div><p>Custom software, POS systems, and management systems.</p></div>
-                <div class="service-card"><img src="images/image 4.jpeg"><i class="fa-solid fa-screwdriver-wrench"></i><h3>IT Support</h3><div class="price-tag">From MWK 250,000</div><p>Computer repair, networking, CCTV installation.</p></div>
-                <div class="service-card"><img src="images/image 5.jpeg"><i class="fa-solid fa-bullhorn"></i><h3>Graphics & Digital Marketing</h3><div class="price-tag">MWK 459,000</div><p>Graphics Design, Social Media Management, Branding.</p></div>
-                <div class="service-card pink"><i class="fa-solid fa-warehouse"></i><h3>Stock Tracking</h3><p>Real-time inventory and stock management systems for your business.</p></div>
-                <div class="service-card purple"><i class="fa-solid fa-cloud"></i><h3>Cloud Solutions</h3><p>Scalable cloud hosting, backups, and SaaS deployment.</p></div>
-                <div class="service-card blue"><i class="fa-solid fa-shield-halved"></i><h3>Backup & Disaster Recovery</h3><p>Secure data backups and recovery plans to protect your business.</p></div>
-                <div class="service-card green"><i class="fa-solid fa-user-secret"></i><h3>Cyber Security</h3><p>Threat detection, data breach prevention, and security audits.</p></div>
-                <div class="service-card pink"><i class="fa-solid fa-robot"></i><h3>Automation</h3><p>Automate workflows, reports, and business processes with AI.</p></div>
-                <div class="service-card purple"><i class="fa-solid fa-database"></i><h3>Data Management</h3><p>Database design, migration, and analytics for smart decisions.</p></div>
+                <div class="service-card"><img src="images/service-web.jpg"><i class="fa-solid fa-code" style="color:var(--blue)"></i><h3 style="color:var(--blue)">Web Development</h3><div class="price-tag" style="color:var(--green)">From MWK 255,000</div><p>Enterprise websites and web applications.</p></div>
+                <div class="service-card"><img src="images/service-app.jpg"><i class="fa-solid fa-laptop-code" style="color:var(--purple)"></i><h3 style="color:var(--purple)">Software Solutions</h3><div class="price-tag" style="color:var(--green)">From MWK 500,000</div><p>Custom ERP, POS, and management systems.</p></div>
+                <div class="service-card"><img src="images/services.jpg"><i class="fa-solid fa-network-wired" style="color:var(--orange)"></i><h3 style="color:var(--orange)">Network Infrastructure</h3><div class="price-tag" style="color:var(--green)">From MWK 300,000</div><p>Secure LAN/WAN and cloud architecture.</p></div>
+                <div class="service-card"><img src="images/services1.jpeg"><i class="fa-solid fa-screwdriver-wrench" style="color:var(--pink)"></i><h3 style="color:var(--pink)">IT Support & CCTV</h3><div class="price-tag" style="color:var(--green)">From MWK 250,000</div><p>24/7 technical support and surveillance.</p></div>
+                <div class="service-card"><img src="images/image 5.jpeg"><i class="fa-solid fa-bullhorn" style="color:var(--yellow)"></i><h3 style="color:var(--yellow)">Digital Marketing</h3><div class="price-tag" style="color:var(--green)">MWK 459,000</div><p>Brand strategy and ad campaigns.</p></div>
+                <div class="service-card"><i class="fa-solid fa-cloud" style="color:var(--brown)"></i><h3 style="color:var(--brown)">Cloud & DevOps</h3><p>Scalable cloud hosting and automation.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="inspire" style="background: linear-gradient(180deg, var(--dark) 0%, #001F3F 100%);">
+        <div class="container">
+            <h2 class="section-title">Stay <span>Inspired</span></h2>
+            <div class="services-grid">
+                <div class="service-card inspire-card"><img src="images/brave.jpeg"><h3 style="color:var(--pink)">"ONE BYTE AT A TIME!!"</h3><p>We build courage to innovate and lead the digital revolution.</p></div>
+                <div class="service-card inspire-card"><img src="images/brave1.jpeg"><h3 style="color:var(--green)">"CODE IS THE NEW BRAVERY"</h3><p>Every empire starts with a single line of code. Start yours today.</p></div>
             </div>
         </div>
     </section>
 
     <section class="courses" id="courses">
         <div class="container">
-            <h2 class="section-title">Our <span>Tech Courses</span></h2>
+            <h2 class="section-title">ByteZone <span>Academy</span></h2>
             <div class="courses-grid">
-                <div class="course-card"><h3>Web Development</h3><p>Learn HTML, CSS, JavaScript, React.</p><div class="course-price">MWK 255,000 <span>/full course</span></div><a href="https://docs.google.com" target="_blank" class="btn">REGISTER NOW</a></div>
-                <div class="course-card"><h3>Mobile App Development</h3><p>Build Android & iOS apps using Flutter.</p><div class="course-price">MWK 500,000 <span>/full course</span></div><a href="https://docs.google.com" target="_blank" class="btn">REGISTER NOW</a></div>
-                <div class="course-card"><h3>Graphics & Digital Marketing</h3><p>Master Photoshop, Canva, Facebook Ads.</p><div class="course-price">MWK 459,000</div><a href="https://docs.google.com" target="_blank" class="btn">REGISTER NOW</a></div>
+                <div class="course-card"><h3 style="color:var(--blue)">Full Stack Web Dev</h3><p>HTML, CSS, JavaScript, React, Node.js</p><div class="course-price" style="color:var(--green)">MWK 255,000</div><a href="https://docs.google.com" target="_blank" class="btn">ENROLL NOW</a></div>
+                <div class="course-card"><h3 style="color:var(--purple)">Mobile App Development</h3><p>Flutter, Firebase, API Integration</p><div class="course-price" style="color:var(--green)">MWK 500,000</div><a href="https://docs.google.com" target="_blank" class="btn">ENROLL NOW</a></div>
+                <div class="course-card"><h3 style="color:var(--pink)">UI/UX & Digital Marketing</h3><p>Figma, Photoshop, Facebook Ads, SEO</p><div class="course-price" style="color:var(--green)">MWK 459,000</div><a href="https://docs.google.com" target="_blank" class="btn">ENROLL NOW</a></div>
             </div>
         </div>
     </section>
 
     <section id="portfolio">
         <div class="container">
-            <h2 class="section-title">Our <span>Portfolio</span></h2>
+            <h2 class="section-title">Featured <span>Projects</span></h2>
             <div class="services-grid">
-                <div class="service-card"><img src="images/image 1.jpeg"><i class="fa-solid fa-store"></i><h3>E-Commerce Website</h3><p>Full online store with PayChangu integration.</p><button onclick="openProject('ecommerce')" class="btn">View Project</button></div>
-                <div class="service-card"><img src="images/school.jpeg"><i class="fa-solid fa-school"></i><h3>School Management System</h3><p>Student records, Fees tracking, Results portal.</p><div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;"><button onclick="openProject('school')" class="btn">View Details</button><a href="https://github.com/Meleksebri/school-management-system.git" target="_blank" class="btn btn-red"><i class="fa-brands fa-github"></i> View Code</a></div></div>
-                <div class="service-card"><img src="images/restaurant.jpeg"><i class="fa-solid fa-utensils"></i><h3>Restaurant Website + App</h3><p>Online ordering system with delivery tracking.</p><button onclick="openProject('restaurant')" class="btn">View Project</button></div>
+                <div class="service-card"><img src="images/e-commerce.png"><i class="fa-solid fa-store" style="color:var(--green)"></i><h3 style="color:var(--green)">E-Commerce Platform</h3><p>PayChangu + Airtel Money. 40% sales increase.</p><button onclick="openProject('ecommerce')" class="btn">View Case Study</button></div>
+                <div class="service-card"><img src="images/school.jpeg"><i class="fa-solid fa-school" style="color:var(--blue)"></i><h3 style="color:var(--blue)">School ERP System</h3><p>Student records, fees, results. 60% admin time saved.</p><div style="display:flex; gap:10px; justify-content:center;"><button onclick="openProject('school')" class="btn">Details</button><a href="https://github.com/Meleksebri/school-management-system.git" target="_blank" class="btn btn-red"><i class="fa-brands fa-github"></i></a></div></div>
+                <div class="service-card"><img src="images/restaurant.jpeg"><i class="fa-solid fa-utensils" style="color:var(--orange)"></i><h3 style="color:var(--orange)">Restaurant App</h3><p>Online ordering + rider tracking. 120+ orders month 1.</p><button onclick="openProject('restaurant')" class="btn">View Case Study</button></div>
             </div>
         </div>
     </section>
-
-    <section id="about">
+        <section id="about">
         <div class="container">
             <h2 class="section-title">About <span>ByteZoneConnect</span></h2>
             <div class="about-grid">
                 <img src="images/about.jpeg" alt="About ByteZone">
                 <div>
-                    <h3 style="font-family:Orbitron; font-size:2rem; margin-bottom:15px; color:var(--green);">YOUR CARING TECH PARTNER</h3>
-                    <p>We provide cutting-edge tech solutions and training in Mzuzu. From Web Development to Graphics Design, we equip you with skills to thrive in the digital world.</p>
-                    <img src="images/about2.jpg" alt="Team" style="margin-top:20px;">
+                    <h3 style="font-family:Orbitron; font-size:2.2rem; margin-bottom:20px; color:var(--green);">ONE BYTE AT A TIME!!</h3>
+                    <p style="color:var(--blue)">Based in Mzuzu, ByteZoneConnect is more than a company. We are a movement to digitize Malawi. We combine world-class training with premium software solutions.</p>
+                    <img src="images/about2.jpg" alt="Team" style="margin-top:25px; border-radius:20px;">
                 </div>
             </div>
         </div>
@@ -161,11 +188,11 @@
 
     <section id="blog">
         <div class="container">
-            <h2 class="section-title">Latest <span>Blog</span></h2>
+            <h2 class="section-title">Latest <span>Insights</span></h2>
             <div class="blog-grid">
-                <div class="blog-card"><img src="images/image 1.jpeg"><div class="blog-content"><h3>Top 5 Web Dev Trends 2026</h3><p>Stay ahead with the latest technologies.</p><a href="#" class="btn" style="padding:10px 20px;">Read More</a></div></div>
-                <div class="blog-card"><img src="images/image 2.jpeg"><div class="blog-content"><h3>Why Learn Coding in Malawi</h3><p>The digital economy is booming.</p><a href="#" class="btn" style="padding:10px 20px;">Read More</a></div></div>
-                <div class="blog-card"><img src="images/image 3.jpeg"><div class="blog-content"><h3>Graphics Design for Business</h3><p>How good design can grow your brand.</p><a href="#" class="btn" style="padding:10px 20px;">Read More</a></div></div>
+                <div class="blog-card"><img src="images/image 1.jpeg"><div class="blog-content"><h3 style="color:var(--purple)">Top 5 Web Dev Trends 2026</h3><p>AI, Web3, and the future of development in Africa.</p><a href="#" class="btn" style="padding:12px 25px;">Read More</a></div></div>
+                <div class="blog-card"><img src="images/image 2.jpeg"><div class="blog-content"><h3 style="color:var(--pink)">Why Coding is Critical in Malawi</h3><p>The digital economy is creating 1000s of jobs.</p><a href="#" class="btn" style="padding:12px 25px;">Read More</a></div></div>
+                <div class="blog-card"><img src="images/image 3.jpeg"><div class="blog-content"><h3 style="color:var(--yellow)">Design That Sells</h3><p>How great branding can 10x your business revenue.</p><a href="#" class="btn" style="padding:12px 25px;">Read More</a></div></div>
             </div>
         </div>
     </section>
@@ -174,14 +201,10 @@
         <div class="container">
             <h2 class="section-title">Our <span>Gallery</span></h2>
             <div class="gallery-grid">
-                <div class="gallery-item"><img src="images/hero.jpg"></div>
-                <div class="gallery-item"><img src="images/hero2.jpeg"></div>
-                <div class="gallery-item"><img src="images/image 1.jpeg"></div>
-                <div class="gallery-item"><img src="images/image 2.jpeg"></div>
-                <div class="gallery-item"><img src="images/image 3.jpeg"></div>
-                <div class="gallery-item"><img src="images/image 4.jpeg"></div>
-                <div class="gallery-item"><img src="images/image 5.jpeg"></div>
-                <div class="gallery-item"><img src="images/image 6.jpeg"></div>
+                <div class="gallery-item"><img src="images/hero.jpg"></div><div class="gallery-item"><img src="images/hero2.jpeg"></div>
+                <div class="gallery-item"><img src="images/image 1.jpeg"></div><div class="gallery-item"><img src="images/image 2.jpeg"></div>
+                <div class="gallery-item"><img src="images/image 3.jpeg"></div><div class="gallery-item"><img src="images/image 4.jpeg"></div>
+                <div class="gallery-item"><img src="images/image 5.jpeg"></div><div class="gallery-item"><img src="images/image 6.jpeg"></div>
             </div>
         </div>
     </section>
@@ -195,117 +218,160 @@
 
     <section id="testimonials">
         <div class="container">
-            <h2 class="section-title">What Our <span>Students</span> Say</h2>
+            <h2 class="section-title">Client <span>Testimonials</span></h2>
             <div class="testimonial-grid">
-                <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p>"ByteZone taught me web development in 3 months."</p><h4>- Chimwemwe K</h4></div>
-                <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p>"The trainers are patient and practical."</p><h4>- Grace M</h4></div>
-                <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p>"They built our company website and it looks amazing!"</p><h4>- John D</h4></div>
+                <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"ByteZone transformed our business with a website that actually converts."</p><h4 style="color:var(--green)">- Chimwemwe K, CEO</h4></div>
+                <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"The training was hands-on. Got my first dev job in 2 months."</p><h4 style="color:var(--blue)">- Grace M, Developer</h4></div>
+                <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"Professional and world-class support. Highly recommended!"</p><h4 style="color:var(--purple)">- John D, Business Owner</h4></div>
             </div>
         </div>
     </section>
 
     <section id="contact">
         <div class="container">
-            <h2 class="section-title">Contact <span>Us</span></h2>
+            <h2 class="section-title">Let's <span>Connect</span></h2>
+            <a href="mailto:bytezone@bytezoneconnectmw.com" class="contact-email"><i class="fa-solid fa-envelope" style="color:var(--red)"></i> bytezone@bytezoneconnectmw.com</a>
             <form class="contact-form" action="https://formspree.io/f/info@bytezoneconnectmw.com" method="POST">
                 <div class="form-group"><input type="text" name="name" placeholder="Your Name" required></div>
                 <div class="form-group"><input type="email" name="email" placeholder="Your Email" required></div>
-                <div class="form-group"><textarea name="message" rows="5" placeholder="Your Message" required></textarea></div>
+                <div class="form-group"><textarea name="message" rows="5" placeholder="Tell us about your project..." required></textarea></div>
                 <button type="submit" class="btn" style="width:100%; border:none;">Send Message</button>
             </form>
             <div class="social-icons">
+                <a href="mailto:bytezone@bytezoneconnectmw.com"><i class="fa-solid fa-envelope"></i></a>
                 <a href="https://www.facebook.com/share/1GkCvxEj6t/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
                 <a href="https://x.com/gomesavirgo" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
                 <a href="https://www.instagram.com/invites/contact/?utm_source=ig_contact_invite&utm_medium=copy_link&utm_content=40qt0as" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                 <a href="https://www.tiktok.com/@gomesavirgo?_r=1&_t=ZS-9839pzV0XjR" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
                 <a href="https://www.threads.com/@gomesavirgo?invite=0" target="_blank"><i class="fa-brands fa-threads"></i></a>
-                <a href="https://play.google.com/store/apps/details?id=org.thunderdog.challegram" target="_blank"><i class="fa-brands fa-google-play"></i></a>
+            </div>
+        </div>
+    </section>
+        <section id="team" style="background: linear-gradient(180deg, #001F3F 0%, var(--dark) 100%);">
+        <div class="container">
+            <h2 class="section-title">Meet The <span>Team</span></h2>
+            <div class="team-grid">
+                <div class="team-card"><div class="team-img"><img src="images/gomes-avirgo.jpeg" alt="Gomes Avirgo"></div><h3>Gomes Avirgo</h3><p>Founder & CEO</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/ishmael-joseph.jpeg" alt="Ishmael Joseph"></div><h3>Ishmael Joseph</h3><p>Chief Technology Officer</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/phyllis-chawinga.jpeg" alt="Phyllis Chawinga"></div><h3>Phyllis Chawinga</h3><p>Lead Web Developer</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/gracius-kaomba.jpeg" alt="Gracius Kaomba"></div><h3>Gracius Kaomba</h3><p>Creative Director</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/brave-mphande.jpeg" alt="Brave Mphande"></div><h3>Brave Mphande</h3><p>Sales Manager</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/john-daka.jpeg" alt="John Daka"></div><h3>John Daka</h3><p>Marketing Lead</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/mary-tembo.jpeg" alt="Mary Tembo"></div><h3>Mary Tembo</h3><p>IT Support Manager</p></div>
             </div>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <p>© 2026 ByteZoneConnect. All Rights Reserved. | YOUR CARING TECH PARTNER</p>
+            <p>© 2026 ByteZoneConnect. All Rights Reserved.</p>
+            <p style="color:var(--green); margin-top:10px; letter-spacing: 2px;">ONE BYTE AT A TIME!!</p>
         </div>
     </footer>
 
-    <div id="projectModal" class="modal">
-      <div class="modal-content">
-        <span class="close" onclick="closeProject()">&times;</span>
-        <div id="projectDetails"></div>
-      </div>
-    </div>
-        <style>
-        section { padding: 120px 20px; }
-      .section-title { text-align: center; font-size: 3rem; font-weight: 900; font-family: 'Orbitron'; margin-bottom: 15px; color: white; animation: neon 4s infinite; }
-        body.light-mode.section-title { color: #12121A; }
-      .section-title span { color: var(--green); }
-      .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
-      .about-grid img { width: 100%; border-radius: 20px; border: 2px solid var(--green); transition: 0.5s; }
-      .about-grid img:hover { transform: scale(1.05) rotate(1deg); box-shadow: 0 0 40px var(--green); }
-      .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
-      .service-card { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 0 20px rgba(0,255,136,0.1); text-align: center; transition: 0.4s; border: 2px solid var(--green); }
-      .service-card:hover { transform: translateY(-20px); box-shadow: 0 0 40px var(--blue); }
-      .service-card i { font-size: 4rem; color: var(--green); margin-bottom: 20px; }
-      .service-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; }
-      .price-tag { font-size: 1.8rem; color: var(--green); font-weight: 900; margin: 10px 0; font-family: 'Orbitron'; }
-      .service-card.pink { border-color: var(--pink); }
-      .service-card.pink:hover { box-shadow: 0 0 40px var(--pink); }
-      .service-card.pink i { color: var(--pink); }
-      .service-card.purple { border-color: var(--purple); }
-      .service-card.purple:hover { box-shadow: 0 0 40px var(--purple); }
-      .service-card.purple i { color: var(--purple); }
-      .service-card.blue { border-color: var(--blue); }
-      .service-card.blue:hover { box-shadow: 0 0 40px var(--blue); }
-      .service-card.blue i { color: var(--blue); }
-      .service-card.green { border-color: var(--green); }
-      .service-card.green:hover { box-shadow: 0 0 40px var(--green); }
-      .service-card.green i { color: var(--green); }
-      .courses { background: linear-gradient(180deg, var(--dark) 0%, #001F3F 100%); }
-      .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-      .course-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid var(--blue); transition: 0.4s; }
-      .course-card:hover { transform: translateY(-10px); border-color: var(--green); box-shadow: 0 0 30px var(--green); }
-      .course-price { font-size: 2.5rem; color: var(--green); font-weight: 900; margin: 15px 0; font-family: 'Orbitron'; }
-      .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-      .blog-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid var(--blue); transition: 0.4s; }
-      .blog-card:hover { transform: translateY(-10px); box-shadow: 0 0 30px var(--pink); }
-      .blog-card img { width: 100%; height: 220px; object-fit: cover; }
-      .blog-content { padding: 25px; }
-      .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-      .gallery-item { border-radius: 20px; overflow: hidden; border: 2px solid var(--blue); transition: 0.4s; }
-      .gallery-item:hover { transform: scale(1.05); border-color: var(--green); box-shadow: 0 0 20px var(--green); }
-      .gallery-item img { width: 100%; height: 250px; object-fit: cover; }
-      .chart-container { max-width: 800px; margin: 0 auto; background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--green); }
-      .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-      .testimonial-card { background: var(--card); padding: 30px; border-radius: 20px; border-left: 5px solid var(--green); transition: 0.4s; }
-      .testimonial-card:hover { transform: translateY(-10px) scale(1.03); box-shadow: 0 0 30px var(--green); border-color: var(--blue); }
-      .testimonial-card.stars i { color: #444; transition: 0.3s; }
-      .testimonial-card:hover.stars i { color: var(--gold); text-shadow: 0 0 15px var(--gold); }
-      .contact-form { background: var(--card); padding: 50px; border-radius: 20px; max-width: 700px; margin: 40px auto 0; border: 1px solid var(--blue); }
-      .form-group input,.form-group textarea { width: 100%; padding: 15px; border: 2px solid #333; background: #1A1A24; color: white; border-radius: 10px; font-family: 'Poppins'; margin-bottom: 15px; }
-        body.light-mode.form-group input, body.light-mode.form-group textarea { background: #FFF; color: #12121A; border-color: #ccc; }
-      .social-icons { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-top: 40px; }
-      .social-icons a { width: 70px; height: 70px; background: linear-gradient(135deg, var(--red), var(--green), var(--blue)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; transition: 0.4s; text-decoration: none; }
-      .social-icons a:hover { transform: rotate(360deg) scale(1.2); box-shadow: 0 0 30px var(--green); }
-      .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: var(--green); color: var(--dark); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; animation: pulse 2s infinite; z-index: 999; text-decoration: none; }
-        footer { background: var(--dark); color: white; text-align: center; padding: 40px 20px; border-top: 2px solid var(--green); }
-        @media(max-width: 992px) {.datetime-box { display: none; }.menu-toggle { display: block; }.nav-links { display: none; flex-direction: column; position: absolute; top: 90px; left: 0; width: 100%; background: var(--dark); padding: 20px; }.nav-links.active { display: flex; } }
-        @media(max-width: 768px) {.hero h1 { font-size: 2.5rem; }.about-grid { grid-template-columns: 1fr; }}
-      .modal {display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
-      .modal-content {background: var(--card); margin: 5% auto; padding: 30px; border-radius: 15px; width: 90%; max-width: 650px; border: 2px solid var(--green); }
-      .close {color: #aaa; float: right; font-size: 32px; cursor: pointer;}
+    <div id="projectModal" class="modal"><div class="modal-content"><span class="close" onclick="closeProject()">&times;</span><div id="projectDetails"></div></div></div>
+
+    <style>
+        section { padding: 140px 30px; position: relative; }
+ .section-title { text-align: center; font-size: 3.2rem; font-weight: 900; font-family: 'Orbitron'; margin-bottom: 20px; color: white; }
+        body.light-mode.section-title { color: #0F0F1A; }
+ .section-title span { color: var(--green); }
+ .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+ .about-grid img { width: 100%; border-radius: 20px; border: 2px solid var(--green); transition: 0.5s; }
+ .about-grid img:hover { transform: scale(1.03); box-shadow: 0 0 50px var(--green); }
+ .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 35px; }
+ .service-card { background: var(--glass); backdrop-filter: blur(10px); padding: 35px; border-radius: 20px; border: 1px solid rgba(0,255,136,0.2); text-align: center; transition: 0.4s; }
+ .service-card:hover { transform: translateY(-15px); border-color: var(--green); box-shadow: 0 15px 50px rgba(0,255,136,0.3); }
+ .service-card i { font-size: 3.5rem; margin-bottom: 20px; }
+ .service-card img { width: 100%; height: 280px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; }
+ .inspire-card { border-color: var(--pink); }
+ .inspire-card img { height: 350px; }
+ .inspire-card:hover { animation: inspireHover 2s ease-in-out infinite; box-shadow: 0 0 50px var(--pink); border-color: var(--green); }
+ .price-tag { font-size: 1.9rem; font-weight: 900; margin: 15px 0; font-family: 'Orbitron'; }
+ .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+ .team-card { background: var(--glass); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; text-align: center; border: 1px solid rgba(0,255,136,0.2); transition: 0.4s; }
+ .team-card:hover { transform: translateY(-10px); border-color: var(--green); box-shadow: 0 10px 40px rgba(0,255,136,0.3); }
+ .team-img { width: 150px; height: 150px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden; border: 3px solid var(--green); }
+ .team-img img { width: 100%; height: 100%; object-fit: cover; }
+ .team-card h3 { font-family: 'Orbitron'; font-size: 1.4rem; margin-bottom: 5px; color: var(--green); }
+ .team-card p { color: var(--blue); font-weight: 600; }
+ .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
+ .course-card { background: var(--glass); backdrop-filter: blur(10px); padding: 45px 35px; border-radius: 20px; border: 1px solid rgba(0,175,255,0.3); transition: 0.4s; }
+ .course-card:hover { transform: translateY(-10px); border-color: var(--green); box-shadow: 0 15px 50px rgba(0,255,136,0.3); }
+ .course-price { font-size: 2.6rem; font-weight: 900; margin: 20px 0; font-family: 'Orbitron'; }
+ .blog-grid,.gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+ .blog-card,.gallery-item { background: var(--glass); border-radius: 20px; overflow: hidden; border: 1px solid rgba(0,255,136,0.2); transition: 0.4s; }
+ .blog-card:hover,.gallery-item:hover { transform: translateY(-10px); box-shadow: 0 15px 50px rgba(0,255,136,0.3); }
+ .blog-card img,.gallery-item img { width: 100%; height: 240px; object-fit: cover; }
+ .blog-content { padding: 30px; }
+ .chart-container { max-width: 900px; margin: 0 auto; background: var(--glass); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; border: 1px solid rgba(0,255,136,0.2); }
+ .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
+ .testimonial-card { background: var(--glass); backdrop-filter: blur(10px); padding: 35px; border-radius: 20px; border-left: 4px solid var(--green); transition: 0.4s; }
+ .testimonial-card:hover { transform: translateY(-10px); border-color: var(--blue); box-shadow: 0 10px 40px rgba(0,175,255,0.3); }
+ .contact-form { background: var(--glass); backdrop-filter: blur(10px); padding: 60px; border-radius: 20px; max-width: 750px; margin: 40px auto 0; border: 1px solid rgba(0,255,136,0.2); }
+ .form-group input,.form-group textarea { width: 100%; padding: 18px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; border-radius: 12px; font-family: 'Poppins'; margin-bottom: 20px; font-size: 1rem; }
+        body.light-mode.form-group input, body.light-mode.form-group textarea { background: #FFF; color: #0F0F1A; border-color: #ddd; }
+ .social-icons { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-top: 50px; }
+ .social-icons a { width: 75px; height: 75px; background: linear-gradient(135deg, var(--red), var(--green), var(--blue)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; transition: 0.4s; text-decoration: none; }
+ .social-icons a:hover { transform: rotate(360deg) scale(1.2); box-shadow: 0 0 40px var(--green); }
+ .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: var(--green); color: var(--dark); width: 75px; height: 75px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.8rem; animation: pulse 2s infinite; z-index: 999; text-decoration: none; }
+ .contact-email { display: flex; justify-content: center; align-items: center; gap: 12px; font-size: 1.3rem; color: var(--green); font-weight: 700; text-decoration: none; margin-bottom: 35px; transition: 0.3s; }
+ .contact-email:hover { color: var(--blue); transform: scale(1.05); }
+        footer { background: var(--dark); color: white; text-align: center; padding: 50px 30px; border-top: 1px solid rgba(0,255,136,0.3); }
+        @media(max-width: 992px) {.clock-wrapper { display: none; }.money-ticker { display: none; } }
+        @media(max-width: 768px) {.hero h1 { font-size: 2.8rem; }.about-grid { grid-template-columns: 1fr; }}
+ .modal {display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
+ .modal-content {background: var(--glass); backdrop-filter: blur(20px); margin: 5% auto; padding: 40px; border-radius: 20px; width: 90%; max-width: 700px; border: 1px solid var(--green); }
+ .close {color: #aaa; float: right; font-size: 35px; cursor: pointer; transition: 0.3s;}
+ .close:hover { color: var(--red); }
     </style>
 
 <script>
-    function updateDateTime() {
+    // DIGITAL CLOCK
+    function updateDigitalClock() {
         const now = new Date();
-        document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-        document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const time = now.toLocaleTimeString('en-US', { hour12: false });
+        const ms = String(now.getMilliseconds()).padStart(3, '0');
+        document.getElementById('digitalTime').textContent = time;
+        document.getElementById('digital-ms').textContent = ms;
+        document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
     }
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
+    updateDigitalClock();
+    setInterval(updateDigitalClock, 50);
 
+    // LIVE MONEY TICKER - Updates every 6-10 seconds
+    let currentMoney = 500000;
+    const moneyEl = document.getElementById('moneyValue');
+
+    function updateMoneyTicker() {
+        const now = new Date();
+        const hour = now.getHours();
+        const isDay = hour >= 6 && hour < 18; // 6AM to 6PM
+
+        const upChance = isDay? 0.70 : 0.45; // 70% day, 45% night
+        const shouldGoUp = Math.random() < upChance;
+
+        const changeAmount = Math.floor(Math.random() * 5000) + 500; // Random between 500 - 5500
+
+        if(shouldGoUp) {
+            currentMoney += changeAmount;
+            moneyEl.className = 'up ticker-flash';
+        } else {
+            currentMoney = Math.max(100000, currentMoney - changeAmount); // Don't go below 100k
+            moneyEl.className = 'down ticker-flash';
+        }
+
+        moneyEl.textContent = 'MWK ' + currentMoney.toLocaleString();
+
+        setTimeout(() => { moneyEl.classList.remove('ticker-flash'); }, 500);
+
+        // Schedule next update in 6-10 seconds
+        const nextUpdate = Math.random() * 4000 + 6000; // 6000ms to 10000ms
+        setTimeout(updateMoneyTicker, nextUpdate);
+    }
+    updateMoneyTicker(); // Start it
+
+    // THEME TOGGLE
     const themeToggle = document.getElementById('themeToggle');
     if(localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>'; }
     themeToggle.onclick = () => {
@@ -314,34 +380,36 @@
         else { localStorage.setItem('theme','dark'); themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>'; }
     };
 
+    // MENU TOGGLE
     document.getElementById('menuToggle').onclick = () => document.getElementById('navLinks').classList.toggle('active');
+    function closeMenu() { document.getElementById('navLinks').classList.remove('active'); }
 
+    // PROJECT MODAL
     const projects = {
-      ecommerce: { title: "E-Commerce Website", desc: "Full online store for a fashion boutique. Features: Product catalog, Cart, PayChangu & Airtel Money integration, Admin dashboard.", result: "Result: 40% increase in sales in 2 months.", img: "images/image 1.jpeg" },
-      school: { title: "School Management System", desc: "Full stack system for schools. Features: Student records, Fees tracking, Results portal, Attendance, Teacher portal. <br><br> <b>Tech Stack:</b> React, Node.js, MongoDB <br> <a href='https://github.com/Meleksebri/school-management-system.git' target='_blank' style='color:var(--green)'>View on GitHub <i class='fa-brands fa-github'></i></a>", result: "Result: Cut admin work by 60%.", img: "images/school.jpeg" },
-      restaurant: { title: "Restaurant Website + App", desc: "Online ordering system with delivery tracking. Features: Menu management, Cart, Online payments, Rider tracking.", result: "Result: 120+ orders in first month.", img: "images/restaurant.jpeg" }
+      ecommerce: { title: "E-Commerce Platform", desc: "Full online store for fashion boutique. Features: Product catalog, Cart, PayChangu & Airtel Money integration, Admin dashboard, Analytics.", result: "Result: 40% increase in sales in 2 months.", img: "images/e-commerce.png" },
+      school: { title: "School ERP System", desc: "Full stack system for schools. Features: Student records, Fees tracking, Results portal, Attendance, Teacher portal. <br><br> <b>Tech Stack:</b> React, Node.js, MongoDB <br> <a href='https://github.com/Meleksebri/school-management-system.git' target='_blank' style='color:var(--green)'>View on GitHub <i class='fa-brands fa-github'></i></a>", result: "Result: Cut admin work by 60%.", img: "images/school.jpeg" },
+      restaurant: { title: "Restaurant App", desc: "Online ordering system with delivery tracking. Features: Menu management, Cart, Online payments, Rider GPS tracking, Customer notifications.", result: "Result: 120+ orders in first month.", img: "images/restaurant.jpeg" }
     };
     function openProject(id) {
       const p = projects[id];
-      document.getElementById("projectDetails").innerHTML = `<h2 style="color:var(--green); font-family:Orbitron; margin-bottom:15px;">${p.title}</h2><img src="${p.img}" style="width:100%; border-radius:10px; margin:15px 0;"><p>${p.desc}</p><p style="color:var(--green); font-weight:bold;">${p.result}</p>`;
+      document.getElementById("projectDetails").innerHTML = `<h2 style="color:var(--green); font-family:Orbitron; margin-bottom:20px;">${p.title}</h2><img src="${p.img}" style="width:100%; border-radius:15px; margin:20px 0;"><p style="font-size:1.1rem; line-height:1.8;">${p.desc}</p><p style="color:var(--green); font-weight:bold; margin-top:15px; font-size:1.2rem;">${p.result}</p>`;
       document.getElementById("projectModal").style.display = "block";
     }
     function closeProject() { document.getElementById("projectModal").style.display = "none"; }
 
+    // CHART.JS
     const ctx = document.getElementById('impactChart');
     if(ctx){
       new Chart(ctx, {
           type: 'bar',
-          data: { labels: ['Websites', 'Mobile Apps', 'Students Trained', 'Clients'], datasets: [{ label: 'Projects Completed', data: [24, 12, 180, 45], backgroundColor: ['#E10600', '#00FF88', '#00AFFF', '#FF00FF'], borderRadius: 10 }] },
-          options: { responsive: true, plugins: { legend: { display: false } } }
+          data: { labels: ['Websites', 'Mobile Apps', 'Students Trained', 'Enterprise Clients'], datasets: [{ label: 'Projects Completed', data: [24, 12, 180, 45], backgroundColor: ['#E10600', '#00FF88', '#00AFFF', '#FF00FF'], borderRadius: 12 }] },
+          options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
       });
     }
 
     window.onclick = function(event) {
         const modal = document.getElementById('projectModal');
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
+        if (event.target == modal) { modal.style.display = "none"; }
     }
 </script>
 </body>
