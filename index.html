@@ -60,6 +60,26 @@
         #moneyValue.down { color: var(--red); }
         #moneyArrow { font-size: 1.2rem; margin-right: 5px; transition: 0.3s; }
         .ticker-flash { animation: tickerFlash 0.5s; }
+        @keyframes scanLine { 0% { background-position: 0% 0%; } 100% { background-position: 0% 100%; } }
+
+.visitor-box { 
+    text-align: center; 
+    border: 1px solid var(--green); 
+    background: rgba(0,255,136,0.05);
+    background-image: linear-gradient(transparent 50%, rgba(0,255,136,0.03) 50%);
+    background-size: 100% 4px;
+    padding: 8px 16px; 
+    border-radius: 10px; 
+    box-shadow: 0 20px rgba(0,255,136,0.3), inset 0 0 20px rgba(0,255,136,0.1);
+    backdrop-filter: blur(10px);
+    animation: scanLine 3s linear infinite;
+}
+.visitor-label { font-size: 0.65rem; color: var(--green); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+#visitorsValue { font-family: 'Orbitron'; font-size: 1.5rem; font-weight: 900; color: var(--green); text-shadow: 0 0 15px var(--green); transition: 0.3s; }
+#visitorsValue.up { animation: tickerFlash 0.4s; }
+#visitorsIcon { font-size: 1rem; margin-right: 5px; }
+
+@media(max-width: 768px) {.visitor-box { display: none; }}
 
         .hero { background: linear-gradient(-45deg, #07070D, #001F3F, #0F0F1A, #001F3F); background-size: 400% 400%; animation: gradientShift 15s ease infinite; min-height: 85vh; padding: 180px 30px 120px; display: flex; align-items: center; justify-content: center; color: white; text-align: center; position: relative; overflow: hidden; }
         .hero .container { position: relative; z-index: 3; }
@@ -89,6 +109,10 @@
 
             <div class="nav-right">
                 <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
+                <div class="visitor-box">
+    <div class="visitor-label"><span id="visitorsIcon">👁</span><span id="visitorText">LIVE VISITORS</span></div>
+    <div id="visitorsValue">847</div>
+</div>
                 
                <div class="money-ticker">
     <div class="money-label">LIVE REVENUE</div>
@@ -407,6 +431,38 @@
         setTimeout(updateMoneyTicker, nextUpdate);
     }
     updateMoneyTicker(); // Start it
+    // NEW VISITORS COUNTER 950 TO 40 + TEXT SWITCH EVERY 5S
+let visitors = Math.floor(Math.random() * 200) + 650; // Start 650-850
+const visitorsEl = document.getElementById('visitorsValue');
+const visitorTextEl = document.getElementById('visitorText');
+let showVisitors = true;
+
+// Switch text every 5 seconds
+setInterval(() => {
+    showVisitors = !showVisitors;
+    visitorTextEl.textContent = showVisitors ? 'LIVE VISITORS' : 'BYTEZONECONNECT';
+}, 5000);
+
+function updateVisitors() {
+    const spike = Math.random();
+    let changed = false;
+
+    if(spike > 0.95) { visitors += Math.floor(Math.random() * 100) + 50; changed = true; } // viral spike
+    else if(spike > 0.7) { visitors += Math.floor(Math.random() * 10) + 1; changed = true; } // normal up
+    else { visitors -= Math.floor(Math.random() * 8) + 1; changed = true; } // drop
+
+    if(visitors > 950) visitors = 950;
+    if(visitors < 40) visitors = 40;
+
+    if(changed) {
+        visitorsEl.textContent = visitors.toLocaleString();
+        visitorsEl.classList.add('up');
+        setTimeout(() => visitorsEl.classList.remove('up'), 400);
+    }
+
+    setTimeout(updateVisitors, Math.random() * 1500 + 1000); // 1-2.5 seconds
+}
+updateVisitors();
     // THEME TOGGLE
     const themeToggle = document.getElementById('themeToggle');
     if(localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>'; }
