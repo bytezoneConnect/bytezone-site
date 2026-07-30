@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ByteZoneConnect - Premium Tech Solutions & Training | Mzuzu</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -25,6 +25,7 @@
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes inspireHover { 0% { transform: scale(1) rotate(0); } 50% { transform: scale(1.03) rotate(1deg); } 100% { transform: scale(1) rotate(0); } }
         @keyframes tickerFlash { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        @keyframes circuit { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
 
         .container { max-width: 1400px; margin: 0 auto; padding: 0 30px; }
         nav { background: var(--glass); backdrop-filter: blur(20px); box-shadow: 0 5px 40px rgba(0,255,136,0.15); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,255,136,0.3); }
@@ -48,14 +49,14 @@
         .theme-toggle { background: transparent; border: 1px solid var(--green); color: var(--green); padding: 12px 14px; border-radius: 50%; cursor: pointer; transition: 0.3s; font-size: 1.1rem; }
         .theme-toggle:hover { background: var(--green); color: var(--dark); transform: rotate(180deg); }
 
-        .clock-wrapper { text-align: center; }
-        .digital-clock { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: 900; background: linear-gradient(90deg, var(--blue), var(--green), var(--pink), var(--yellow), var(--red), var(--purple), var(--orange)); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 5s ease infinite; }
-        #digital-ms { font-size: 1rem; color: var(--green); }
-        #current-date { font-size: 0.9rem; color: var(--yellow); font-weight: 600; letter-spacing: 1px; margin-top: 5px; }
+        .clock-wrapper { text-align: center; font-family: 'Rajdhani', sans-serif; }
+        .digital-clock { font-family: 'Rajdhani'; font-size: 1.8rem; font-weight: 700; background: linear-gradient(90deg, var(--blue), var(--green), var(--pink), var(--yellow), var(--red), var(--purple), var(--orange)); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 5s ease infinite; }
+        #digital-ms { font-size: 1rem; color: var(--green); font-family: 'Rajdhani'; }
+        #current-date { font-size: 0.9rem; color: var(--yellow); font-weight: 600; letter-spacing: 1px; margin-top: 5px; font-family: 'Rajdhani'; }
         
-        .money-ticker { text-align: center; border-left: 2px solid var(--green); padding-left: 20px; }
+        .money-ticker { text-align: center; border-left: 2px solid var(--green); padding-left: 20px; font-family: 'Rajdhani'; }
         .money-label { font-size: 0.8rem; color: var(--yellow); font-weight: 700; letter-spacing: 1px; }
-        #moneyValue { font-family: 'Orbitron'; font-size: 1.4rem; font-weight: 900; transition: 0.3s; }
+        #moneyValue { font-family: 'Rajdhani'; font-size: 1.4rem; font-weight: 700; transition: 0.3s; }
         #moneyValue.up { color: var(--green); }
         #moneyValue.down { color: var(--red); }
         #moneyArrow { font-size: 1.2rem; margin-right: 5px; transition: 0.3s; }
@@ -75,7 +76,7 @@
     animation: scanLine 3s linear infinite;
 }
 .visitor-label { font-size: 0.65rem; color: var(--green); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
-#visitorsValue { font-family: 'Orbitron'; font-size: 1.5rem; font-weight: 900; color: var(--green); text-shadow: 0 0 15px var(--green); transition: 0.3s; }
+#visitorsValue { font-family: 'Rajdhani'; font-size: 1.5rem; font-weight: 700; color: var(--green); text-shadow: 0 0 15px var(--green); transition: 0.3s; }
 #visitorsValue.up { animation: tickerFlash 0.4s; }
 #visitorsIcon { font-size: 1rem; margin-right: 5px; }
 
@@ -91,6 +92,9 @@
         .btn:hover { transform: translateY(-10px) scale(1.05); box-shadow: 0 15px 50px rgba(0,255,136,0.6); }
         .btn-red { background: linear-gradient(135deg, var(--red), var(--pink)); color: white; }
         .btn-red:hover { box-shadow: 0 15px 50px rgba(225,6,0,0.6); }
+        
+        .clickable-title { cursor: pointer; transition: 0.3s; }
+        .clickable-title:hover { color: var(--green) !important; text-shadow: 0 0 15px var(--green); }
         </style>
 </head>
 <body>
@@ -136,8 +140,8 @@
             <li><a href="#about" onclick="closeMenu()">About</a></li>
             <li><a href="#blog" onclick="closeMenu()">Blog</a></li>
             <li><a href="#gallery" onclick="closeMenu()">Gallery</a></li>
-            <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
             <li><a href="#team" onclick="closeMenu()">Our Team</a></li>
+            <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
         </ul>
     </nav>
 
@@ -151,17 +155,16 @@
             </div>
         </div>
     </section>
-
     <section id="services">
         <div class="container">
             <h2 class="section-title">Premium <span>Services</span></h2>
             <div class="services-grid">
-                <div class="service-card"><img src="images/service-web.jpg"><i class="fa-solid fa-code" style="color:var(--blue)"></i><h3 style="color:var(--blue)">Web Development</h3><div class="price-tag" style="color:var(--green)">From MWK 255,000</div><p>Enterprise websites and web applications.</p></div>
-                <div class="service-card"><img src="images/service-app.jpg"><i class="fa-solid fa-laptop-code" style="color:var(--purple)"></i><h3 style="color:var(--purple)">Software Solutions</h3><div class="price-tag" style="color:var(--green)">From MWK 500,000</div><p>Custom ERP, POS, and management systems.</p></div>
-                <div class="service-card"><img src="images/services.jpg"><i class="fa-solid fa-network-wired" style="color:var(--orange)"></i><h3 style="color:var(--orange)">Network Infrastructure</h3><div class="price-tag" style="color:var(--green)">From MWK 300,000</div><p>Secure LAN/WAN and cloud architecture.</p></div>
-                <div class="service-card"><img src="images/services1.jpeg"><i class="fa-solid fa-screwdriver-wrench" style="color:var(--pink)"></i><h3 style="color:var(--pink)">IT Support & CCTV</h3><div class="price-tag" style="color:var(--green)">From MWK 250,000</div><p>24/7 technical support and surveillance.</p></div>
-                <div class="service-card"><img src="images/image 5.jpeg"><i class="fa-solid fa-bullhorn" style="color:var(--yellow)"></i><h3 style="color:var(--yellow)">Digital Marketing</h3><div class="price-tag" style="color:var(--green)">MWK 459,000</div><p>Brand strategy and ad campaigns.</p></div>
-                <div class="service-card"><img src="images/clouds.png"><i class="fa-solid fa-cloud" style="color:var(--brown)"></i><h3 style="color:var(--brown)">Cloud & DevOps</h3><p>Scalable cloud hosting and automation.</p></div>
+                <div class="service-card"><img src="images/service-web.jpg"><i class="fa-solid fa-code" style="color:var(--blue)"></i><h3 style="color:var(--blue)" class="clickable-title" onclick="openService('web')">Web Development</h3><div class="price-tag" style="color:var(--green)">From MWK 255,000</div><p>Enterprise websites and web applications.</p></div>
+                <div class="service-card"><img src="images/service-app.jpg"><i class="fa-solid fa-laptop-code" style="color:var(--purple)"></i><h3 style="color:var(--purple)" class="clickable-title" onclick="openService('software')">Software Solutions</h3><div class="price-tag" style="color:var(--green)">From MWK 500,000</div><p>Custom ERP, POS, and management systems.</p></div>
+                <div class="service-card"><img src="images/services.jpg"><i class="fa-solid fa-network-wired" style="color:var(--orange)"></i><h3 style="color:var(--orange)" class="clickable-title" onclick="openService('network')">Network Infrastructure</h3><div class="price-tag" style="color:var(--green)">From MWK 300,000</div><p>Secure LAN/WAN and cloud architecture.</p></div>
+                <div class="service-card"><img src="images/services1.jpeg"><i class="fa-solid fa-screwdriver-wrench" style="color:var(--pink)"></i><h3 style="color:var(--pink)" class="clickable-title" onclick="openService('it')">IT Support & CCTV</h3><div class="price-tag" style="color:var(--green)">From MWK 250,000</div><p>24/7 technical support and surveillance.</p></div>
+                <div class="service-card"><img src="images/image 5.jpeg"><i class="fa-solid fa-bullhorn" style="color:var(--yellow)"></i><h3 style="color:var(--yellow)" class="clickable-title" onclick="openService('marketing')">Digital Marketing</h3><div class="price-tag" style="color:var(--green)">MWK 459,000</div><p>Brand strategy and ad campaigns.</p></div>
+                <div class="service-card"><img src="images/clouds.png"><i class="fa-solid fa-cloud" style="color:var(--brown)"></i><h3 style="color:var(--brown)" class="clickable-title" onclick="openService('cloud')">Cloud & DevOps</h3><p>Scalable cloud hosting and automation.</p></div>
             </div>
         </div>
     </section>
@@ -180,9 +183,9 @@
         <div class="container">
             <h2 class="section-title">ByteZone <span>Academy</span></h2>
             <div class="courses-grid">
-                <div class="course-card"><h3 style="color:var(--blue)">Full Stack Web Dev</h3><p>HTML, CSS, JavaScript, React, Node.js</p><div class="course-price" style="color:var(--green)">MWK 255,000</div><a href="https://docs.google.com" target="_blank" class="btn">ENROLL NOW</a></div>
-                <div class="course-card"><h3 style="color:var(--purple)">Mobile App Development</h3><p>Flutter, Firebase, API Integration</p><div class="course-price" style="color:var(--green)">MWK 500,000</div><a href="https://docs.google.com" target="_blank" class="btn">ENROLL NOW</a></div>
-                <div class="course-card"><h3 style="color:var(--pink)">UI/UX & Digital Marketing</h3><p>Figma, Photoshop, Facebook Ads, SEO</p><div class="course-price" style="color:var(--green)">MWK 459,000</div><a href="https://docs.google.com" target="_blank" class="btn">ENROLL NOW</a></div>
+                <div class="course-card"><h3 style="color:var(--blue)" class="clickable-title" onclick="openCourse('webdev')">Full Stack Web Dev</h3><p>HTML, CSS, JavaScript, React, Node.js</p><div class="course-price" style="color:var(--green)">MWK 255,000</div><a href="#" onclick="openForm()" class="btn">ENROLL NOW</a></div>
+                <div class="course-card"><h3 style="color:var(--purple)" class="clickable-title" onclick="openCourse('mobile')">Mobile App Development</h3><p>Flutter, Firebase, API Integration</p><div class="course-price" style="color:var(--green)">MWK 500,000</div><a href="#" onclick="openForm()" class="btn">ENROLL NOW</a></div>
+                <div class="course-card"><h3 style="color:var(--pink)" class="clickable-title" onclick="openCourse('uiux')">UI/UX & Digital Marketing</h3><p>Figma, Photoshop, Facebook Ads, SEO</p><div class="course-price" style="color:var(--green)">MWK 459,000</div><a href="#" onclick="openForm()" class="btn">ENROLL NOW</a></div>
             </div>
         </div>
     </section>
@@ -191,13 +194,13 @@
         <div class="container">
             <h2 class="section-title">Featured <span>Projects</span></h2>
             <div class="services-grid">
-                <div class="service-card"><img src="images/e-commerce.png"><i class="fa-solid fa-store" style="color:var(--green)"></i><h3 style="color:var(--green)">E-Commerce Platform</h3><p>PayChangu + Airtel Money. 40% sales increase.</p><button onclick="openProject('ecommerce')" class="btn">View Case Study</button></div>
-                <div class="service-card"><img src="images/school.jpeg"><i class="fa-solid fa-school" style="color:var(--blue)"></i><h3 style="color:var(--blue)">School ERP System</h3><p>Student records, fees, results. 60% admin time saved.</p><div style="display:flex; gap:10px; justify-content:center;"><button onclick="openProject('school')" class="btn">Details</button><a href="https://github.com/Meleksebri/school-management-system.git" target="_blank" class="btn btn-red"><i class="fa-brands fa-github"></i></a></div></div>
-                <div class="service-card"><img src="images/restaurant.jpeg"><i class="fa-solid fa-utensils" style="color:var(--orange)"></i><h3 style="color:var(--orange)">Restaurant App</h3><p>Online ordering + rider tracking. 120+ orders month 1.</p><button onclick="openProject('restaurant')" class="btn">View Case Study</button></div>
+                <div class="service-card"><img src="images/e-commerce.png"><i class="fa-solid fa-store" style="color:var(--green)"></i><h3 style="color:var(--green)" class="clickable-title" onclick="openProject('ecommerce')">E-Commerce Platform</h3><p>PayChangu + Airtel Money. 40% sales increase.</p><button onclick="openProject('ecommerce')" class="btn">View Case Study</button></div>
+                <div class="service-card"><img src="images/school.jpeg"><i class="fa-solid fa-school" style="color:var(--blue)"></i><h3 style="color:var(--blue)" class="clickable-title" onclick="openProject('school')">School ERP System</h3><p>Student records, fees, results. 60% admin time saved.</p><div style="display:flex; gap:10px; justify-content:center;"><button onclick="openProject('school')" class="btn">Details</button><a href="https://github.com/Meleksebri/school-management-system.git" target="_blank" class="btn btn-red"><i class="fa-brands fa-github"></i></a></div></div>
+                <div class="service-card"><img src="images/restaurant.jpeg"><i class="fa-solid fa-utensils" style="color:var(--orange)"></i><h3 style="color:var(--orange)" class="clickable-title" onclick="openProject('restaurant')">Restaurant App</h3><p>Online ordering + rider tracking. 120+ orders month 1.</p><button onclick="openProject('restaurant')" class="btn">View Case Study</button></div>
             </div>
         </div>
     </section>
-        <section id="about">
+    <section id="about">
         <div class="container">
             <h2 class="section-title">About <span>ByteZoneConnect</span></h2>
             <div class="about-grid">
@@ -215,9 +218,9 @@
         <div class="container">
             <h2 class="section-title">Latest <span>Insights</span></h2>
             <div class="blog-grid">
-                <div class="blog-card"><img src="images/image 1.jpeg"><div class="blog-content"><h3 style="color:var(--purple)">Top 5 Web Dev Trends 2026</h3><p>AI, Web3, and the future of development in Africa.</p><a href="#" class="btn" style="padding:12px 25px;">Read More</a></div></div>
-                <div class="blog-card"><img src="images/image 2.jpeg"><div class="blog-content"><h3 style="color:var(--pink)">Why Coding is Critical in Malawi</h3><p>The digital economy is creating 1000s of jobs.</p><a href="#" class="btn" style="padding:12px 25px;">Read More</a></div></div>
-                <div class="blog-card"><img src="images/image 3.jpeg"><div class="blog-content"><h3 style="color:var(--yellow)">Design That Sells</h3><p>How great branding can 10x your business revenue.</p><a href="#" class="btn" style="padding:12px 25px;">Read More</a></div></div>
+                <div class="blog-card"><img src="images/image 1.jpeg"><div class="blog-content"><h3 style="color:var(--purple)">Top 5 Web Dev Trends 2026</h3><p>AI, Web3, and the future of development in Africa.</p><button onclick="openBlog('trends')" class="btn" style="padding:12px 25px;">Read More</button></div></div>
+                <div class="blog-card"><img src="images/image 2.jpeg"><div class="blog-content"><h3 style="color:var(--pink)">Why Coding is Critical in Malawi</h3><p>The digital economy is creating 1000s of jobs.</p><button onclick="openBlog('coding')" class="btn" style="padding:12px 25px;">Read More</button></div></div>
+                <div class="blog-card"><img src="images/image 3.jpeg"><div class="blog-content"><h3 style="color:var(--yellow)">Design That Sells</h3><p>How great branding can 10x your business revenue.</p><button onclick="openBlog('design')" class="btn" style="padding:12px 25px;">Read More</button></div></div>
             </div>
         </div>
     </section>
@@ -234,8 +237,9 @@
         </div>
     </section>
 
-    <section id="stats">
-        <div class="container">
+    <section id="stats" style="position:relative; overflow:hidden;">
+        <canvas id="circuitCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;"></canvas>
+        <div class="container" style="position:relative; z-index:2;">
             <h2 class="section-title">Our <span>Impact</span></h2>
             <div class="chart-container"><canvas id="impactChart"></canvas></div>
         </div>
@@ -248,6 +252,21 @@
                 <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"ByteZone transformed our business with a website that actually converts."</p><h4 style="color:var(--green)">- Chimwemwe K, CEO</h4></div>
                 <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"The training was hands-on. Got my first dev job in 2 months."</p><h4 style="color:var(--blue)">- Grace M, Developer</h4></div>
                 <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"Professional and world-class support. Highly recommended!"</p><h4 style="color:var(--purple)">- John D, Business Owner</h4></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" style="background: linear-gradient(180deg, #001F3F 0%, var(--dark) 100%);">
+        <div class="container">
+            <h2 class="section-title">Meet The <span>Team</span></h2>
+            <div class="team-grid">
+                <div class="team-card"><div class="team-img"><img src="images/gomes-avirgo.jpeg" alt="Gomes Avirgo"></div><h3>Gomes Avirgo</h3><p>Founder & CEO</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/ishmael-joseph.jpeg" alt="Ishmael Joseph"></div><h3>Ishmael Joseph</h3><p>Chief Technology Officer</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/phyllis-chawinga.jpeg" alt="Phyllis Chawinga"></div><h3>Phyllis Chawinga</h3><p>Lead Web Developer</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/gracius-kaomba.jpeg" alt="Gracius Kaomba"></div><h3>Gracius Kaomba</h3><p>Creative Director</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/brave-mphande.jpeg" alt="Brave Mphande"></div><h3>Brave Mphande</h3><p>Sales Manager</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/john-daka.jpeg" alt="John Daka"></div><h3>John Daka</h3><p>Marketing Lead</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/mary-tembo.jpeg" alt="Mary Tembo"></div><h3>Mary Tembo</h3><p>IT Support Manager</p></div>
             </div>
         </div>
     </section>
@@ -272,20 +291,6 @@
             </div>
         </div>
     </section>
-        <section id="team" style="background: linear-gradient(180deg, #001F3F 0%, var(--dark) 100%);">
-        <div class="container">
-            <h2 class="section-title">Meet The <span>Team</span></h2>
-            <div class="team-grid">
-                <div class="team-card"><div class="team-img"><img src="images/gomes-avirgo.jpeg" alt="Gomes Avirgo"></div><h3>Gomes Avirgo</h3><p>Founder & CEO</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/ishmael-joseph.jpeg" alt="Ishmael Joseph"></div><h3>Ishmael Joseph</h3><p>Chief Technology Officer</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/phyllis-chawinga.jpeg" alt="Phyllis Chawinga"></div><h3>Phyllis Chawinga</h3><p>Lead Web Developer</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/gracius-kaomba.jpeg" alt="Gracius Kaomba"></div><h3>Gracius Kaomba</h3><p>Creative Director</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/brave-mphande.jpeg" alt="Brave Mphande"></div><h3>Brave Mphande</h3><p>Sales Manager</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/john-daka.jpeg" alt="John Daka"></div><h3>John Daka</h3><p>Marketing Lead</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/mary-tembo.jpeg" alt="Mary Tembo"></div><h3>Mary Tembo</h3><p>IT Support Manager</p></div>
-            </div>
-        </div>
-    </section>
 
     <footer>
         <div class="container">
@@ -294,18 +299,17 @@
         </div>
     </footer>
 
-    <div id="projectModal" class="modal"><div class="modal-content"><span class="close" onclick="closeProject()">&times;</span><div id="projectDetails"></div></div></div>
-
+    <div id="projectModal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal('projectModal')">&times;</span><div id="projectDetails"></div></div></div>
     <style>
         section { padding: 140px 30px; position: relative; }
  .section-title { text-align: center; font-size: 3.2rem; font-weight: 900; font-family: 'Orbitron'; margin-bottom: 20px; color: white; }
-        body.light-mode.section-title { color: #0F0F1A; }
+        body.light-mode .section-title { color: #0F0F1A; }
  .section-title span { color: var(--green); }
  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
  .about-grid img { width: 100%; border-radius: 20px; border: 2px solid var(--green); transition: 0.5s; }
  .about-grid img:hover { transform: scale(1.03); box-shadow: 0 0 50px var(--green); }
  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 35px; }
- .service-card { background: var(--glass); backdrop-filter: blur(10px); padding: 35px; border-radius: 20px; border: 1px solid rgba(0,255,136,0.2); text-align: center; transition: 0.4s; }
+ .service-card { background: var(--glass); backdrop-filter: blur(10px); padding: 35px; border-radius: 20px; border: 1px solid rgba(0,255,136,0.2); text-align: center; transition: 0.4s; cursor: pointer; }
  .service-card:hover { transform: translateY(-15px); border-color: var(--green); box-shadow: 0 15px 50px rgba(0,255,136,0.3); }
  .service-card i { font-size: 3.5rem; margin-bottom: 20px; }
  .service-card img { width: 100%; height: 280px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; }
@@ -335,7 +339,7 @@
  .testimonial-card:hover { transform: translateY(-10px); border-color: var(--blue); box-shadow: 0 10px 40px rgba(0,175,255,0.3); }
  .contact-form { background: var(--glass); backdrop-filter: blur(10px); padding: 60px; border-radius: 20px; max-width: 750px; margin: 40px auto 0; border: 1px solid rgba(0,255,136,0.2); }
  .form-group input,.form-group textarea { width: 100%; padding: 18px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; border-radius: 12px; font-family: 'Poppins'; margin-bottom: 20px; font-size: 1rem; }
-        body.light-mode.form-group input, body.light-mode.form-group textarea { background: #FFF; color: #0F0F1A; border-color: #ddd; }
+        body.light-mode .form-group input, body.light-mode .form-group textarea { background: #FFF; color: #0F0F1A; border-color: #ddd; }
  .social-icons { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-top: 50px; }
  .social-icons a { width: 75px; height: 75px; background: linear-gradient(135deg, var(--red), var(--green), var(--blue)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; transition: 0.4s; text-decoration: none; }
  .social-icons a:hover { transform: rotate(360deg) scale(1.2); box-shadow: 0 0 40px var(--green); }
@@ -345,17 +349,58 @@
         footer { background: var(--dark); color: white; text-align: center; padding: 50px 30px; border-top: 1px solid rgba(0,255,136,0.3); }
         @media(max-width: 992px) {.clock-wrapper { display: none; }.money-ticker { display: none; } }
         @media(max-width: 768px) {.hero h1 { font-size: 2.8rem; }.about-grid { grid-template-columns: 1fr; }}
- .modal {display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
- .modal-content {background: var(--glass); backdrop-filter: blur(20px); margin: 5% auto; padding: 40px; border-radius: 20px; width: 90%; max-width: 700px; border: 1px solid var(--green); }
+ .modal {display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); overflow-y: auto; }
+ .modal-content {background: var(--glass); backdrop-filter: blur(20px); margin: 5% auto; padding: 40px; border-radius: 20px; width: 90%; max-width: 800px; border: 1px solid var(--green); }
  .close {color: #aaa; float: right; font-size: 35px; cursor: pointer; transition: 0.3s;}
  .close:hover { color: var(--red); }
+ .modal-content h2 { font-family: 'Orbitron'; color: var(--green); margin-bottom: 20px; }
+ .modal-content ul { text-align: left; margin: 15px 0; padding-left: 20px; }
+ .modal-content li { margin: 8px 0; color: var(--blue); }
+    
+    /* ENROLL POPUP */
+    .enroll-popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
+    .enroll-box { background: #0a0a0a; border: 2px solid #00ff88; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; color: #fff; font-family: sans-serif; }
+    .enroll-box h2 { color: #00ff88; text-align: center; }
+    .enroll-box input, .enroll-box select, .enroll-box textarea { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid #00ff88; color: #fff; border-radius: 8px; }
+    .enroll-box button { width: 100%; padding: 15px; background: #00ff88; border: none; color: #000; font-weight: bold; border-radius: 8px; cursor: pointer; }
+    .close-btn { float: right; font-size: 28px; cursor: pointer; color: #00ff88; }
     </style>
 
+<!-- ENROLLMENT POPUP FORM -->
+<div id="enrollPopup" class="enroll-popup">
+  <div class="enroll-box">
+    <span class="close-btn" onclick="closeForm()">&times;</span>
+    <h2>ByteZoneConnect Enrollment</h2>
+    <form id="enrollForm">
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="tel" name="whatsapp" placeholder="WhatsApp Number" required>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <select name="course" required>
+        <option value="">Select Course</option>
+        <option value="Full Stack Web Dev - MWK 255,000">Full Stack Web Dev - MWK 255,000</option>
+        <option value="Mobile App Development - MWK 500,000">Mobile App Development - MWK 500,000</option>
+        <option value="UI/UX & Digital Marketing - MWK 459,000">UI/UX & Digital Marketing - MWK 459,000</option>
+      </select>
+      <textarea name="message" placeholder="Why do you want to join?"></textarea>
+      <button type="submit">SUBMIT APPLICATION</button>
+    </form>
+    <p id="successMsg" style="display:none; color:#00ff88; text-align:center;">✅ Application Sent! We'll contact you on WhatsApp.</p>
+  </div>
+</div>
+
+<!-- SERVICE MODAL -->
+<div id="serviceModal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal('serviceModal')">&times;</span><div id="serviceDetails"></div></div></div>
+
+<!-- COURSE MODAL -->
+<div id="courseModal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal('courseModal')">&times;</span><div id="courseDetails"></div></div></div>
+
+<!-- BLOG MODAL -->
+<div id="blogModal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal('blogModal')">&times;</span><div id="blogDetails"></div></div></div>
 <script>
     // DIGITAL CLOCK
     function updateDigitalClock() {
         const now = new Date();
-        const time = now.toLocaleTimeString('en-US', { hour12: false });
+      const time = now.toLocaleTimeString('en-US', { hour12: true });
         const ms = String(now.getMilliseconds()).padStart(3, '0');
         document.getElementById('digitalTime').textContent = time;
         document.getElementById('digital-ms').textContent = ms;
@@ -364,41 +409,36 @@
     updateDigitalClock();
     setInterval(updateDigitalClock, 50);
 
-        // LIVE MONEY TICKER - 2-4 SECONDS + MORE PROFITS + ARROWS + SAVE OFFLINE
-    let currentMoney = 2500000; // NEW START
+    // LIVE MONEY TICKER - RESETS AT 06:00 AM
+    let currentMoney = 2500000;
     let lastUpdateTime = Date.now();
     const moneyEl = document.getElementById('moneyValue');
     const arrowEl = document.getElementById('moneyArrow');
 
-    // Load saved data
-    const savedMoney = localStorage.getItem('bytezone_money');
-    const savedTime = localStorage.getItem('bytezone_money_time');
-    
-    if(savedMoney && savedTime){
-        currentMoney = parseInt(savedMoney);
-        lastUpdateTime = parseInt(savedTime);
+    function checkReset() {
+        const now = new Date();
+        const lastReset = localStorage.getItem('bytezone_last_reset');
+        const today6am = new Date();
+        today6am.setHours(6, 0, 0, 0);
         
-        // Simulate what happened while user was away
-        const timeDiff = Date.now() - lastUpdateTime;
-        const updatesMissed = Math.floor(timeDiff / 3000); // approx every 3 seconds
-        
-        for(let i = 0; i < updatesMissed; i++){
-            simulateMoneyChange(false);
+        if(!lastReset || new Date(lastReset) < today6am) {
+            currentMoney = 2500000; // Reset to base
+            localStorage.setItem('bytezone_last_reset', now.toISOString());
         }
-    } else {
-        moneyEl.innerHTML = `<span id="moneyArrow">↑</span> MWK ${currentMoney.toLocaleString()}`;
     }
+    checkReset();
+
+    const savedMoney = localStorage.getItem('bytezone_money');
+    if(savedMoney){ currentMoney = parseInt(savedMoney); }
+    moneyEl.innerHTML = `<span id="moneyArrow">↑</span> MWK ${currentMoney.toLocaleString()}`;
 
     function simulateMoneyChange(shouldSave = true) {
         const now = new Date();
         const hour = now.getHours();
-        const isDay = hour >= 6 && hour < 18; // 6AM to 6PM
-
-        // MORE PROFIT BIAS kkkk 😂
-        const upChance = isDay? 0.85 : 0.65; // 85% day, 65% night. More greens!
+        const isDay = hour >= 6 && hour < 18;
+        const upChance = isDay? 0.85 : 0.65;
         const shouldGoUp = Math.random() < upChance;
-
-        const changeAmount = Math.floor(Math.random() * 8000) + 1000; // Bigger jumps: 1000 - 9000
+        const changeAmount = Math.floor(Math.random() * 8000) + 1000;
 
         if(shouldGoUp) {
             currentMoney += changeAmount;
@@ -406,63 +446,48 @@
             arrowEl.style.color = 'var(--green)';
             moneyEl.className = 'up ticker-flash';
         } else {
-            currentMoney = Math.max(500000, currentMoney - changeAmount); // Don't go below 500k
+            currentMoney = Math.max(500000, currentMoney - changeAmount);
             arrowEl.textContent = '↓';
             arrowEl.style.color = 'var(--red)';
             moneyEl.className = 'down ticker-flash';
         }
 
         moneyEl.innerHTML = `<span id="moneyArrow">${arrowEl.textContent}</span> MWK ${currentMoney.toLocaleString()}`;
-        lastUpdateTime = Date.now();
-
-        if(shouldSave){
-            localStorage.setItem('bytezone_money', currentMoney);
-            localStorage.setItem('bytezone_money_time', lastUpdateTime);
-        }
-
+        if(shouldSave){ localStorage.setItem('bytezone_money', currentMoney); }
         setTimeout(() => { moneyEl.classList.remove('ticker-flash'); }, 500);
     }
 
     function updateMoneyTicker() {
+        checkReset();
         simulateMoneyChange(true);
-
-        // Schedule next update in 2-4 seconds
-        const nextUpdate = Math.random() * 2000 + 2000; // 2000ms to 4000ms
+        const nextUpdate = Math.random() * 2000 + 2000;
         setTimeout(updateMoneyTicker, nextUpdate);
     }
-    updateMoneyTicker(); // Start it
-    // NEW VISITORS COUNTER 950 TO 40 + TEXT SWITCH EVERY 5S
-let visitors = Math.floor(Math.random() * 200) + 650; // Start 650-850
-const visitorsEl = document.getElementById('visitorsValue');
-const visitorTextEl = document.getElementById('visitorText');
-let showVisitors = true;
+    updateMoneyTicker();
 
-// Switch text every 5 seconds
-setInterval(() => {
-    showVisitors = !showVisitors;
-    visitorTextEl.textContent = showVisitors ? 'LIVE VISITORS' : 'BYTEZONECONNECT';
-}, 5000);
-
-function updateVisitors() {
-    const spike = Math.random();
-    let changed = false;
-
-    if(spike > 0.95) { visitors += Math.floor(Math.random() * 100) + 50; changed = true; } // viral spike
-    else if(spike > 0.7) { visitors += Math.floor(Math.random() * 10) + 1; changed = true; } // normal up
-    else { visitors -= Math.floor(Math.random() * 8) + 1; changed = true; } // drop
-
-    if(visitors > 950) visitors = 950;
-    if(visitors < 40) visitors = 40;
-
-    if(changed) {
+    // VISITORS COUNTER
+    let visitors = Math.floor(Math.random() * 200) + 650;
+    const visitorsEl = document.getElementById('visitorsValue');
+    const visitorTextEl = document.getElementById('visitorText');
+    let showVisitors = true;
+    setInterval(() => {
+        showVisitors = !showVisitors;
+        visitorTextEl.textContent = showVisitors ? 'LIVE VISITORS' : 'BYTEZONECONNECT';
+    }, 5000);
+    function updateVisitors() {
+        const spike = Math.random();
+        if(spike > 0.95) { visitors += Math.floor(Math.random() * 100) + 50; }
+        else if(spike > 0.7) { visitors += Math.floor(Math.random() * 10) + 1; }
+        else { visitors -= Math.floor(Math.random() * 8) + 1; }
+        if(visitors > 950) visitors = 950;
+        if(visitors < 40) visitors = 40;
         visitorsEl.textContent = visitors.toLocaleString();
         visitorsEl.classList.add('up');
         setTimeout(() => visitorsEl.classList.remove('up'), 400);
+        setTimeout(updateVisitors, Math.random() * 1500 + 1000);
     }
+    updateVisitors();
 
-    setTimeout(updateVisitors, Math.random() * 1500 + 1000); // 1-2.5 seconds
-}
-updateVisitors();
     // THEME TOGGLE
     const themeToggle = document.getElementById('themeToggle');
     if(localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>'; }
@@ -476,18 +501,56 @@ updateVisitors();
     document.getElementById('menuToggle').onclick = () => document.getElementById('navLinks').classList.toggle('active');
     function closeMenu() { document.getElementById('navLinks').classList.remove('active'); }
 
-    // PROJECT MODAL
-    const projects = {
-      ecommerce: { title: "E-Commerce Platform", desc: "Full online store for fashion boutique. Features: Product catalog, Cart, PayChangu & Airtel Money integration, Admin dashboard, Analytics.", result: "Result: 40% increase in sales in 2 months.", img: "images/e-commerce.png" },
-      school: { title: "School ERP System", desc: "Full stack system for schools. Features: Student records, Fees tracking, Results portal, Attendance, Teacher portal. <br><br> <b>Tech Stack:</b> React, Node.js, MongoDB <br> <a href='https://github.com/Meleksebri/school-management-system.git' target='_blank' style='color:var(--green)'>View on GitHub <i class='fa-brands fa-github'></i></a>", result: "Result: Cut admin work by 60%.", img: "images/school.jpeg" },
-      restaurant: { title: "Restaurant App", desc: "Online ordering system with delivery tracking. Features: Menu management, Cart, Online payments, Rider GPS tracking, Customer notifications.", result: "Result: 120+ orders in first month.", img: "images/restaurant.jpeg" }
+    // DATA FOR MODALS
+    const services = {
+      it: { title: "IT Support & CCTV", desc: "<p><b>What is it?</b><br>24/7 technical support for computers, networks, servers + CCTV installation and monitoring.</p><p><b>Why Important?</b><br>Keep your business running with zero downtime. Prevent theft and monitor staff.</p><ul><li>Hardware & Software Troubleshooting</li><li>Network Setup & Maintenance</li><li>CCTV Installation with Remote Access</li><li>Data Backup & Recovery</li></ul><p><b>Perfect for:</b> Schools, Banks, Shops, Offices in Malawi</p>" },
+      cloud: { title: "Cloud & DevOps", desc: "<p><b>What is it?</b><br>Host your apps on AWS/Google Cloud + Automate deployments with CI/CD.</p><p><b>Why Important?</b><br>Scale infinitely, pay only for what you use. Deploy updates in minutes not days.</p><ul><li>Cloud Migration: AWS, Azure, Google Cloud</li><li>Docker & Kubernetes Containerization</li><li>CI/CD Pipelines with GitHub Actions</li><li>24/7 Server Monitoring & Security</li></ul><p><b>Result:</b> 70% less server costs, 99.9% uptime</p>" },
+      web: { title: "Web Development", desc: "<p>Custom websites that convert visitors to customers. E-commerce, Corporate, Portfolios.</p><ul><li>React, Next.js, Node.js</li><li>Mobile Responsive Design</li><li>SEO Optimized</li><li>Payment Integration: Airtel Money, PayChangu</li></ul>" },
+      software: { title: "Software Solutions", desc: "<p>Custom ERP, POS, School Management Systems built for Malawi businesses.</p><ul><li>Inventory Management</li><li>Accounting & Payroll</li><li>Student Records & Results</li></ul>" },
+      network: { title: "Network Infrastructure", desc: "<p>Secure LAN, WAN, Fiber setup for offices and schools.</p><ul><li>Cisco & MikroTik Configuration</li><li>VPN & Firewall Setup</li><li>WiFi Hotspot Management</li></ul>" },
+      marketing: { title: "Digital Marketing", desc: "<p>We make people know you. Facebook Ads, Google Ads, Branding.</p><ul><li>Social Media Management</li><li>SEO & Google Ranking</li><li>Brand Identity Design</li></ul>" }
     };
+
+    const courses = {
+      webdev: { title: "Full Stack Web Development", topics: "<ul><li>Month 1: HTML5, CSS3, Responsive Design</li><li>Month 2: JavaScript ES6, DOM Manipulation</li><li>Month 3: React.js + Tailwind CSS</li><li>Month 4: Node.js, Express, MongoDB</li><li>Month 5: Payment APIs, Deployment, Portfolio Project</li></ul><p><b>Duration:</b> 5 Months <br><b>Certificate:</b> ByteZoneConnect Certified Developer <br><b>Job Support:</b> CV + Interview Prep Included</p>" },
+      mobile: { title: "Mobile App Development", topics: "<ul><li>Month 1: Dart Programming Fundamentals</li><li>Month 2: Flutter UI/UX Design</li><li>Month 3: Firebase Auth, Database, Storage</li><li>Month 4: API Integration, Payment Gateways</li><li>Month 5: Publish to Play Store + Final App</li></ul><p><b>Duration:</b> 5 Months <br><b>Build:</b> 3 Real Apps for your portfolio</p>" },
+      uiux: { title: "UI/UX & Digital Marketing", topics: "<ul><li>Month 1: Figma, Adobe XD, Design Principles</li><li>Month 2: Photoshop, Illustrator, Branding</li><li>Month 3: Facebook Ads, Google Ads</li><li>Month 4: SEO, Content Strategy, Analytics</li><li>Month 5: Client Project + Certification</li></ul><p><b>Duration:</b> 5 Months <br><b>Skills:</b> Become a Freelancer in 90 days</p>" }
+    };
+
+    const projects = {
+      ecommerce: { title: "E-Commerce Platform", desc: "<img src='images/e-commerce.png' style='width:100%; border-radius:15px; margin:20px 0;'><p><b>Client:</b> Fashion Boutique in Lilongwe</p><p><b>Challenge:</b> No online sales, only walk-in customers.</p><p><b>Solution:</b> Full e-commerce site with PayChangu + Airtel Money, Product catalog, Admin dashboard, WhatsApp order notifications.</p><p><b>Tech:</b> React, Node.js, MongoDB, PayChangu API</p><p style='color:var(--green); font-weight:bold; font-size:1.2rem;'>Result: 40% increase in sales in 2 months. 500+ online orders.</p>" },
+      school: { title: "School ERP System", desc: "<img src='images/school.jpeg' style='width:100%; border-radius:15px; margin:20px 0;'><p><b>Client:</b> Private Secondary School, Mzuzu</p><p><b>Challenge:</b> Manual records, fees tracking taking weeks.</p><p><b>Solution:</b> Full ERP: Student records, Fees tracking, Results portal, Attendance, Teacher portal, Parent SMS alerts.</p><p><b>Tech:</b> React, Node.js, MongoDB <a href='https://github.com/Meleksebri/school-management-system.git' target='_blank' style='color:var(--green)'>View on GitHub <i class='fa-brands fa-github'></i></a></p><p style='color:var(--green); font-weight:bold; font-size:1.2rem;'>Result: Cut admin work by 60%. Fees collection up 35%.</p>" },
+      restaurant: { title: "Restaurant App", desc: "<img src='images/restaurant.jpeg' style='width:100%; border-radius:15px; margin:20px 0;'><p><b>Client:</b> Food Delivery Startup</p><p><b>Challenge:</b> Phone orders only, no tracking.</p><p><b>Solution:</b> Mobile app + Admin dashboard. Online ordering, Cart, Online payments, Rider GPS tracking, Customer notifications.</p><p><b>Tech:</b> Flutter, Firebase, Google Maps API</p><p style='color:var(--green); font-weight:bold; font-size:1.2rem;'>Result: 120+ orders in first month. Delivery time cut by 50%.</p>" }
+    };
+
+    const blogs = {
+      trends: { title: "Top 5 Web Dev Trends 2026", content: "<p>The future is here. In 2026 African developers must master:</p><ul><li><b>1. AI Integration:</b> ChatGPT APIs in every website</li><li><b>2. Web3:</b> Blockchain payments for Malawi businesses</li><li><b>3. Serverless:</b> No servers, just code. Cheaper hosting</li><li><b>4. Mobile-First:</b> 90% of Malawians use phones</li><li><b>5. Low-Code:</b> Build faster with AI tools</li></ul><p>At ByteZone we teach all 5. Join us.</p>" },
+      coding: { title: "Why Coding is Critical in Malawi", content: "<p>The digital economy will create 50,000 jobs by 2030. Here's why:</p><ul><li><b>Remote Jobs:</b> Work for US/EU companies from Mzuzu</li><li><b>Startups:</b> Build the next Airtel Money</li><li><b>Problem Solving:</b> Digitize agriculture, health, education</li></ul><p>Government and NGOs are paying K500K - K2M for devs. Don't be left behind.</p>" },
+      design: { title: "Design That Sells", content: "<p>Your website has 3 seconds to impress. Here's how:</p><ul><li><b>Color Psychology:</b> Green = Trust, Blue = Tech</li><li><b>Fast Loading:</b> Under 2 seconds or they leave</li><li><b>Clear CTA:</b> 'BUY NOW' not 'Submit'</li></ul><p>We increased client revenue by 300% just by redesigning. Let us do yours.</p>" }
+    };
+
+    // MODAL FUNCTIONS
+    function openService(id) {
+      const s = services[id];
+      document.getElementById("serviceDetails").innerHTML = `<h2>${s.title}</h2>${s.desc}`;
+      document.getElementById("serviceModal").style.display = "block";
+    }
+    function openCourse(id) {
+      const c = courses[id];
+      document.getElementById("courseDetails").innerHTML = `<h2>${c.title}</h2>${c.topics}`;
+      document.getElementById("courseModal").style.display = "block";
+    }
     function openProject(id) {
       const p = projects[id];
-      document.getElementById("projectDetails").innerHTML = `<h2 style="color:var(--green); font-family:Orbitron; margin-bottom:20px;">${p.title}</h2><img src="${p.img}" style="width:100%; border-radius:15px; margin:20px 0;"><p style="font-size:1.1rem; line-height:1.8;">${p.desc}</p><p style="color:var(--green); font-weight:bold; margin-top:15px; font-size:1.2rem;">${p.result}</p>`;
+      document.getElementById("projectDetails").innerHTML = `<h2>${p.title}</h2>${p.desc}`;
       document.getElementById("projectModal").style.display = "block";
     }
-    function closeProject() { document.getElementById("projectModal").style.display = "none"; }
+    function openBlog(id) {
+      const b = blogs[id];
+      document.getElementById("blogDetails").innerHTML = `<h2>${b.title}</h2>${b.content}`;
+      document.getElementById("blogModal").style.display = "block";
+    }
+    function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
     // CHART.JS
     const ctx = document.getElementById('impactChart');
@@ -495,14 +558,47 @@ updateVisitors();
       new Chart(ctx, {
           type: 'bar',
           data: { labels: ['Websites', 'Mobile Apps', 'Students Trained', 'Enterprise Clients'], datasets: [{ label: 'Projects Completed', data: [24, 12, 180, 45], backgroundColor: ['#E10600', '#00FF88', '#00AFFF', '#FF00FF'], borderRadius: 12 }] },
-          options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+          options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } }}
       });
     }
 
-    window.onclick = function(event) {
-        const modal = document.getElementById('projectModal');
-        if (event.target == modal) { modal.style.display = "none"; }
+    // CIRCUIT ANIMATION
+    const canvas = document.getElementById('circuitCanvas');
+    const cctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    let particles = [];
+    for(let i=0; i<50; i++){
+        particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx: (Math.random()-0.5)*2, vy: (Math.random()-0.5)*2});
     }
+    function animateCircuits(){
+        cctx.clearRect(0,0,canvas.width,canvas.height);
+        cctx.strokeStyle = 'rgba(0,255,136,0.1)';
+        particles.forEach(p=>{
+            p.x += p.vx; p.y += p.vy;
+            if(p.x<0 || p.x>canvas.width) p.vx *= -1;
+            if(p.y<0 || p.y>canvas.height) p.vy *= -1;
+            cctx.beginPath();
+            cctx.arc(p.x,p.y,2,0,Math.PI*2);
+            cctx.fillStyle = 'rgba(0,255,136,0.5)';
+            cctx.fill();
+        });
+        requestAnimationFrame(animateCircuits);
+    }
+    animateCircuits();
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) { event.target.style.display = "none"; }
+    }
+
+    // ENROLL POPUP
+    function openForm() { document.getElementById('enrollPopup').style.display = 'flex'; }
+    function closeForm() { document.getElementById('enrollPopup').style.display = 'none'; }
+    document.getElementById('enrollForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('successMsg').style.display = 'block';
+      setTimeout(() => { closeForm(); document.getElementById('successMsg').style.display = 'none'; }, 3000);
+    });
 </script>
 </body>
 </html>
