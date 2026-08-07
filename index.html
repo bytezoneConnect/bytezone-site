@@ -28,15 +28,36 @@
         @keyframes circuit { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
 
         .container { max-width: 1400px; margin: 0 auto; padding: 0 30px; }
-        nav { background: var(--glass); backdrop-filter: blur(20px); box-shadow: 0 5px 40px rgba(0,255,136,0.15); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,255,136,0.3); }
-        .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 18px 30px; }
-        .nav-right { display: flex; align-items: center; gap: 30px; }
+        nav { background: var(--glass); backdrop-filter: blur(20px); box-shadow: 0 5px 40px rgba(0,255,136,0.15); position: fixed; left: 0; right: 0; top: 0; width: 100%; z-index: 1000; border-bottom: 1px solid rgba(0,255,136,0.3); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 18px 30px; position: relative; }
+        .nav-right { display: flex; align-items: center; gap: 22px; justify-content: flex-end; flex: 1; min-width: 0; }
+        .nav-left { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        nav, .nav-container, .nav-left, .nav-right { transition: none !important; }
         
-        .logo { display: flex; align-items: center; gap: 15px; font-family: 'Orbitron', sans-serif; font-size: 30px; font-weight: 900; text-decoration: none; }
-        .logo img { height: 85px; animation: glow 3s infinite; }
-        .logo span:nth-child(2) { color: var(--red); }
-        .logo span:nth-child(3) { color: var(--green); }
-        .logo span:nth-child(4) { color: var(--blue); font-size: 18px; letter-spacing: 2px; }
+        .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; line-height: 1; }
+        .nav-brand-logo { width: 120px; height: 120px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.32); box-shadow: 0 0 28px rgba(0,175,255,0.22); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+        .nav-brand-logo:hover { transform: scale(1.08); box-shadow: 0 0 52px rgba(0,255,136,0.55), 0 0 28px rgba(91,149,255,0.32); border-color: rgba(0,255,136,0.65); }
+        .nav-brand-text { display: flex; flex-direction: column; line-height: 1.05; }
+        .brand-line-one { display: block; font-family: 'Orbitron', sans-serif; font-size: 0.95rem; font-weight: 900; letter-spacing: 0.08em; }
+        .brand-line-one strong:first-child { color: var(--green); margin-right: 4px; }
+        .brand-line-one strong:last-child { color: var(--blue); }
+        .brand-line-two { display: block; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--pink); letter-spacing: 0.1em; }
+        .nav-brand:hover .brand-line-one strong:first-child { color: #7cffb2; }
+        .nav-brand:hover .brand-line-one strong:last-child { color: #84d7ff; }
+        .nav-brand:hover .brand-line-two { color: #ffe066; }
+        .nav-market-btn { position: relative; overflow: hidden; z-index: 1; display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.22); background: radial-gradient(circle at top left, rgba(91,149,255,0.55), transparent 30%), radial-gradient(circle at bottom right, rgba(212,122,255,0.45), transparent 30%), linear-gradient(120deg, #5B95FF, #D47AFF); background-size: 220% 220%; color: #07070D; font-family: 'Orbitron', sans-serif; font-weight: 800; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: marketColorShift 2s ease infinite;
+        }
+        .nav-market-btn::before { content: ''; position: absolute; inset: -16%; background: radial-gradient(circle at 50% 10%, rgba(255,255,255,0.6), transparent 30%), radial-gradient(circle at 50% 90%, rgba(0,255,255,0.22), transparent 40%); opacity: 0.85; filter: blur(14px); animation: bubbleSparkle 1.8s ease-in-out infinite; }
+        .nav-market-btn::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 25% 30%, rgba(255,255,255,0.22), transparent 20%), radial-gradient(circle at 70% 50%, rgba(255,255,255,0.14), transparent 18%); opacity: 0.8; pointer-events: none; }
+        .nav-market-btn:hover { transform: scale(1.06); box-shadow: 0 0 18px rgba(255,255,255,0.28), 0 0 20px rgba(0,175,255,0.3); }
+        .nav-market-btn i { color: #07070D; }
+        @keyframes marketColorShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        @keyframes bubbleSparkle { 0%,100% { opacity: 0.85; transform: translateY(0) scale(1); } 50% { opacity: 1; transform: translateY(-2px) scale(1.03); } }
+        .market-loader { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10001; display: flex; justify-content: center; align-items: center; }
+        .market-loader-content { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 40px; border-radius: 24px; background: rgba(5,5,15,0.95); border: 1px solid rgba(0,255,136,0.3); box-shadow: 0 35px 90px rgba(0,255,136,0.18); }
+        .market-loader-content img { width: 140px; margin-bottom: 24px; animation: glow 1.8s infinite; }
+        .market-loader-content p { color: #f1fff2; font-size: 1.2rem; letter-spacing: 0.05em; text-align: center; max-width: 320px; }
 
         .nav-links-dropdown { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; max-height: 85vh; overflow-y: auto; background: var(--glass); backdrop-filter: blur(25px); padding: 25px; list-style: none; border-top: 1px solid rgba(0,255,136,0.3); }
         .nav-links-dropdown.active { display: flex; animation: slideDown 0.4s ease; }
@@ -44,12 +65,41 @@
         .nav-links-dropdown li a { color: white; text-decoration: none; padding: 16px 0; display: block; font-weight: 600; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
         .nav-links-dropdown li a:hover { color: var(--green); padding-left: 15px; text-shadow: 0 0 10px var(--green); }
 
+        .nav-left { display: flex; align-items: center; gap: 16px; }
+        .nav-left button { display: flex; align-items: center; gap: 8px; }
         .menu-toggle { font-size: 1rem; color: var(--green); background: transparent; border: 1px solid var(--green); padding: 12px 20px; border-radius: 12px; cursor: pointer; font-family: 'Orbitron'; transition: 0.3s; }
         .menu-toggle:hover { background: var(--green); color: var(--dark); box-shadow: 0 0 20px var(--green); }
         .theme-toggle { background: transparent; border: 1px solid var(--green); color: var(--green); padding: 12px 14px; border-radius: 50%; cursor: pointer; transition: 0.3s; font-size: 1.1rem; }
         .theme-toggle:hover { background: var(--green); color: var(--dark); transform: rotate(180deg); }
 
         .clock-wrapper { text-align: center; font-family: 'Rajdhani', sans-serif; }
+        .news-ticker-section { background: rgba(0,255,136,0.05); margin-top: 120px; }
+        .ticker-wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 30px 0; border-bottom: 1px solid rgba(0,255,136,0.15); }
+        .ticker-label { display: inline-flex; align-items: center; gap: 12px; font-family: 'Orbitron'; text-transform: uppercase; letter-spacing: 2px; color: var(--green); font-size: 0.95rem; }
+        .ticker-track { flex: 1; overflow: hidden; border-radius: 18px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.12); padding: 20px 25px; }
+        .ticker-track span { display: inline-block; white-space: nowrap; animation: tickerMove 22s linear infinite; font-size: 1rem; color: #e6f7ff; }
+        @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        .testimonial-grid { display: none; }
+        .testimonials-marquee { overflow: hidden; position: relative; margin-top: 40px; }
+        .testimonial-track { display: flex; gap: 25px; width: max-content; animation: marquee 24s linear infinite; }
+        .testimonial-track:nth-child(2) { position: absolute; top: 0; left: 100%; animation-delay: 12s; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        .testimonials-marquee { min-height: 320px; padding: 25px 0; }
+        .testimonial-card { min-width: 320px; max-width: 340px; flex: 0 0 auto; }
+
+        .faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px; }
+.faq-item { position: relative; overflow: hidden; background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.35)), url('images/bytezone logo.png') center center / 180px no-repeat; background-blend-mode: overlay; border: 1px solid rgba(0,255,136,0.2); backdrop-filter: blur(18px); padding: 30px; border-radius: 24px; transition: transform 0.3s, box-shadow 0.3s; }
+        .faq-item:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,255,136,0.1); }
+        .faq-item h3 { font-family: 'Orbitron'; font-size: 1.2rem; margin-bottom: 15px; color: var(--green); }
+        .faq-item p { color: #d7f9d7; line-height: 1.8; }
+
+        .service-card p, .course-card p, .testimonial-card p { color: #d7d7d7; }
+        .service-card:hover, .course-card:hover, .blog-card:hover, .testimonial-card:hover { transform: translateY(-10px); }
+
+        @media(max-width: 992px) { .clock-wrapper { display: none; } .money-ticker { display: none; } .ticker-wrap { flex-direction: column; align-items: flex-start; } .ticker-track { width: 100%; } }
+        @media(max-width: 768px) { .hero h1 { font-size: 2.8rem; } .about-grid { grid-template-columns: 1fr; } .nav-container { flex-direction: column; align-items: stretch; gap: 20px; padding: 18px 20px; } .nav-left { justify-content: space-between; width: 100%; } .nav-right { flex-wrap: wrap; justify-content: center; gap: 15px; } .ticker-wrap { padding: 20px 0; } .ticker-track span { animation-duration: 18s; } .service-card, .course-card, .blog-card, .testimonial-card { padding: 28px; } .faq-grid { gap: 18px; } .testimonial-card { min-width: 260px; } .testimonial-track { animation: marquee 28s linear infinite; } .testimonial-track:nth-child(2) { left: 100%; } }
         .digital-clock { font-family: 'Rajdhani'; font-size: 1.8rem; font-weight: 700; background: linear-gradient(90deg, var(--blue), var(--green), var(--pink), var(--yellow), var(--red), var(--purple), var(--orange)); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 5s ease infinite; }
         #digital-ms { font-size: 1rem; color: var(--green); font-family: 'Rajdhani'; }
         #current-date { font-size: 0.9rem; color: var(--yellow); font-weight: 600; letter-spacing: 1px; margin-top: 5px; font-family: 'Rajdhani'; }
@@ -64,59 +114,144 @@
         @keyframes scanLine { 0% { background-position: 0% 0%; } 100% { background-position: 0% 100%; } }
 
 .visitor-box { 
-    text-align: center; 
-    border: 1px solid var(--green); 
-    background: rgba(0,255,136,0.05);
-    background-image: linear-gradient(transparent 50%, rgba(0,255,136,0.03) 50%);
-    background-size: 100% 4px;
-    padding: 8px 16px; 
-    border-radius: 10px; 
-    box-shadow: 0 20px rgba(0,255,136,0.3), inset 0 0 20px rgba(0,255,136,0.1);
-    backdrop-filter: blur(10px);
-    animation: scanLine 3s linear infinite;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 190px;
+    padding: 16px 24px;
+    border-radius: 26px;
+    border: 1px solid rgba(0,255,136,0.45);
+    background: linear-gradient(135deg, rgba(0,255,136,0.18), rgba(0,175,255,0.16));
+    box-shadow: 0 22px 52px rgba(0,255,136,0.18);
+    backdrop-filter: blur(18px);
+    animation: pulseCard 4.2s ease-in-out infinite alternate;
+    cursor: pointer;
+    color: #f4fff8;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
 }
-.visitor-label { font-size: 0.65rem; color: var(--green); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
-#visitorsValue { font-family: 'Rajdhani'; font-size: 1.5rem; font-weight: 700; color: var(--green); text-shadow: 0 0 15px var(--green); transition: 0.3s; }
-#visitorsValue.up { animation: tickerFlash 0.4s; }
-#visitorsIcon { font-size: 1rem; margin-right: 5px; }
-
-@media(max-width: 768px) {.visitor-box { display: none; }}
-
+.visitor-box:hover { transform: translateY(-3px); border-color: rgba(0,255,136,0.68); background: linear-gradient(135deg, rgba(0,255,136,0.26), rgba(0,175,255,0.24)); box-shadow: 0 26px 70px rgba(0,255,136,0.28); }
+    .visitor-box .visitor-label { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; letter-spacing: 1px; color: #d6ffdc; }
+    .visitor-box #visitorsValue { font-size: 1.75rem; }
+    .visitor-box #visitorsIcon { font-size: 1.1rem; margin-right: 4px; }
+        .money-ticker { text-align: center; border-left: 2px solid var(--green); padding-left: 20px; font-family: 'Rajdhani'; animation: glowNumbers 4s ease-in-out infinite alternate; }
+        .money-label { font-size: 0.8rem; color: var(--yellow); font-weight: 700; letter-spacing: 1px; }
+        #moneyValue { font-family: 'Rajdhani'; font-size: 1.4rem; font-weight: 700; transition: 0.3s; }
+        #moneyValue.up { color: var(--green); }
+        #moneyValue.down { color: var(--red); }
+        #moneyArrow { font-size: 1.2rem; margin-right: 5px; transition: 0.3s; }
+        .ticker-flash { animation: tickerFlash 0.5s; }
+        @keyframes pulseCard { 0% { transform: translateY(0); } 100% { transform: translateY(-4px); } }
+        @keyframes pulseValue { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-3px); opacity: 0.95; } }
+        @keyframes glowNumbers { 0% { transform: translateY(0); } 50% { transform: translateY(-2px); } 100% { transform: translateY(0); } }
         .hero { background: linear-gradient(-45deg, #07070D, #001F3F, #0F0F1A, #001F3F); background-size: 400% 400%; animation: gradientShift 15s ease infinite; min-height: 85vh; padding: 180px 30px 120px; display: flex; align-items: center; justify-content: center; color: white; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px), radial-gradient(circle at 20% 25%, rgba(0,255,136,0.08), transparent 18%), radial-gradient(circle at 80% 15%, rgba(0,175,255,0.08), transparent 18%); background-size: 60px 60px, 60px 60px, 100% 100%, 100% 100%; pointer-events: none; }
         .hero .container { position: relative; z-index: 3; }
         .hero h1 { font-size: 4.5rem; font-weight: 900; font-family: 'Orbitron', sans-serif; margin-bottom: 30px; line-height: 1.2; }
         .hero h1 span { color: var(--green); text-shadow: 0 0 20px var(--green); }
         .hero p { font-size: 1.4rem; margin-bottom: 50px; color: #aaa; max-width: 800px; margin-left: auto; margin-right: auto; }
         .btn-group { display: flex; gap: 25px; justify-content: center; flex-wrap: wrap; }
-        .btn { background: linear-gradient(135deg, var(--green), var(--blue)); color: var(--dark); padding: 22px 45px; border-radius: 15px; text-decoration: none; font-weight: 800; display: inline-block; transition: 0.4s; border: none; cursor: pointer; font-family: 'Orbitron'; font-size: 1.1rem; }
-        .btn:hover { transform: translateY(-10px) scale(1.05); box-shadow: 0 15px 50px rgba(0,255,136,0.6); }
-        .btn-red { background: linear-gradient(135deg, var(--red), var(--pink)); color: white; }
-        .btn-red:hover { box-shadow: 0 15px 50px rgba(225,6,0,0.6); }
+        .btn { padding: 22px 45px; border-radius: 15px; text-decoration: none; font-weight: 800; display: inline-flex; align-items: center; gap: 10px; transition: transform 0.3s ease, box-shadow 0.3s ease; border: none; cursor: pointer; font-family: 'Orbitron'; font-size: 1.1rem; }
+        .btn:hover { transform: translateY(-6px) scale(1.02); }
+        .btn-academy { background: radial-gradient(circle at top left, #9D4EDD, #6E00FF); color: #fff; padding: 20px 42px; border: 2px solid rgba(163, 100, 255, 0.45); box-shadow: 0 18px 45px rgba(157,78,221,0.28); border-radius: 24px; }
+        .btn-academy:hover { box-shadow: 0 22px 55px rgba(157,78,221,0.42); }
+        .btn-market { background: linear-gradient(135deg, #5B95FF, #D47AFF); color: #07070D; padding: 20px 42px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.24); box-shadow: 0 18px 42px rgba(155,95,255,0.25); }
+        .btn-market:hover { box-shadow: 0 20px 55px rgba(212,122,255,0.4); }
+        .btn-signup { background: linear-gradient(135deg, #FFD700, #FF8C00); color: #07070D; padding: 20px 42px; border: 2px solid rgba(255,255,255,0.34); box-shadow: inset 0 0 18px rgba(255,255,255,0.15), 0 16px 42px rgba(255,140,0,0.24); border-radius: 32px; }
+        .btn-signup:hover { box-shadow: inset 0 0 24px rgba(255,255,255,0.22), 0 20px 48px rgba(255,140,0,0.35); }
+        .btn-enroll { display: inline-flex; align-items: center; justify-content: center; min-width: 180px; padding: 16px 30px; border-radius: 999px; background: linear-gradient(135deg, #00FF88, #00AFFF); color: #07070D; font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.24); box-shadow: 0 18px 40px rgba(0,175,255,0.22), inset 0 0 14px rgba(255,255,255,0.12); transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease; }
+        .btn-enroll:hover { transform: translateY(-3px); box-shadow: 0 24px 50px rgba(0,175,255,0.30), inset 0 0 18px rgba(255,255,255,0.16); filter: brightness(1.04); }
+        .btn-outline { background: transparent; color: #f7f7f7; border: 1px solid rgba(255,255,255,0.28); box-shadow: inset 0 0 10px rgba(255,255,255,0.06); }
         
         .clickable-title { cursor: pointer; transition: 0.3s; }
         .clickable-title:hover { color: var(--green) !important; text-shadow: 0 0 15px var(--green); }
+
+        .hero-subtitle { color: #c7ffd8; font-size: 1.4rem; margin-bottom: 15px; letter-spacing: 1px; }
+        .hero-subtitle span { color: var(--blue); text-shadow: 0 0 15px var(--blue); }
+        .hero-description { color: #d7d7d7; font-size: 1.2rem; margin-bottom: 45px; }
+        .hero-top { display: flex; flex-direction: column; gap: 24px; align-items: center; }
+        .hero-ribbon { display: inline-flex; flex-direction: column; gap: 10px; padding: 18px 24px; margin: 0 auto 35px; max-width: 760px; border-radius: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(18px); box-shadow: 0 25px 60px rgba(0,255,136,0.12); }
+        .hero-ribbon span { display: block; color: #d9fef0; font-size: 0.95rem; letter-spacing: 0.8px; }
+        .hero-ribbon span:first-child { font-family: 'Orbitron'; font-weight: 800; color: var(--green); text-transform: uppercase; }
+        .hero-ribbon span:last-child { opacity: 0.82; }
+        .scroll-hint { display: inline-flex; align-items: center; justify-content: center; gap: 12px; margin: 0 auto 35px; padding: 14px 20px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(16px); font-size: 0.95rem; color: #e6f7ff; animation: hintGlow 2.6s ease-in-out infinite; cursor: pointer; }
+        .scroll-hint:hover { background: rgba(255,255,255,0.12); }
+        .scroll-hint i { font-size: 1rem; animation: bounceDown 1.5s ease-in-out infinite; }
+        @keyframes hintGlow { 0%,100% { transform: translateY(0); opacity: 0.95; } 50% { transform: translateY(-3px); opacity: 1; } }
+        @keyframes bounceDown { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+        .status-card { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; background: rgba(5,12,38,0.95); border: 1px solid rgba(80,190,255,0.18); border-radius: 28px; padding: 30px; max-width: 1000px; margin: 0 auto 60px; backdrop-filter: blur(22px); box-shadow: 0 30px 95px rgba(0,135,210,0.18); position: relative; overflow: hidden; }
+        .status-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top left, rgba(0,255,136,0.12), transparent 20%), radial-gradient(circle at bottom right, rgba(91,149,255,0.12), transparent 18%); pointer-events: none; }
+        .status-panel { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 22px; min-height: 360px; }
+        .status-left { padding: 28px; border-radius: 26px; background: rgba(8,18,48,0.92); border: 1px solid rgba(255,255,255,0.08); overflow: hidden; }
+        .status-right { display: flex; flex-direction: column; gap: 22px; }
+        .status-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 0; font-family: 'Orbitron'; font-size: 1rem; letter-spacing: 2px; color: var(--blue); text-transform: uppercase; position: relative; z-index: 1; }
+        .status-header i { color: var(--green); font-size: 1.1rem; }
+        .live-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #75ffb9; background: rgba(0,255,136,0.12); border: 1px solid rgba(0,255,136,0.18); border-radius: 999px; padding: 8px 14px; }
+        .matrix-layer { position: absolute; inset: 24px; pointer-events: none; font-family: 'Rajdhani', sans-serif; font-size: 0.88rem; line-height: 1.4; white-space: pre; z-index: 0; opacity: 0.35; mix-blend-mode: screen; color: rgba(255,255,255,0.18); text-align: center; }
+        .status-highlight { color: #c9e8ff; font-size: 0.95rem; line-height: 1.8; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 18px; }
+        .update-card { background: rgba(5,14,35,0.95); border: 1px solid rgba(91,149,255,0.16); border-radius: 24px; padding: 26px; min-height: 250px; box-shadow: 0 18px 45px rgba(0,85,180,0.12); }
+        .update-card .status-header { margin-bottom: 18px; }
+        .update-ticker { font-size: 1rem; line-height: 1.7; padding: 24px; border-radius: 22px; background: linear-gradient(135deg, rgba(0,175,255,0.08), rgba(255,0,255,0.06)); border: 1px solid rgba(255,255,255,0.1); color: #f8fcff; min-height: 160px; display: flex; align-items: center; position: relative; z-index: 1; }
+        .update-ticker .quote { display: block; font-size: 1rem; line-height: 1.8; max-width: 100%; }
+        .status-meta { margin-top: 14px; color: #a4ffd2; font-size: 0.95rem; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; position: relative; z-index: 1; }
+        .status-meta span { font-family: 'Orbitron'; color: #7cffb2; }
+        .live-stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+        .live-stat { border-radius: 22px; background: rgba(255,255,255,0.05); border: 1px solid rgba(91,149,255,0.12); padding: 22px; min-height: 130px; display: flex; flex-direction: column; justify-content: space-between; }
+        .live-stat strong { display: block; font-family: 'Orbitron'; font-size: 2rem; color: #fff; }
+        .live-stat small { display: block; color: #98d2ff; margin-top: 10px; line-height: 1.5; }
+        @media(max-width: 992px) { .status-card { grid-template-columns: 1fr; } .status-right { order: 2; } .live-stats-grid { grid-template-columns: 1fr; } }
+
+        .counter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin-bottom: 45px; }
+        .counter-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(0,255,136,0.18); border-radius: 24px; padding: 30px; text-align: center; backdrop-filter: blur(18px); transition: transform 0.4s, box-shadow 0.4s; }
+        .counter-card:hover { transform: translateY(-8px); box-shadow: 0 25px 60px rgba(0,255,136,0.12); }
+        .counter-number { font-family: 'Orbitron'; font-size: 3rem; font-weight: 900; color: var(--green); margin-bottom: 12px; }
+        .counter-card p { font-size: 1rem; color: #d5f8d5; letter-spacing: 0.8px; }
+
+        .js-enabled section,
+        .js-enabled .service-card,
+        .js-enabled .course-card,
+        .js-enabled .blog-card,
+        .js-enabled .testimonial-card,
+        .js-enabled .team-card,
+        .js-enabled .gallery-item,
+        .js-enabled .status-card,
+        .js-enabled .counter-card {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .visible { opacity: 1 !important; transform: translateY(0) !important; }
         </style>
 </head>
 <body>
 
     <div id="loader"><img src="images/bytezone logo.png" alt="Loading"></div>
+    <div id="marketLoader" class="market-loader" style="display:none;"><div class="market-loader-content"><img src="images/bytezone logo.png" alt="ByteZoneConnect" /><p>Loading ByteZoneConnect Market...</p></div></div>
     <a href="https://wa.me/265988367358" class="whatsapp-float" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
 
     <nav>
         <div class="container nav-container">
-            <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i> Menu</button>
-            
-            <a href="#home" class="logo">
-                <img src="images/bytezone logo.png" alt="ByteZoneConnect Logo">
-                <span>Byte</span><span>Zone</span><span>CONNECT</span>
-            </a>
+            <div class="nav-left">
+                <a href="#home" class="nav-brand">
+                    <img src="images/bytezone logo.png" alt="ByteZoneConnect" class="nav-brand-logo">
+                    <div class="nav-brand-text">
+                        <span class="brand-line-one"><strong>Byte</strong><strong>Zone</strong></span>
+                        <span class="brand-line-two">Connect</span>
+                    </div>
+                </a>
+                <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
+                <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i> Menu</button>
+                <button class="btn btn-small nav-market-btn" onclick="openMarket()"><i class="fa-solid fa-store"></i> MARKET</button>
+                <button class="btn btn-small btn-signup" onclick="openSignupModal()">SIGN UP</button>
+            </div>
 
             <div class="nav-right">
-                <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
-                <div class="visitor-box">
-    <div class="visitor-label"><span id="visitorsIcon">👁</span><span id="visitorText">LIVE VISITORS</span></div>
-    <div id="visitorsValue">847</div>
-</div>
+                <button class="visitor-box" type="button" onclick="document.getElementById('liveUpdates').scrollIntoView({ behavior: 'smooth', block: 'start' })">
+                    <div class="visitor-label"><span id="visitorsIcon">👁</span><span id="visitorText">LIVE VISITORS</span></div>
+                    <div id="visitorsValue">847</div>
+                </button>
                 
                <div class="money-ticker">
     <div class="money-label">LIVE REVENUE</div>
@@ -141,20 +276,52 @@
             <li><a href="#blog" onclick="closeMenu()">Blog</a></li>
             <li><a href="#gallery" onclick="closeMenu()">Gallery</a></li>
             <li><a href="#team" onclick="closeMenu()">Our Team</a></li>
+            <li><a href="#faq" onclick="closeMenu()">FAQ</a></li>
             <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
         </ul>
     </nav>
 
     <section class="hero" id="home">
-        <div class="container">
+        <div class="container hero-top">
             <h1>BUILD THE FUTURE WITH <span>BYTEZONE</span></h1>
-            <p>ONE BYTE AT A TIME!! We Code. We Train. We Transform Businesses.</p>
+            <p class="hero-subtitle">Powering Malawi with <span id="heroKeyword">AI-Driven</span> systems.</p>
+            <p class="hero-description">ONE BYTE AT A TIME!! We Code. We Train. We Transform Businesses.</p>
+            <div class="hero-ribbon"><span>Trusted by Mzuzu businesses</span><span>Launch in 14 days • Secure cloud hosting • Local support</span></div>
+            <div class="scroll-hint" onclick="document.getElementById('inspire').scrollIntoView({ behavior: 'smooth', block: 'start' })"><span>Scroll for client stories</span><i class="fa-solid fa-arrow-down"></i></div>
             <div class="btn-group">
-                <a href="#courses" class="btn">JOIN ACADEMY <i class="fa-solid fa-graduation-cap"></i></a>
-                <a href="#contact" class="btn btn-red">LAUNCH PROJECT</a>
+                <a href="#courses" class="btn btn-academy">JOIN ACADEMY <i class="fa-solid fa-graduation-cap"></i></a>
+                <a href="#" onclick="openMarket(); return false;" class="btn btn-market">SHOP MARKET <i class="fa-solid fa-store"></i></a>
+                <a href="#" onclick="openSignupModal(); return false;" class="btn btn-signup">SIGN UP</a>
             </div>
         </div>
     </section>
+
+    <section id="liveUpdates">
+        <div class="container">
+            <h2 class="section-title">Live <span>Updates</span></h2>
+            <div class="status-card">
+                <div class="status-panel status-left">
+                    <div class="status-header"><span>AUTO REFRESH FEED</span><span class="live-label">LIVE MATRIX</span></div>
+                    <div id="matrixLayer" class="matrix-layer"></div>
+                    <div class="status-highlight"><p>Network pulses and visitor intelligence stream inside the ByteZone dashboard. This live matrix keeps the data vibe active while your team watches the feed refresh.</p></div>
+                </div>
+                <div class="status-panel status-right">
+                    <div class="update-card">
+                        <div class="status-header"><span>Latest system pulse</span><i class="fa-solid fa-bolt"></i></div>
+                        <div id="updateTicker" class="update-ticker">ByteZoneConnect is optimizing your experience...</div>
+                        <div class="status-meta">Next refresh in <span id="refreshCountdown">5</span>s</div>
+                    </div>
+                    <div class="live-stats-grid">
+                        <div class="live-stat"><strong>847</strong><small>Active visitors now</small></div>
+                        <div class="live-stat"><strong>+28%</strong><small>Weekly demand spike</small></div>
+                        <div class="live-stat"><strong>14d</strong><small>Fast launch timeline</small></div>
+                        <div class="live-stat"><strong>99.9%</strong><small>Uptime guarantee</small></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="services">
         <div class="container">
             <h2 class="section-title">Premium <span>Services</span></h2>
@@ -165,6 +332,45 @@
                 <div class="service-card"><img src="images/services1.jpeg"><i class="fa-solid fa-screwdriver-wrench" style="color:var(--pink)"></i><h3 style="color:var(--pink)" class="clickable-title" onclick="openService('it')">IT Support & CCTV</h3><div class="price-tag" style="color:var(--green)">From MWK 250,000</div><p>24/7 technical support and surveillance.</p></div>
                 <div class="service-card"><img src="images/image 5.jpeg"><i class="fa-solid fa-bullhorn" style="color:var(--yellow)"></i><h3 style="color:var(--yellow)" class="clickable-title" onclick="openService('marketing')">Digital Marketing</h3><div class="price-tag" style="color:var(--green)">MWK 459,000</div><p>Brand strategy and ad campaigns.</p></div>
                 <div class="service-card"><img src="images/clouds.png"><i class="fa-solid fa-cloud" style="color:var(--brown)"></i><h3 style="color:var(--brown)" class="clickable-title" onclick="openService('cloud')">Cloud & DevOps</h3><p>Scalable cloud hosting and automation.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="marketplace" style="display:none;">
+        <div class="container">
+            <div class="market-close-row"><button class="btn btn-small btn-outline" onclick="closeMarket()">Close Market</button></div>
+            <div class="market-header">
+                <div>
+                    <span class="eyebrow">BZC MARKET</span>
+                    <h2 class="section-title">Shop <span>ByteZone</span> Market</h2>
+                    <p class="market-lead">Discover premium laptops, laser printers, servers, smart door locks, gadgets, and office technology with easy checkout, trusted warranties, and local support.</p>
+                </div>
+                <div class="market-buttons">
+                    <button class="btn btn-green active" onclick="filterMarket('all', this)">All Products</button>
+                    <button class="btn btn-outline" onclick="filterMarket('laptop', this)">Laptops</button>
+                    <button class="btn btn-outline" onclick="filterMarket('printer', this)">Printers</button>
+                    <button class="btn btn-outline" onclick="filterMarket('security', this)">Security</button>
+                    <button class="btn btn-outline" onclick="filterMarket('server', this)">Servers</button>
+                </div>
+            </div>
+            <div class="market-toolbar">
+                <div class="search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="marketSearch" type="text" placeholder="Search laptops, printers, gadgets, servers..." oninput="renderMarketProducts()">
+                </div>
+                <div class="market-highlights">
+                    <div><strong>Fast Local Delivery</strong><span>Same-day pick-up in Mzuzu</span></div>
+                    <div><strong>Secure Checkout</strong><span>Airtel Money, PayChangu, Visa</span></div>
+                    <div><strong>1-Year Warranty</strong><span>Authorized service support</span></div>
+                </div>
+            </div>
+            <div class="market-grid" id="marketGrid"></div>
+            <div class="market-footer-card">
+                <div>
+                    <h3>Need help choosing the right tech?</h3>
+                    <p>Contact our BZC market team to compare laptops, printers, servers, and smart access systems with the right specs for your business.</p>
+                </div>
+                <button class="btn btn-red" onclick="openSignupModal()">GET MARKET UPDATES</button>
             </div>
         </div>
     </section>
@@ -183,9 +389,9 @@
         <div class="container">
             <h2 class="section-title">ByteZone <span>Academy</span></h2>
             <div class="courses-grid">
-                <div class="course-card"><h3 style="color:var(--blue)" class="clickable-title" onclick="openCourse('webdev')">Full Stack Web Dev</h3><p>HTML, CSS, JavaScript, React, Node.js</p><div class="course-price" style="color:var(--green)">MWK 255,000</div><a href="#" onclick="openForm()" class="btn">ENROLL NOW</a></div>
-                <div class="course-card"><h3 style="color:var(--purple)" class="clickable-title" onclick="openCourse('mobile')">Mobile App Development</h3><p>Flutter, Firebase, API Integration</p><div class="course-price" style="color:var(--green)">MWK 500,000</div><a href="#" onclick="openForm()" class="btn">ENROLL NOW</a></div>
-                <div class="course-card"><h3 style="color:var(--pink)" class="clickable-title" onclick="openCourse('uiux')">UI/UX & Digital Marketing</h3><p>Figma, Photoshop, Facebook Ads, SEO</p><div class="course-price" style="color:var(--green)">MWK 459,000</div><a href="#" onclick="openForm()" class="btn">ENROLL NOW</a></div>
+                <div class="course-card"><h3 style="color:var(--blue)" class="clickable-title" onclick="openCourse('webdev')">Full Stack Web Dev</h3><p>HTML, CSS, JavaScript, React, Node.js</p><div class="course-price" style="color:var(--green)">MWK 255,000</div><a href="#" onclick="openForm()" class="btn btn-enroll">ENROLL NOW</a></div>
+                <div class="course-card"><h3 style="color:var(--purple)" class="clickable-title" onclick="openCourse('mobile')">Mobile App Development</h3><p>Flutter, Firebase, API Integration</p><div class="course-price" style="color:var(--green)">MWK 500,000</div><a href="#" onclick="openForm()" class="btn btn-enroll">ENROLL NOW</a></div>
+                <div class="course-card"><h3 style="color:var(--pink)" class="clickable-title" onclick="openCourse('uiux')">UI/UX & Digital Marketing</h3><p>Figma, Photoshop, Facebook Ads, SEO</p><div class="course-price" style="color:var(--green)">MWK 459,000</div><a href="#" onclick="openForm()" class="btn btn-enroll">ENROLL NOW</a></div>
             </div>
         </div>
     </section>
@@ -228,11 +434,27 @@
     <section id="gallery">
         <div class="container">
             <h2 class="section-title">Our <span>Gallery</span></h2>
-            <div class="gallery-grid">
-                <div class="gallery-item"><img src="images/hero.jpg"></div><div class="gallery-item"><img src="images/hero2.jpeg"></div>
-                <div class="gallery-item"><img src="images/image 1.jpeg"></div><div class="gallery-item"><img src="images/image 2.jpeg"></div>
-                <div class="gallery-item"><img src="images/image 3.jpeg"></div><div class="gallery-item"><img src="images/image 4.jpeg"></div>
-                <div class="gallery-item"><img src="images/image 5.jpeg"></div><div class="gallery-item"><img src="images/image 6.jpeg"></div>
+            <div class="gallery-marquee">
+                <div class="gallery-track">
+                    <div class="gallery-item"><img src="images/hero.jpg"></div>
+                    <div class="gallery-item"><img src="images/hero2.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 1.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 2.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 3.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 4.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 5.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 6.jpeg"></div>
+                </div>
+                <div class="gallery-track second">
+                    <div class="gallery-item"><img src="images/hero.jpg"></div>
+                    <div class="gallery-item"><img src="images/hero2.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 1.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 2.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 3.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 4.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 5.jpeg"></div>
+                    <div class="gallery-item"><img src="images/image 6.jpeg"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -241,6 +463,12 @@
         <canvas id="circuitCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;"></canvas>
         <div class="container" style="position:relative; z-index:2;">
             <h2 class="section-title">Our <span>Impact</span></h2>
+            <div class="counter-grid">
+                <div class="counter-card"><div class="counter-number" data-target="120">0</div><p>Websites Delivered</p></div>
+                <div class="counter-card"><div class="counter-number" data-target="950">0</div><p>Monthly Active Users</p></div>
+                <div class="counter-card"><div class="counter-number" data-target="180">0</div><p>Students Trained</p></div>
+                <div class="counter-card"><div class="counter-number" data-target="45">0</div><p>Enterprise Clients</p></div>
+            </div>
             <div class="chart-container"><canvas id="impactChart"></canvas></div>
         </div>
     </section>
@@ -248,10 +476,23 @@
     <section id="testimonials">
         <div class="container">
             <h2 class="section-title">Client <span>Testimonials</span></h2>
-            <div class="testimonial-grid">
-                <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"ByteZone transformed our business with a website that actually converts."</p><h4 style="color:var(--green)">- Chimwemwe K, CEO</h4></div>
-                <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"The training was hands-on. Got my first dev job in 2 months."</p><h4 style="color:var(--blue)">- Grace M, Developer</h4></div>
-                <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"Professional and world-class support. Highly recommended!"</p><h4 style="color:var(--purple)">- John D, Business Owner</h4></div>
+            <div class="testimonials-marquee">
+                <div class="testimonial-track">
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"ByteZone made our digital store look premium and brought real foot traffic to Shopwise Mzuzu."</p><h4 style="color:var(--green)">- Lumbani, Shopwise Mzuzu</h4></div>
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"Our hardware business doubled online inquiries after the new website launch."</p><h4 style="color:var(--blue)">- Gabriel Hardware, Mzuzu</h4></div>
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"Shella Auto-Parts got a cleaner, faster site that helped customers book parts on WhatsApp instantly."</p><h4 style="color:var(--pink)">- Shella Auto-Parts, Mzuzu</h4></div>
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"The team delivered fast, clear updates and helped us move from manual records to digital orders."</p><h4 style="color:var(--green)">- Sana Cash n Carry, Mzuzu</h4></div>
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"Thanks to ByteZone, Hope Investments attracted new clients with a sharp digital showcase."</p><h4 style="color:var(--blue)">- Hope Investments, Mzuzu</h4></div>
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"ByteZone’s support and speed made our launch effortless. We now serve customers every hour."</p><h4 style="color:var(--purple)">- Hanghang Shops, Mzuzu</h4></div>
+                </div>
+                <div class="testimonial-track">
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"ByteZone made our digital store look premium and brought real foot traffic to Shopwise Mzuzu."</p><h4 style="color:var(--green)">- Lumbani, Shopwise Mzuzu</h4></div>
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"Our hardware business doubled online inquiries after the new website launch."</p><h4 style="color:var(--blue)">- Gabriel Hardware, Mzuzu</h4></div>
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"Shella Auto-Parts got a cleaner, faster site that helped customers book parts on WhatsApp instantly."</p><h4 style="color:var(--pink)">- Shella Auto-Parts, Mzuzu</h4></div>
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"The team delivered fast, clear updates and helped us move from manual records to digital orders."</p><h4 style="color:var(--green)">- Sana Cash n Carry, Mzuzu</h4></div>
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"Thanks to ByteZone, Hope Investments attracted new clients with a sharp digital showcase."</p><h4 style="color:var(--blue)">- Hope Investments, Mzuzu</h4></div>
+                    <div class="testimonial-card"><div class="stars"><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><p>"ByteZone’s support and speed made our launch effortless. We now serve customers every hour."</p><h4 style="color:var(--purple)">- Hanghang Shops, Mzuzu</h4></div>
+                </div>
             </div>
         </div>
     </section>
@@ -260,13 +501,41 @@
         <div class="container">
             <h2 class="section-title">Meet The <span>Team</span></h2>
             <div class="team-grid">
-                <div class="team-card"><div class="team-img"><img src="images/gomes-avirgo.jpeg" alt="Gomes Avirgo"></div><h3>Gomes Avirgo</h3><p>Founder & CEO</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/ishmael-joseph.jpeg" alt="Ishmael Joseph"></div><h3>Ishmael Joseph</h3><p>Chief Technology Officer</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/phyllis-chawinga.jpeg" alt="Phyllis Chawinga"></div><h3>Phyllis Chawinga</h3><p>Lead Web Developer</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/gracius-kaomba.jpeg" alt="Gracius Kaomba"></div><h3>Gracius Kaomba</h3><p>Creative Director</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/brave-mphande.jpeg" alt="Brave Mphande"></div><h3>Brave Mphande</h3><p>Sales Manager</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/john-daka.jpeg" alt="John Daka"></div><h3>John Daka</h3><p>Marketing Lead</p></div>
-                <div class="team-card"><div class="team-img"><img src="images/mary-tembo.jpeg" alt="Mary Tembo"></div><h3>Mary Tembo</h3><p>IT Support Manager</p></div>
+                <div class="team-card"><div class="team-img"><img src="images/gomes-avirgo.jpeg" alt="Gomes Avirgo"></div><div class="team-info"><h3>Gomes Avirgo</h3><p>Founder & CEO</p></div></div>
+                <div class="team-card"><div class="team-img"><img src="images/ishmael-joseph.jpeg" alt="Ishmael Joseph"></div><div class="team-info"><h3>Ishmael Joseph</h3><p>Chief Technology Officer</p></div></div>
+                <div class="team-card"><div class="team-img"><img src="images/phyllis-chawinga.jpeg" alt="Phyllis Chawinga"></div><div class="team-info"><h3>Phyllis Chawinga</h3><p>Lead Web Developer</p></div></div>
+                <div class="team-card"><div class="team-img"><img src="images/gracius-kaomba.jpeg" alt="Gracius Kaomba"></div><div class="team-info"><h3>Gracius Kaomba</h3><p>Creative Director</p></div></div>
+                <div class="team-card"><div class="team-img"><img src="images/brave-mphande.jpeg" alt="Brave Mphande"></div><div class="team-info"><h3>Brave Mphande</h3><p>Sales Manager</p></div></div>
+                <div class="team-card"><div class="team-img"><img src="images/john-daka.jpeg" alt="John Daka"></div><div class="team-info"><h3>John Daka</h3><p>Marketing Lead</p></div></div>
+                <div class="team-card"><div class="team-img"><img src="images/mary-tembo.jpeg" alt="Mary Tembo"></div><div class="team-info"><h3>Mary Tembo</h3><p>IT Support Manager</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently <span>Asked Questions</span></h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>How fast can my website go live?</h3>
+                    <p>Most standard business websites launch within 10–14 days after we agree on design, content, and payment details.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Do you provide training after development?</h3>
+                    <p>Yes. Every project includes handover training so your team can manage updates, content, and basic analytics.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can I add payment systems like Airtel Money?</h3>
+                    <p>Absolutely. We integrate local payment gateways, mobile money, and point-of-sale systems for Malawi businesses.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What support do I get after the website is live?</h3>
+                    <p>ByteZoneConnect offers 30-day support plus optional maintenance packages for updates, security, and hosting.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Do you build mobile apps from the same team?</h3>
+                    <p>Yes. Our developers build mobile apps and backend systems that connect seamlessly with websites and cloud platforms.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -318,22 +587,84 @@
  .inspire-card:hover { animation: inspireHover 2s ease-in-out infinite; box-shadow: 0 0 50px var(--pink); border-color: var(--green); }
  .price-tag { font-size: 1.9rem; font-weight: 900; margin: 15px 0; font-family: 'Orbitron'; }
  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
- .team-card { background: var(--glass); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; text-align: center; border: 1px solid rgba(0,255,136,0.2); transition: 0.4s; }
- .team-card:hover { transform: translateY(-10px); border-color: var(--green); box-shadow: 0 10px 40px rgba(0,255,136,0.3); }
+ .team-card { background: var(--glass); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; text-align: center; border: 1px solid rgba(0,255,136,0.2); transition: border-color 0.4s, box-shadow 0.4s; animation: zoomPulse 6s ease-in-out infinite alternate; }
+ .team-card:hover { border-color: var(--green); box-shadow: 0 10px 40px rgba(0,255,136,0.3); }
  .team-img { width: 150px; height: 150px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden; border: 3px solid var(--green); }
  .team-img img { width: 100%; height: 100%; object-fit: cover; }
- .team-card h3 { font-family: 'Orbitron'; font-size: 1.4rem; margin-bottom: 5px; color: var(--green); }
- .team-card p { color: var(--blue); font-weight: 600; }
+ .team-info { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 10px; margin-top: 15px; }
+ .team-info h3 { font-family: 'Orbitron'; font-size: 1.4rem; justify-self: end; text-align: right; color: var(--green); margin: 0; }
+ .team-info p { color: var(--blue); font-weight: 600; justify-self: start; text-align: left; margin: 0; }
+ @keyframes zoomPulse { from { transform: scale(1); } to { transform: scale(1.02); } }
  .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
  .course-card { background: var(--glass); backdrop-filter: blur(10px); padding: 45px 35px; border-radius: 20px; border: 1px solid rgba(0,175,255,0.3); transition: 0.4s; }
  .course-card:hover { transform: translateY(-10px); border-color: var(--green); box-shadow: 0 15px 50px rgba(0,255,136,0.3); }
  .course-price { font-size: 2.6rem; font-weight: 900; margin: 20px 0; font-family: 'Orbitron'; }
- .blog-grid,.gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
- .blog-card,.gallery-item { background: var(--glass); border-radius: 20px; overflow: hidden; border: 1px solid rgba(0,255,136,0.2); transition: 0.4s; }
- .blog-card:hover,.gallery-item:hover { transform: translateY(-10px); box-shadow: 0 15px 50px rgba(0,255,136,0.3); }
- .blog-card img,.gallery-item img { width: 100%; height: 240px; object-fit: cover; }
+ .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+ .gallery-marquee { overflow: hidden; position: relative; margin-top: 30px; padding: 20px 0; border-radius: 24px; background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.15); }
+ .gallery-track { display: flex; gap: 25px; width: max-content; animation: marqueeRight 30s linear infinite; }
+ .gallery-track.second { position: absolute; top: 0; left: 0; animation-delay: 15s; }
+ .gallery-item { flex: 0 0 auto; border-radius: 22px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.18); transition: transform 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease; }
+ .gallery-item img { display: block; width: 280px; height: 190px; object-fit: cover; transition: transform 0.5s ease, filter 0.5s ease; }
+ .gallery-item:hover { transform: translateY(-8px); box-shadow: 0 18px 40px rgba(0,255,136,0.28); }
+ .gallery-item:hover img { filter: drop-shadow(0 0 25px rgba(0,255,136,0.35)); transform: scale(1.03); }
+ @keyframes marqueeRight { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+ .team-info { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-top: 15px; }
+ .team-info h3 { font-family: 'Orbitron'; font-size: 1.4rem; text-align: right; color: var(--green); margin: 0; animation: slideRight 4s ease-in-out infinite alternate; }
+ .team-info p { color: var(--blue); font-weight: 600; text-align: left; margin: 0; flex: 1; }
+ @keyframes slideRight { from { transform: translateX(0); } to { transform: translateX(12px); } }
+ .blog-card { background: var(--glass); border-radius: 20px; overflow: hidden; border: 1px solid rgba(0,255,136,0.2); transition: 0.4s; }
+ .blog-card:hover { transform: translateY(-10px); box-shadow: 0 15px 50px rgba(0,255,136,0.3); }
+ .blog-card img { width: 100%; height: 240px; object-fit: cover; }
  .blog-content { padding: 30px; }
  .chart-container { max-width: 900px; margin: 0 auto; background: var(--glass); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; border: 1px solid rgba(0,255,136,0.2); }
+ .btn-small { padding: 12px 18px; font-size: 0.9rem; border-radius: 12px; background: rgba(0,255,136,0.08); color: var(--green); border: 1px solid rgba(0,255,136,0.4); margin-right: 12px; }
+ .btn-small:hover { background: var(--green); color: var(--dark); }
+ .btn-green { background: linear-gradient(135deg, rgba(0,255,136,0.95), rgba(0,175,255,0.95)); color: #07070D; border: 1px solid rgba(255,255,255,0.18); box-shadow: 0 18px 45px rgba(0,255,136,0.25); }
+ .btn-green:hover { box-shadow: 0 22px 55px rgba(0,255,136,0.35); }
+ .btn-red { background: linear-gradient(135deg, #FF9B3E, #FF5C8D); color: #07070D; border: 1px solid rgba(255,255,255,0.18); box-shadow: 0 18px 45px rgba(255,92,141,0.22); }
+ .btn-red:hover { box-shadow: 0 22px 55px rgba(255,92,141,0.35); }
+ .market-close-row { display: flex; justify-content: flex-end; margin-bottom: 25px; }
+ .market-empty { text-align: center; width: 100%; padding: 60px 20px; background: rgba(255,255,255,0.04); border-radius: 20px; border: 1px dashed rgba(255,255,255,0.12); color: #cfd8ff; }
+ .market-empty h3 { margin-bottom: 12px; font-size: 1.35rem; }
+ .market-empty p { color: rgba(255,255,255,0.75); }
+ .market-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 30px; flex-wrap: wrap; margin-bottom: 30px; }
+ .eyebrow { display: inline-block; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+ .market-lead { max-width: 780px; color: #d1d0ff; line-height: 1.8; margin-top: 12px; }
+ .market-buttons { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; }
+ .market-buttons button { background: rgba(255,255,255,0.05); color: #c4d7ff; border: 1px solid rgba(255,255,255,0.14); border-radius: 16px; padding: 10px 18px; transition: 0.3s; }
+ .market-buttons button:hover { background: rgba(91,149,255,0.16); color: #fff; }
+ .market-buttons .active { background: linear-gradient(135deg, rgba(91,149,255,0.24), rgba(212,122,255,0.24)); color: #fff; border-color: rgba(255,255,255,0.22); }
+ .market-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 25px; flex-wrap: wrap; margin-bottom: 30px; }
+ .search-wrap { flex: 1; min-width: 320px; position: relative; }
+ .search-wrap i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.7); }
+ .search-wrap input { width: 100%; padding: 18px 18px 18px 50px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.05); color: white; }
+ .search-wrap input::placeholder { color: rgba(255,255,255,0.65); }
+ .market-highlights { display: flex; gap: 20px; flex-wrap: wrap; justify-content: flex-end; min-width: 320px; }
+ .market-highlights div { background: radial-gradient(circle at top left, rgba(0,175,255,0.15), rgba(255,0,255,0.15)), rgba(7,12,35,0.9); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 18px 22px; min-width: 190px; }
+ .market-highlights strong { display: block; color: var(--pink); margin-bottom: 6px; }
+ .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+ .market-card { background: linear-gradient(180deg, rgba(7,12,35,0.96), rgba(20,10,65,0.98)); border: 1px solid rgba(142,80,255,0.22); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.35s ease, box-shadow 0.35s ease; }
+ .market-card:hover { transform: translateY(-8px); box-shadow: 0 20px 70px rgba(142,80,255,0.24); }
+ .market-card img { width: 100%; height: 220px; object-fit: cover; filter: saturate(1.05) brightness(0.95); }
+ .market-card-body { padding: 25px; display: flex; flex-direction: column; gap: 16px; }
+ .market-card-body h3 { margin: 0; font-size: 1.55rem; color: #f6efff; }
+ .market-card-body p { margin: 0; color: #d5cffb; line-height: 1.65; }
+ .product-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: rgba(255,255,255,0.78); font-size: 0.95rem; }
+ .product-meta span { display: inline-flex; align-items: center; gap: 6px; }
+ .market-badge { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 999px; background: rgba(212,122,255,0.18); color: #ffb5ff; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; }
+ .product-features { margin: 0; padding-left: 16px; color: rgba(255,255,255,0.75); }
+ .product-features li { margin-bottom: 8px; }
+ .market-cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+ .market-cta .btn { flex: 1; min-width: 160px; }
+ .market-footer-card { background: rgba(0,255,136,0.06); border: 1px solid rgba(0,255,136,0.16); border-radius: 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 28px; margin-top: 35px; }
+ .market-footer-card h3 { margin: 0; color: white; font-size: 1.5rem; }
+ .market-footer-card p { margin: 8px 0 0; color: #c4f8d4; }
+ .signup-modal-content { max-width: 520px; }
+ .signup-modal-content form .form-group input { margin-bottom: 20px; }
+ .modal-content h2 { margin-top: 0; }
+ @media(max-width: 992px) { .market-toolbar { flex-direction: column; align-items: stretch; } .market-highlights { justify-content: flex-start; } }
+ @media(max-width: 768px) { .market-header { flex-direction: column; } .market-buttons { justify-content: center; } .market-footer-card { flex-direction: column; align-items: stretch; } }
+
  .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
  .testimonial-card { background: var(--glass); backdrop-filter: blur(10px); padding: 35px; border-radius: 20px; border-left: 4px solid var(--green); transition: 0.4s; }
  .testimonial-card:hover { transform: translateY(-10px); border-color: var(--blue); box-shadow: 0 10px 40px rgba(0,175,255,0.3); }
@@ -386,6 +717,21 @@
     </form>
     <p id="successMsg" style="display:none; color:#00ff88; text-align:center;">✅ Application Sent! We'll contact you on WhatsApp.</p>
   </div>
+</div>
+
+<div id="signupModal" class="modal">
+    <div class="modal-content signup-modal-content">
+        <span class="close" onclick="closeSignupModal()">&times;</span>
+        <h2>Join ByteZoneConnect</h2>
+        <p>Sign up with your email to receive exclusive market launches, gadget drops, pricing alerts, and local deals from BZC.</p>
+        <form id="signupForm" action="https://formspree.io/f/info@bytezoneconnectmw.com" method="POST">
+            <div class="form-group"><input type="email" name="email" placeholder="Email Address" required></div>
+            <input type="hidden" name="form-name" value="ByteZoneConnect Signup">
+            <input type="hidden" name="_subject" value="New BZC Email Signup">
+            <button type="submit" class="btn" style="width:100%; border:none;">SIGN UP WITH EMAIL</button>
+        </form>
+        <p id="signupSuccess" style="display:none; color:#00ff88; text-align:center; margin-top:20px;">Thank you! Your signup is being sent to ByteZoneConnect.</p>
+    </div>
 </div>
 
 <!-- SERVICE MODAL -->
@@ -503,12 +849,12 @@
 
     // DATA FOR MODALS
     const services = {
-      it: { title: "IT Support & CCTV", desc: "<p><b>What is it?</b><br>24/7 technical support for computers, networks, servers + CCTV installation and monitoring.</p><p><b>Why Important?</b><br>Keep your business running with zero downtime. Prevent theft and monitor staff.</p><ul><li>Hardware & Software Troubleshooting</li><li>Network Setup & Maintenance</li><li>CCTV Installation with Remote Access</li><li>Data Backup & Recovery</li></ul><p><b>Perfect for:</b> Schools, Banks, Shops, Offices in Malawi</p>" },
-      cloud: { title: "Cloud & DevOps", desc: "<p><b>What is it?</b><br>Host your apps on AWS/Google Cloud + Automate deployments with CI/CD.</p><p><b>Why Important?</b><br>Scale infinitely, pay only for what you use. Deploy updates in minutes not days.</p><ul><li>Cloud Migration: AWS, Azure, Google Cloud</li><li>Docker & Kubernetes Containerization</li><li>CI/CD Pipelines with GitHub Actions</li><li>24/7 Server Monitoring & Security</li></ul><p><b>Result:</b> 70% less server costs, 99.9% uptime</p>" },
-      web: { title: "Web Development", desc: "<p>Custom websites that convert visitors to customers. E-commerce, Corporate, Portfolios.</p><ul><li>React, Next.js, Node.js</li><li>Mobile Responsive Design</li><li>SEO Optimized</li><li>Payment Integration: Airtel Money, PayChangu</li></ul>" },
-      software: { title: "Software Solutions", desc: "<p>Custom ERP, POS, School Management Systems built for Malawi businesses.</p><ul><li>Inventory Management</li><li>Accounting & Payroll</li><li>Student Records & Results</li></ul>" },
-      network: { title: "Network Infrastructure", desc: "<p>Secure LAN, WAN, Fiber setup for offices and schools.</p><ul><li>Cisco & MikroTik Configuration</li><li>VPN & Firewall Setup</li><li>WiFi Hotspot Management</li></ul>" },
-      marketing: { title: "Digital Marketing", desc: "<p>We make people know you. Facebook Ads, Google Ads, Branding.</p><ul><li>Social Media Management</li><li>SEO & Google Ranking</li><li>Brand Identity Design</li></ul>" }
+      it: { title: "IT Support & CCTV", desc: "<p><b>What is it?</b><br>24/7 technical support for computers, networks, servers, and CCTV installation with remote access.</p><p><b>What you get:</b></p><ul><li>Proactive hardware & software maintenance</li><li>Network health checks and firewall protection</li><li>CCTV video monitoring, recording, and mobile alerts</li><li>Backup & disaster recovery planning</li><li>Helpdesk support for staff and customers</li></ul><p><b>Ideal for:</b> schools, clinics, banks, shops, and offices in Mzuzu who need uptime and security.</p>" },
+      cloud: { title: "Cloud & DevOps", desc: "<p><b>What is it?</b><br>Scalable cloud hosting, automation pipelines, and secure infrastructure for growing businesses.</p><p><b>Why it matters:</b></p><ul><li>Cloud migration to AWS, Azure, or Google Cloud</li><li>Containerization with Docker + Kubernetes</li><li>Automated deployments via CI/CD pipelines</li><li>Infrastructure as code and monitoring alerts</li><li>Secure backups, failover, and auto-scaling</li></ul><p><b>Result:</b> faster releases, lower hosting costs, and trusted performance.</p>" },
+      web: { title: "Web Development", desc: "<p><b>What is it?</b><br>Conversion-focused websites built to sell, educate, and generate leads.</p><p><b>Included:</b></p><ul><li>Responsive UI for desktop and mobile</li><li>Fast performance, SEO, and analytics setup</li><li>Custom CMS or admin dashboard</li><li>Payment gateway integration with Airtel Money and PayChangu</li><li>Local business listings and Google Maps integration</li></ul><p><b>Best for:</b> retail, services, education, and professional brands in Malawi.</p>" },
+      software: { title: "Software Solutions", desc: "<p><b>What is it?</b><br>Custom systems for school management, inventory, payroll, and point-of-sale.</p><p><b>What we build:</b></p><ul><li>ERP for finance and operations</li><li>POS systems for retail and hospitality</li><li>Student portals, attendance, and results</li><li>Inventory, procurement, and supplier tracking</li><li>Reporting dashboards for managers</li></ul><p><b>Outcome:</b> fewer errors, faster decisions, and better control.</p>" },
+      network: { title: "Network Infrastructure", desc: "<p><b>What is it?</b><br>Reliable local network design for offices, schools, and retail sites.</p><p><b>Capabilities:</b></p><ul><li>Cisco, MikroTik, and fiber cabling setup</li><li>VPN for secure remote access</li><li>Firewall and WiFi hotspot management</li><li>Bandwidth optimization and guest networks</li></ul><p><b>Result:</b> fast, stable connectivity across your team and customers.</p>" },
+      marketing: { title: "Digital Marketing", desc: "<p><b>What is it?</b><br>Growth marketing designed to get more leads, customers, and visibility.</p><p><b>Included:</b></p><ul><li>Social media strategy and ads</li><li>Search engine optimization (SEO)</li><li>Google Business and local listings</li><li>Brand identity and messaging</li><li>Performance reporting and campaign optimization</li></ul><p><b>Result:</b> stronger brand awareness, better sales, and measurable ROI.</p>" }
     };
 
     const courses = {
@@ -518,7 +864,7 @@
     };
 
     const projects = {
-      ecommerce: { title: "E-Commerce Platform", desc: "<img src='images/e-commerce.png' style='width:100%; border-radius:15px; margin:20px 0;'><p><b>Client:</b> Fashion Boutique in Lilongwe</p><p><b>Challenge:</b> No online sales, only walk-in customers.</p><p><b>Solution:</b> Full e-commerce site with PayChangu + Airtel Money, Product catalog, Admin dashboard, WhatsApp order notifications.</p><p><b>Tech:</b> React, Node.js, MongoDB, PayChangu API</p><p style='color:var(--green); font-weight:bold; font-size:1.2rem;'>Result: 40% increase in sales in 2 months. 500+ online orders.</p>" },
+      ecommerce: { title: "E-Commerce Platform", desc: "<img src='images/e-commerce.png' style='width:100%; border-radius:15px; margin:20px 0;'><p><b>Client:</b> Fashion Boutique in Lilongwe</p><p><b>Challenge:</b> No online sales, only walk-in customers.</p><p><b>Solution:</b> Full e-commerce site with PayChangu + Airtel Money, product catalogue, inventory tracking, admin dashboard, and WhatsApp order notifications.</p><p><b>Tech:</b> React, Node.js, MongoDB, PayChangu API</p><p style='color:var(--green); font-weight:bold; font-size:1.2rem;'>Result: 40% increase in sales in 2 months. 500+ online orders.</p><h3 style='margin-top:20px; color:var(--blue);'>Case Studies in Mzuzu</h3><ul><li><b>Shopwise:</b> Streamlined store menu, mobile ordering, and digital receipts.</li><li><b>Sana Cash n Carry:</b> Integrated online catalog with fast pickup options.</li><li><b>Hope Investments:</b> High-conversion product showcase and contact automation.</li><li><b>Hanghang Shops:</b> Local catalogue with multi-store support and faster checkout.</li></ul><p style='color:var(--green); font-weight:bold; font-size:1.1rem;'>Each site was built for local Malawi payment flows and customer convenience.</p>" },
       school: { title: "School ERP System", desc: "<img src='images/school.jpeg' style='width:100%; border-radius:15px; margin:20px 0;'><p><b>Client:</b> Private Secondary School, Mzuzu</p><p><b>Challenge:</b> Manual records, fees tracking taking weeks.</p><p><b>Solution:</b> Full ERP: Student records, Fees tracking, Results portal, Attendance, Teacher portal, Parent SMS alerts.</p><p><b>Tech:</b> React, Node.js, MongoDB <a href='https://github.com/Meleksebri/school-management-system.git' target='_blank' style='color:var(--green)'>View on GitHub <i class='fa-brands fa-github'></i></a></p><p style='color:var(--green); font-weight:bold; font-size:1.2rem;'>Result: Cut admin work by 60%. Fees collection up 35%.</p>" },
       restaurant: { title: "Restaurant App", desc: "<img src='images/restaurant.jpeg' style='width:100%; border-radius:15px; margin:20px 0;'><p><b>Client:</b> Food Delivery Startup</p><p><b>Challenge:</b> Phone orders only, no tracking.</p><p><b>Solution:</b> Mobile app + Admin dashboard. Online ordering, Cart, Online payments, Rider GPS tracking, Customer notifications.</p><p><b>Tech:</b> Flutter, Firebase, Google Maps API</p><p style='color:var(--green); font-weight:bold; font-size:1.2rem;'>Result: 120+ orders in first month. Delivery time cut by 50%.</p>" }
     };
@@ -555,10 +901,13 @@
     // CHART.JS
     const ctx = document.getElementById('impactChart');
     if(ctx){
+      const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0, 'rgba(91,149,255,0.8)');
+      gradient.addColorStop(1, 'rgba(212,122,255,0.4)');
       new Chart(ctx, {
           type: 'bar',
-          data: { labels: ['Websites', 'Mobile Apps', 'Students Trained', 'Enterprise Clients'], datasets: [{ label: 'Projects Completed', data: [24, 12, 180, 45], backgroundColor: ['#E10600', '#00FF88', '#00AFFF', '#FF00FF'], borderRadius: 12 }] },
-          options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } }}
+          data: { labels: ['Websites', 'Mobile Apps', 'Students Trained', 'Enterprise Clients'], datasets: [{ label: 'Impact Score', data: [77, 48, 35, 120], backgroundColor: ['#00FF88', '#00AFFF', '#FF00FF', '#FFD700'], borderRadius: 20, borderSkipped: false, borderWidth: 0 }] },
+          options: { responsive: true, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(10,10,30,0.95)', titleColor: '#fff', bodyColor: '#dcdcff', borderColor: 'rgba(255,255,255,0.12)', borderWidth: 1 } }, scales: { x: { ticks: { color: '#c4d7ff', font: { family: 'Rajdhani', size: 13 } }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: '#a8d0ff', font: { family: 'Rajdhani', size: 13 } }, grid: { color: 'rgba(255,255,255,0.08)' } } }}
       });
     }
 
@@ -591,6 +940,80 @@
         if (event.target.classList.contains('modal')) { event.target.style.display = "none"; }
     }
 
+    // ROTATING HERO KEYWORDS
+    document.body.classList.add('js-enabled');
+    const heroKeywords = ['AI-Driven', 'Cloud-Ready', 'Secure', 'Scalable', 'Fast'];
+    const heroKeywordEl = document.getElementById('heroKeyword');
+    let keywordIndex = 0;
+    setInterval(() => {
+        keywordIndex = (keywordIndex + 1) % heroKeywords.length;
+        heroKeywordEl.textContent = heroKeywords[keywordIndex];
+    }, 2600);
+
+    // LIVE UPDATE WIDGET
+    const liveMessages = [
+        { text: 'New tech training modules are rolling out every week.', class: 'font-a' },
+        { text: 'ByteZoneConnect servers are monitored 24/7.', class: 'font-b' },
+        { text: 'Industry-ready projects update automatically.', class: 'font-c' },
+        { text: 'Your next web launch can go live in 14 days.', class: 'font-d' },
+        { text: 'We keep your digital brand fresh and fast.', class: 'font-e' }
+    ];
+    const updateTicker = document.getElementById('updateTicker');
+    const refreshCountdown = document.getElementById('refreshCountdown');
+    let updateIndex = 0;
+    let refreshTimer = 5;
+    function refreshUpdateMessage() {
+        updateIndex = (updateIndex + 1) % liveMessages.length;
+        const message = liveMessages[updateIndex];
+        updateTicker.innerHTML = `<span class="quote ${message.class}">${message.text}</span>`;
+        refreshTimer = 5;
+    }
+    refreshUpdateMessage();
+    setInterval(() => {
+        refreshCountdown.textContent = refreshTimer;
+        refreshTimer = refreshTimer > 0 ? refreshTimer - 1 : 5;
+        if (refreshTimer === 5) refreshUpdateMessage();
+    }, 1000);
+
+    // COUNTERS ON SCROLL
+    const counters = document.querySelectorAll('.counter-number');
+    function animateCounters() {
+        counters.forEach(counter => {
+            const target = Number(counter.dataset.target);
+            let current = 0;
+            const step = Math.max(1, Math.floor(target / 60));
+            const interval = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(interval);
+                }
+                counter.textContent = current.toLocaleString();
+            }, 25);
+        });
+    }
+    const statsSection = document.getElementById('stats');
+    if (statsSection) {
+        const counterObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.disconnect();
+                }
+            });
+        }, { threshold: 0.35 });
+        counterObserver.observe(statsSection);
+    }
+
+    // SCROLL REVEAL
+    const revealItems = document.querySelectorAll('section, .service-card, .course-card, .blog-card, .testimonial-card, .team-card, .gallery-item, .status-card, .counter-card');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.15 });
+    revealItems.forEach(item => revealObserver.observe(item));
+
     // ENROLL POPUP
     function openForm() { document.getElementById('enrollPopup').style.display = 'flex'; }
     function closeForm() { document.getElementById('enrollPopup').style.display = 'none'; }
@@ -599,6 +1022,112 @@
       document.getElementById('successMsg').style.display = 'block';
       setTimeout(() => { closeForm(); document.getElementById('successMsg').style.display = 'none'; }, 3000);
     });
+
+    // BZC MARKET
+    const marketProducts = [
+      { id: 'p1', name: 'ByteZone ProBook 15', category: 'laptop', price: 'MWK 1,899,000', image: 'images/hero.jpg', label: 'Best Seller', description: '15.6" Intel Core i7, 16GB RAM, 512GB SSD, fingerprint login.', features: ['Fast startup', 'Full HD display', 'Business-grade security'], stock: 'In stock', warranty: '1 year warranty' },
+      { id: 'p2', name: 'BZC Workstation 17', category: 'laptop', price: 'MWK 2,799,000', image: 'images/hero2.jpeg', label: 'Recommended', description: '17.3" Ryzen 9, 32GB RAM, 1TB SSD, dedicated GPU.', features: ['Powerful multitasking', 'Extended battery', 'Office-ready'], stock: 'Limited stock', warranty: '1 year warranty' },
+      { id: 'p3', name: 'LaserPrint Ultra 5200', category: 'printer', price: 'MWK 1,499,000', image: 'images/image 1.jpeg', label: 'Fast Print', description: 'High-speed monochrome laser printer with wireless and USB connectivity.', features: ['6000 ppm', 'Mobile printing', 'Energy saver'], stock: 'In stock', warranty: '2 year warranty' },
+      { id: 'p4', name: 'SmartDoor FingerLock X', category: 'security', price: 'MWK 699,000', image: 'images/image 2.jpeg', label: 'Security Tech', description: 'Fingerprint access, PIN, key override and remote alerts.', features: ['Anti-tamper alarm', 'Audit logs', 'Weatherproof'], stock: 'In stock', warranty: '1 year warranty' },
+      { id: 'p5', name: 'ByteZone Rack Server S24', category: 'server', price: 'MWK 4,999,000', image: 'images/image 3.jpeg', label: 'Enterprise', description: 'Rack server with Xeon CPU, 64GB RAM, 2TB NVMe storage.', features: ['Redundant power', 'Remote management', 'Scalable'], stock: 'Pre-order', warranty: '3 year warranty' },
+      { id: 'p6', name: 'Gadget Hub Pack', category: 'accessory', price: 'MWK 339,000', image: 'images/image 4.jpeg', label: 'Bundle', description: 'Wireless mouse, keyboard, USB hub, and portable power bank.', features: ['Office essentials', 'Fast charging', 'Compact design'], stock: 'In stock', warranty: '6 month warranty' },
+      { id: 'p7', name: 'Smart Sensor Door Kit', category: 'security', price: 'MWK 499,000', image: 'images/image 5.jpeg', label: 'Home Secure', description: 'Motion detector, smart lock, and app notifications for doors.', features: ['Remote access', 'Battery backup', 'Easy install'], stock: 'In stock', warranty: '1 year warranty' },
+      { id: 'p8', name: 'ByteZone Mini Server', category: 'server', price: 'MWK 2,199,000', image: 'images/image 6.jpeg', label: 'Compact', description: 'Mini server for SMEs with 32GB RAM and 1TB SSD.', features: ['Low power', 'Quiet cooling', 'Ready for NAS'], stock: 'In stock', warranty: '2 year warranty' }
+    ];
+
+    let currentMarketFilter = 'all';
+    function filterMarket(category, button) {
+      currentMarketFilter = category;
+      document.querySelectorAll('.market-buttons button').forEach(btn => btn.classList.remove('active'));
+      if (button) button.classList.add('active');
+      renderMarketProducts();
+    }
+
+    function renderMarketProducts() {
+      const query = document.getElementById('marketSearch').value.toLowerCase();
+      const grid = document.getElementById('marketGrid');
+      grid.innerHTML = '';
+      const filtered = marketProducts.filter(product => {
+        const matchesCategory = currentMarketFilter === 'all' || product.category === currentMarketFilter;
+        const matchesSearch = product.name.toLowerCase().includes(query) || product.description.toLowerCase().includes(query) || product.category.toLowerCase().includes(query);
+        return matchesCategory && matchesSearch;
+      });
+      if (!filtered.length) {
+        grid.innerHTML = '<div class="market-empty"><h3>No products matched your search.</h3><p>Try another keyword or browse all categories.</p></div>';
+        return;
+      }
+      filtered.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'market-card';
+        card.innerHTML = `
+          <img src="${product.image}" alt="${product.name}">
+          <div class="market-card-body">
+            <div class="product-meta"><span class="market-badge">${product.label}</span><span>${product.category.toUpperCase()}</span></div>
+            <h3>${product.name}</h3>
+            <p>${product.description}</p>
+            <div class="product-meta"><span><i class='fa-solid fa-money-bill-wave'></i> ${product.price}</span><span><i class='fa-solid fa-box'></i> ${product.stock}</span></div>
+            <ul class="product-features">${product.features.map(feature => `<li>${feature}</li>`).join('')}</ul>
+            <div class="market-cta"><button class="btn btn-green" onclick="openSignupModal()">PRE-ORDER</button><button class="btn btn-outline" onclick="openSignupModal()">REQUEST QUOTE</button></div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function openMarket() {
+      const loader = document.getElementById('marketLoader');
+      const market = document.getElementById('marketplace');
+      market.style.display = 'none';
+      loader.style.display = 'flex';
+      setTimeout(() => {
+        loader.style.display = 'none';
+        market.style.display = 'block';
+        renderMarketProducts();
+        market.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 3000);
+    }
+    function closeMarket() { document.getElementById('marketplace').style.display = 'none'; }
+    function openSignupModal() { document.getElementById('signupModal').style.display = 'block'; }
+    function closeSignupModal() { document.getElementById('signupModal').style.display = 'none'; }
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      setTimeout(() => {
+        document.getElementById('signupSuccess').style.display = 'block';
+      }, 150);
+      setTimeout(() => {
+        closeSignupModal();
+        document.getElementById('signupSuccess').style.display = 'none';
+        document.getElementById('signupForm').reset();
+      }, 3200);
+    });
+
+    function initMatrixLayer() {
+      const matrixLayer = document.getElementById('matrixLayer');
+      if (!matrixLayer) return;
+      const glyphs = '0123456789ABCDEFXYZQWERTYUIOPASDFGHJKLZXCVBNM';
+      const rows = 7;
+      const cols = 64;
+      function getRandomChar() { return glyphs[Math.floor(Math.random() * glyphs.length)]; }
+      function getRandomColor() {
+        const colors = ['#4CEDFF','#75FF5F','#FFEB57','#FF8C00','#FF4D8D','#99A6FF'];
+        return colors[Math.floor(Math.random() * colors.length)];
+      }
+      function refreshMatrix() {
+        const phrase = ' GOMES AVIRGO  ';
+        let html = '';
+        for (let r = 0; r < rows; r++) {
+          let line = phrase.repeat(Math.ceil(cols / phrase.length)).substring(0, cols);
+          for (let c = 0; c < cols; c++) {
+            html += `<span style="color:${getRandomColor()}">${line[c] === ' ' ? '&nbsp;' : line[c]}</span>`;
+          }
+          html += '\n';
+        }
+        matrixLayer.innerHTML = html;
+        matrixLayer.style.textAlign = 'center';
+      }
+      refreshMatrix();
+      setInterval(refreshMatrix, 40);
+    }
+    document.addEventListener('DOMContentLoaded', () => { renderMarketProducts(); initMatrixLayer(); }); 
 </script>
 </body>
 </html>
