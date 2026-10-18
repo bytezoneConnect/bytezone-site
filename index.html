@@ -35,8 +35,9 @@
         nav, .nav-container, .nav-left, .nav-right { transition: none !important; }
         
         .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; line-height: 1; }
-        .nav-brand-logo { width: 120px; height: 120px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.32); box-shadow: 0 0 28px rgba(0,175,255,0.22); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
-        .nav-brand-logo:hover { transform: scale(1.08); box-shadow: 0 0 52px rgba(0,255,136,0.55), 0 0 28px rgba(91,149,255,0.32); border-color: rgba(0,255,136,0.65); }
+        .nav-brand { background: transparent; border: none; box-shadow: none; padding: 0; border-radius: 0; }
+        .nav-brand-logo { width: 120px; height: 120px; display: block; object-fit: contain; background: transparent; border: none; box-shadow: none; padding: 0; border-radius: 0; transition: transform 0.3s ease; }
+        .nav-brand-logo:hover { transform: scale(1.03); }
         .nav-brand-text { display: flex; flex-direction: column; line-height: 1.05; }
         .brand-line-one { display: block; font-family: 'Orbitron', sans-serif; font-size: 0.95rem; font-weight: 900; letter-spacing: 0.08em; }
         .brand-line-one strong:first-child { color: var(--green); margin-right: 4px; }
@@ -244,7 +245,6 @@
                 <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
                 <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i> Menu</button>
                 <button class="btn btn-small nav-market-btn" onclick="openMarket()"><i class="fa-solid fa-store"></i> MARKET</button>
-                <button class="btn btn-small btn-signup" onclick="openSignupModal()">SIGN UP</button>
             </div>
 
             <div class="nav-right">
@@ -724,10 +724,11 @@
         <span class="close" onclick="closeSignupModal()">&times;</span>
         <h2>Join ByteZoneConnect</h2>
         <p>Sign up with your email to receive exclusive market launches, gadget drops, pricing alerts, and local deals from BZC.</p>
-        <form id="signupForm" action="https://formspree.io/f/info@bytezoneconnectmw.com" method="POST">
+        <form id="signupForm" action="https://formsubmit.co/bytezoneconnect@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="New ByteZoneConnect Signup!">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://bytezoneconnectmw.netlify.app/thankyou.html">
             <div class="form-group"><input type="email" name="email" placeholder="Email Address" required></div>
-            <input type="hidden" name="form-name" value="ByteZoneConnect Signup">
-            <input type="hidden" name="_subject" value="New BZC Email Signup">
             <button type="submit" class="btn" style="width:100%; border:none;">SIGN UP WITH EMAIL</button>
         </form>
         <p id="signupSuccess" style="display:none; color:#00ff88; text-align:center; margin-top:20px;">Thank you! Your signup is being sent to ByteZoneConnect.</p>
