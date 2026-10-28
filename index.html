@@ -561,6 +561,94 @@
             </div>
         </div>
     </section>
+    <script>
+        const marketProducts = [
+          { id: 'laptop-1', name: 'Dell Latitude 5430', category: 'laptop', price: 'MWK 1,650,000', image: 'images/1.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i7 12th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours', '60-day layby accepted'] },
+          { id: 'laptop-2', name: 'Lenovo X1 Yoga G3', category: 'laptop', price: 'MWK 1,220,000', image: 'images/2.jpeg', label: 'Fairly used', description: '14-inch touchscreen, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Touchscreen, x360 convertible', 'Battery: 4-6 hours', '60-day layby accepted'] },
+          { id: 'laptop-3', name: 'Dell Latitude 7390', category: 'laptop', price: 'MWK 780,000', image: 'images/3.jpeg', label: 'Fairly used', description: '13-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
+          { id: 'laptop-4', name: 'HP 840 G7', category: 'laptop', price: 'MWK 1,340,000', image: 'images/4.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i5 10th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours', '60-day layby accepted'] },
+          { id: 'laptop-5', name: 'Dell Latitude 5420', category: 'laptop', price: 'MWK 1,230,000', image: 'images/5.jpeg', label: 'Fairly used', description: '14-inch Full HD display, Intel Core i5 11th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 6-8 hours'] },
+          { id: 'laptop-6', name: 'HP EliteBook 1040 G8', category: 'laptop', price: 'MWK 2,070,000', image: 'images/6.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i7 11th Gen, 16GB RAM, 512GB SSD.', features: ['Touchscreen, x360 convertible', 'Battery: 6-8 hours'] },
+          { id: 'laptop-7', name: 'Dell Latitude 7290', category: 'laptop', price: 'MWK 780,000', image: 'images/7.jpeg', label: 'Fairly used', description: '13-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
+          { id: 'laptop-8', name: 'Apple MacBook Air M1 (2020)', category: 'laptop', price: 'MWK 2,070,000', image: 'images/8.jpeg', label: 'Fairly used', description: '13-inch display, Apple M1 chip, 8GB RAM, 256GB SSD.', features: ['Battery: 3-5 hours'] },
+          { id: 'laptop-9', name: 'HP ProBook x360 11 EE G7', category: 'laptop', price: 'MWK 530,000', image: 'images/9.jpeg', label: 'Fairly used', description: '11-inch touchscreen, Intel Core m3, 4GB RAM, 200GB SSD.', features: ['Touchscreen, x360 convertible', 'Battery: 4-6 hours'] },
+          { id: 'laptop-10', name: 'HP 450 G6', category: 'laptop', price: 'MWK 1,080,000', image: 'images/10.jpeg', label: 'Fairly used', description: '15-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
+          { id: 'laptop-11', name: 'HP EliteBook 850 G6', category: 'laptop', price: 'MWK 1,260,000', image: 'images/11.jpeg', label: 'Fairly used', description: '15.6-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
+          { id: 'laptop-12', name: 'Dell Latitude 3120', category: 'laptop', price: 'MWK 600,000', image: 'images/12.jpeg', label: 'Fairly used', description: '11-inch touchscreen, Intel Pentium 10th Gen, 8GB RAM, 128GB storage.', features: ['Touchscreen, x360 convertible', 'Battery: 4-6 hours', '60-day layby accepted'] },
+          { id: 'laptop-13', name: 'Dell Latitude 7490', category: 'laptop', price: 'MWK 780,000', image: 'images/13.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
+          { id: 'laptop-14', name: 'Dell Latitude 7420', category: 'laptop', price: 'MWK 1,620,000', image: 'images/14.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i7 11th Gen, 16GB RAM, 256GB SSD.', features: ['Fingerprint reader', 'Battery: 4-6 hours'] },
+          { id: 'laptop-15', name: 'Microsoft Surface Laptop Go 2', category: 'laptop', price: 'MWK 1,020,000', image: 'images/15.jpeg', label: 'Fairly used', description: '12.4-inch touchscreen, Intel Core i5 10th Gen, 8GB RAM, 128GB SSD.', features: ['Touchscreen, super slim', 'Battery: 4-6 hours'] },
+          { id: 'server-r720xd', name: 'Dell PowerEdge R720xd', category: 'server', price: 'MWK 4,999,999', image: 'images/SERVER%20RACK%201.png', label: '2U rack server', description: 'Dell PowerEdge R720xd rack server in a 2U form factor.', features: ['Enterprise rack server', 'Price shown on product image'] },
+          { id: 'server-cabinet', name: 'Server Rack Cabinet', category: 'server', price: 'MWK 7,499,999', image: 'images/server%20rack%20cabinet.png', label: 'Server cabinet', description: 'Secure, high-capacity server rack cabinet for servers and networking equipment.', features: ['Secure design for equipment and data', 'Efficient cooling to maintain temperatures', 'Easy access for maintenance and management', 'Ideal for businesses, companies, and data centers'] }
+        ];
+
+        let currentMarketFilter = 'all';
+        function filterMarket(category, button) {
+          currentMarketFilter = category;
+          document.querySelectorAll('.market-buttons button').forEach(btn => {
+            const isActive = btn === button;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-pressed', String(isActive));
+          });
+          renderMarketProducts();
+        }
+
+        function renderMarketProducts() {
+          const query = document.getElementById('marketSearch').value.trim().toLowerCase();
+          const grid = document.getElementById('marketGrid');
+          const resultCount = document.getElementById('marketResultCount');
+          grid.innerHTML = '';
+          const filtered = marketProducts.filter(product => {
+            const supportsTouchscreen = /touch|x360/i.test([product.description, ...product.features].join(' '));
+            const matchesCategory = currentMarketFilter === 'all' || product.category === currentMarketFilter || (currentMarketFilter === 'touchscreen' && supportsTouchscreen);
+            const searchableText = [product.name, product.description, product.category, product.label, product.price, ...product.features].join(' ').toLowerCase();
+            return matchesCategory && searchableText.includes(query);
+          });
+          resultCount.textContent = `Showing ${filtered.length} ${filtered.length === 1 ? 'product' : 'products'}`;
+          if (!filtered.length) {
+            grid.innerHTML = '<div class="market-empty"><h3>No products found</h3><p>Try a different search or choose another category.</p></div>';
+            return;
+          }
+          filtered.forEach(product => {
+            const card = document.createElement('article');
+            card.className = 'market-card';
+            card.innerHTML = `
+              <div class="market-card-media">
+                <img src="${product.image}" alt="${product.name}" loading="lazy" decoding="async">
+                <span class="market-badge">${product.label}</span>
+              </div>
+              <div class="market-card-body">
+                <div class="product-meta"><span class="market-category">${product.category.toUpperCase()}</span></div>
+                <h3>${product.name}</h3>
+                <p>${product.description}</p>
+                <div class="market-price">${product.price}</div>
+                <ul class="product-features">${product.features.map(feature => `<li>${feature}</li>`).join('')}</ul>
+                <div class="market-cta"><a class="btn btn-green" href="${marketContactUrl(product, 'pre-order')}" target="_blank" rel="noopener noreferrer">Pre-order</a><a class="btn btn-outline" href="${marketContactUrl(product, 'request a quote for')}" target="_blank" rel="noopener noreferrer">Request quote</a></div>
+              </div>
+            `;
+            grid.appendChild(card);
+          });
+        }
+
+        function marketContactUrl(product, request) {
+          const message = `Hello ByteZoneConnect, I would like to ${request} the ${product.name} listed for ${product.price}. Please share availability and next steps.`;
+          return `https://wa.me/265988367358?text=${encodeURIComponent(message)}`;
+        }
+
+        function openMarket() {
+          const market = document.getElementById('marketplace');
+          market.style.display = 'block';
+          market.classList.add('visible');
+          renderMarketProducts();
+          market.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function closeMarket() {
+          document.getElementById('marketplace').style.display = 'none';
+        }
+
+        renderMarketProducts();
+    </script>
 
     <section id="inspire" style="background: linear-gradient(180deg, var(--dark) 0%, #001F3F 100%);">
         <div class="container">
@@ -1534,83 +1622,6 @@
       setTimeout(() => { closeForm(); document.getElementById('successMsg').style.display = 'none'; }, 3000);
     });
 
-    // BZC MARKET
-    const marketProducts = [
-      { id: 'laptop-1', name: 'Dell Latitude 5430', category: 'laptop', price: 'MWK 1,650,000', image: 'images/1.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i7 12th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours', '60-day layby accepted'] },
-      { id: 'laptop-2', name: 'Lenovo X1 Yoga G3', category: 'laptop', price: 'MWK 1,220,000', image: 'images/2.jpeg', label: 'Fairly used', description: '14-inch touchscreen, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Touchscreen, x360 convertible', 'Battery: 4-6 hours', '60-day layby accepted'] },
-      { id: 'laptop-3', name: 'Dell Latitude 7390', category: 'laptop', price: 'MWK 780,000', image: 'images/3.jpeg', label: 'Fairly used', description: '13-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
-      { id: 'laptop-4', name: 'HP 840 G7', category: 'laptop', price: 'MWK 1,340,000', image: 'images/4.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i5 10th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours', '60-day layby accepted'] },
-      { id: 'laptop-5', name: 'Dell Latitude 5420', category: 'laptop', price: 'MWK 1,230,000', image: 'images/5.jpeg', label: 'Fairly used', description: '14-inch Full HD display, Intel Core i5 11th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 6-8 hours'] },
-      { id: 'laptop-6', name: 'HP EliteBook 1040 G8', category: 'laptop', price: 'MWK 2,070,000', image: 'images/6.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i7 11th Gen, 16GB RAM, 512GB SSD.', features: ['Touchscreen, x360 convertible', 'Battery: 6-8 hours'] },
-      { id: 'laptop-7', name: 'Dell Latitude 7290', category: 'laptop', price: 'MWK 780,000', image: 'images/7.jpeg', label: 'Fairly used', description: '13-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
-      { id: 'laptop-8', name: 'Apple MacBook Air M1 (2020)', category: 'laptop', price: 'MWK 2,070,000', image: 'images/8.jpeg', label: 'Fairly used', description: '13-inch display, Apple M1 chip, 8GB RAM, 256GB SSD.', features: ['Battery: 3-5 hours'] },
-      { id: 'laptop-9', name: 'HP ProBook x360 11 EE G7', category: 'laptop', price: 'MWK 530,000', image: 'images/9.jpeg', label: 'Fairly used', description: '11-inch touchscreen, Intel Core m3, 4GB RAM, 200GB SSD.', features: ['Touchscreen, x360 convertible', 'Battery: 4-6 hours'] },
-      { id: 'laptop-10', name: 'HP 450 G6', category: 'laptop', price: 'MWK 1,080,000', image: 'images/10.jpeg', label: 'Fairly used', description: '15-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
-      { id: 'laptop-11', name: 'HP EliteBook 850 G6', category: 'laptop', price: 'MWK 1,260,000', image: 'images/11.jpeg', label: 'Fairly used', description: '15.6-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
-      { id: 'laptop-12', name: 'Dell Latitude 3120', category: 'laptop', price: 'MWK 600,000', image: 'images/12.jpeg', label: 'Fairly used', description: '11-inch touchscreen, Intel Pentium 10th Gen, 8GB RAM, 128GB storage.', features: ['Touchscreen, x360 convertible', 'Battery: 4-6 hours', '60-day layby accepted'] },
-      { id: 'laptop-13', name: 'Dell Latitude 7490', category: 'laptop', price: 'MWK 780,000', image: 'images/13.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
-      { id: 'laptop-14', name: 'Dell Latitude 7420', category: 'laptop', price: 'MWK 1,620,000', image: 'images/14.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i7 11th Gen, 16GB RAM, 256GB SSD.', features: ['Fingerprint reader', 'Battery: 4-6 hours'] },
-      { id: 'laptop-15', name: 'Microsoft Surface Laptop Go 2', category: 'laptop', price: 'MWK 1,020,000', image: 'images/15.jpeg', label: 'Fairly used', description: '12.4-inch touchscreen, Intel Core i5 10th Gen, 8GB RAM, 128GB SSD.', features: ['Touchscreen, super slim', 'Battery: 4-6 hours'] },
-      { id: 'server-r720xd', name: 'Dell PowerEdge R720xd', category: 'server', price: 'MWK 4,999,999', image: 'images/SERVER%20RACK%201.png', label: '2U rack server', description: 'Dell PowerEdge R720xd rack server in a 2U form factor.', features: ['Enterprise rack server', 'Price shown on product image'] },
-      { id: 'server-cabinet', name: 'Server Rack Cabinet', category: 'server', price: 'MWK 7,499,999', image: 'images/server%20rack%20cabinet.png', label: 'Server cabinet', description: 'Secure, high-capacity server rack cabinet for servers and networking equipment.', features: ['Secure design for equipment and data', 'Efficient cooling to maintain temperatures', 'Easy access for maintenance and management', 'Ideal for businesses, companies, and data centers'] }
-    ];
-
-    let currentMarketFilter = 'all';
-    function filterMarket(category, button) {
-      currentMarketFilter = category;
-      document.querySelectorAll('.market-buttons button').forEach(btn => {
-        const isActive = btn === button;
-        btn.classList.toggle('active', isActive);
-        btn.setAttribute('aria-pressed', String(isActive));
-      });
-      renderMarketProducts();
-    }
-
-    function renderMarketProducts() {
-      const query = document.getElementById('marketSearch').value.trim().toLowerCase();
-      const grid = document.getElementById('marketGrid');
-      const resultCount = document.getElementById('marketResultCount');
-      grid.innerHTML = '';
-      const filtered = marketProducts.filter(product => {
-        const supportsTouchscreen = /touch|x360/i.test([product.description, ...product.features].join(' '));
-        const matchesCategory = currentMarketFilter === 'all' || product.category === currentMarketFilter || (currentMarketFilter === 'touchscreen' && supportsTouchscreen);
-        const searchableText = [product.name, product.description, product.category, product.label, product.price, ...product.features].join(' ').toLowerCase();
-        const matchesSearch = searchableText.includes(query);
-        return matchesCategory && matchesSearch;
-      });
-      resultCount.textContent = `Showing ${filtered.length} ${filtered.length === 1 ? 'product' : 'products'}`;
-      if (!filtered.length) {
-        grid.innerHTML = '<div class="market-empty"><h3>No products found</h3><p>Try a different search or choose another category.</p></div>';
-        return;
-      }
-      filtered.forEach(product => {
-        const card = document.createElement('article');
-        card.className = 'market-card';
-        card.innerHTML = `
-          <div class="market-card-media">
-            <img src="${product.image}" alt="${product.name}" loading="lazy" decoding="async">
-            <span class="market-badge">${product.label}</span>
-          </div>
-          <div class="market-card-body">
-            <div class="product-meta"><span class="market-category">${product.category.toUpperCase()}</span></div>
-            <h3>${product.name}</h3>
-            <p>${product.description}</p>
-            <div class="market-price">${product.price}</div>
-            <ul class="product-features">${product.features.map(feature => `<li>${feature}</li>`).join('')}</ul>
-            <div class="market-cta"><button class="btn btn-green" type="button" onclick="openSignupModal()">Pre-order</button><button class="btn btn-outline" type="button" onclick="openSignupModal()">Request quote</button></div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function openMarket() {
-      const market = document.getElementById('marketplace');
-      market.style.display = 'block';
-      renderMarketProducts();
-      market.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    function closeMarket() { document.getElementById('marketplace').style.display = 'none'; }
     function openSignupModal() { document.getElementById('signupModal').style.display = 'block'; }
     function closeSignupModal() { document.getElementById('signupModal').style.display = 'none'; }
     document.getElementById('signupForm').addEventListener('submit', function(e) {
