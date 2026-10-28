@@ -53,10 +53,6 @@
         .nav-market-btn i { color: #78edc9; }
         @keyframes marketColorShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
         @keyframes bubbleSparkle { 0%,100% { opacity: 0.85; transform: translateY(0) scale(1); } 50% { opacity: 1; transform: translateY(-2px) scale(1.03); } }
-        .market-loader { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10001; display: flex; justify-content: center; align-items: center; }
-        .market-loader-content { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 40px; border-radius: 24px; background: rgba(5,5,15,0.95); border: 1px solid rgba(0,255,136,0.3); box-shadow: 0 35px 90px rgba(0,255,136,0.18); }
-        .market-loader-content img { width: 140px; margin-bottom: 24px; animation: glow 1.8s infinite; }
-        .market-loader-content p { color: #f1fff2; font-size: 1.2rem; letter-spacing: 0.05em; text-align: center; max-width: 320px; }
 
         .nav-links-dropdown { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; max-height: 85vh; overflow-y: auto; background: rgba(7,14,23,0.97); backdrop-filter: blur(25px); padding: 14px max(25px, calc((100% - 1340px) / 2)); list-style: none; border-top: 1px solid rgba(143,190,209,0.14); border-bottom: 1px solid rgba(101,232,194,0.2); box-shadow: 0 20px 40px rgba(0,0,0,0.32); }
         .nav-links-dropdown.active { display: flex; animation: slideDown 0.4s ease; }
@@ -346,7 +342,6 @@
 <body>
 
     <div id="loader"><img src="images/bytezone logo.png" alt="Loading"></div>
-    <div id="marketLoader" class="market-loader" style="display:none;"><div class="market-loader-content"><img src="images/bytezone logo.png" alt="ByteZoneConnect" /><p>Loading ByteZoneConnect Market...</p></div></div>
     <a href="https://wa.me/265988367358" class="whatsapp-float" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
 
     <nav>
@@ -528,41 +523,41 @@
         </div>
     </section>
 
-    <section id="marketplace" style="display:none;">
+    <section id="marketplace" style="display:none;" aria-labelledby="marketTitle">
         <div class="container">
-            <div class="market-close-row"><button class="btn btn-small btn-outline" onclick="closeMarket()">Close Market</button></div>
+            <div class="market-close-row"><button class="btn btn-small btn-outline" type="button" onclick="closeMarket()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to site</button></div>
             <div class="market-header">
-                <div>
-                    <span class="eyebrow">BZC MARKET</span>
-                    <h2 class="section-title">Shop <span>ByteZone</span> Market</h2>
-                    <p class="market-lead">Discover premium laptops, laser printers, servers, smart door locks, gadgets, and office technology with easy checkout, trusted warranties, and local support.</p>
+                <div class="market-header-copy">
+                    <span class="eyebrow"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> BZC MARKET · MZUZU, MALAWI</span>
+                    <h2 class="section-title" id="marketTitle">Technology for <span>work and life</span></h2>
+                    <p class="market-lead">Browse our fairly used laptops, rack servers, and server cabinets. Every listing includes its own product photo, specifications, and price, with local support from ByteZoneConnect in Mzuzu.</p>
                 </div>
                 <div class="market-buttons">
-                    <button class="btn btn-green active" onclick="filterMarket('all', this)">All Products</button>
-                    <button class="btn btn-outline" onclick="filterMarket('laptop', this)">Laptops</button>
-                    <button class="btn btn-outline" onclick="filterMarket('printer', this)">Printers</button>
-                    <button class="btn btn-outline" onclick="filterMarket('security', this)">Security</button>
-                    <button class="btn btn-outline" onclick="filterMarket('server', this)">Servers</button>
+                    <button type="button" class="active" aria-pressed="true" onclick="filterMarket('all', this)">All products</button>
+                    <button type="button" aria-pressed="false" onclick="filterMarket('laptop', this)">Laptops</button>
+                    <button type="button" aria-pressed="false" onclick="filterMarket('touchscreen', this)">Touchscreen &amp; 2-in-1</button>
+                    <button type="button" aria-pressed="false" onclick="filterMarket('server', this)">Servers</button>
                 </div>
             </div>
             <div class="market-toolbar">
                 <div class="search-wrap">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input id="marketSearch" type="text" placeholder="Search laptops, printers, gadgets, servers..." oninput="renderMarketProducts()">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input id="marketSearch" type="search" aria-label="Search marketplace products" placeholder="Search products, categories, or features..." oninput="renderMarketProducts()">
                 </div>
                 <div class="market-highlights">
-                    <div><strong>Fast Local Delivery</strong><span>Same-day pick-up in Mzuzu</span></div>
-                    <div><strong>Secure Checkout</strong><span>Airtel Money, PayChangu, Visa</span></div>
-                    <div><strong>1-Year Warranty</strong><span>Authorized service support</span></div>
+                    <div><strong><i class="fa-solid fa-laptop" aria-hidden="true"></i> 15 laptops</strong><span>Plus 2 server solutions</span></div>
+                    <div><strong><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Layby available</strong><span>60 days on selected laptops</span></div>
+                    <div><strong><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ByteZone Store</strong><span>Bahat Building, Mzuzu</span></div>
                 </div>
             </div>
+            <p class="market-result-count" id="marketResultCount" aria-live="polite"></p>
             <div class="market-grid" id="marketGrid"></div>
             <div class="market-footer-card">
                 <div>
                     <h3>Need help choosing the right tech?</h3>
-                    <p>Contact our BZC market team to compare laptops, printers, servers, and smart access systems with the right specs for your business.</p>
+                    <p>Contact our BZC market team for help choosing a laptop, rack server, or server cabinet for your business.</p>
                 </div>
-                <button class="btn btn-red" onclick="openSignupModal()">GET MARKET UPDATES</button>
+                <button class="btn btn-red" type="button" onclick="openSignupModal()">Talk to our team <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
             </div>
         </div>
     </section>
@@ -856,42 +851,103 @@
  .btn-green:hover { box-shadow: 0 22px 55px rgba(0,255,136,0.35); }
  .btn-red { background: linear-gradient(135deg, #FF9B3E, #FF5C8D); color: #07070D; border: 1px solid rgba(255,255,255,0.18); box-shadow: 0 18px 45px rgba(255,92,141,0.22); }
  .btn-red:hover { box-shadow: 0 22px 55px rgba(255,92,141,0.35); }
- .market-close-row { display: flex; justify-content: flex-end; margin-bottom: 25px; }
- .market-empty { text-align: center; width: 100%; padding: 60px 20px; background: rgba(255,255,255,0.04); border-radius: 20px; border: 1px dashed rgba(255,255,255,0.12); color: #cfd8ff; }
- .market-empty h3 { margin-bottom: 12px; font-size: 1.35rem; }
- .market-empty p { color: rgba(255,255,255,0.75); }
- .market-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 30px; flex-wrap: wrap; margin-bottom: 30px; }
- .eyebrow { display: inline-block; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
- .market-lead { max-width: 780px; color: #d1d0ff; line-height: 1.8; margin-top: 12px; }
- .market-buttons { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; }
- .market-buttons button { background: rgba(255,255,255,0.05); color: #c4d7ff; border: 1px solid rgba(255,255,255,0.14); border-radius: 16px; padding: 10px 18px; transition: 0.3s; }
- .market-buttons button:hover { background: rgba(91,149,255,0.16); color: #fff; }
- .market-buttons .active { background: linear-gradient(135deg, rgba(91,149,255,0.24), rgba(212,122,255,0.24)); color: #fff; border-color: rgba(255,255,255,0.22); }
- .market-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 25px; flex-wrap: wrap; margin-bottom: 30px; }
- .search-wrap { flex: 1; min-width: 320px; position: relative; }
- .search-wrap i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.7); }
- .search-wrap input { width: 100%; padding: 18px 18px 18px 50px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.05); color: white; }
- .search-wrap input::placeholder { color: rgba(255,255,255,0.65); }
- .market-highlights { display: flex; gap: 20px; flex-wrap: wrap; justify-content: flex-end; min-width: 320px; }
- .market-highlights div { background: radial-gradient(circle at top left, rgba(0,175,255,0.15), rgba(255,0,255,0.15)), rgba(7,12,35,0.9); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 18px 22px; min-width: 190px; }
- .market-highlights strong { display: block; color: var(--pink); margin-bottom: 6px; }
- .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
- .market-card { background: linear-gradient(180deg, rgba(7,12,35,0.96), rgba(20,10,65,0.98)); border: 1px solid rgba(142,80,255,0.22); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.35s ease, box-shadow 0.35s ease; }
- .market-card:hover { transform: translateY(-8px); box-shadow: 0 20px 70px rgba(142,80,255,0.24); }
- .market-card img { width: 100%; height: 220px; object-fit: cover; filter: saturate(1.05) brightness(0.95); }
- .market-card-body { padding: 25px; display: flex; flex-direction: column; gap: 16px; }
- .market-card-body h3 { margin: 0; font-size: 1.55rem; color: #f6efff; }
- .market-card-body p { margin: 0; color: #d5cffb; line-height: 1.65; }
- .product-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: rgba(255,255,255,0.78); font-size: 0.95rem; }
+ #marketplace { min-height: 100vh; padding-top: 132px; padding-bottom: 80px; background: radial-gradient(ellipse at 82% 0%, rgba(52,119,164,0.17), transparent 34%), var(--dark); }
+ .market-close-row { display: flex; justify-content: flex-end; margin-bottom: 18px; }
+ .market-empty { grid-column: 1 / -1; text-align: center; padding: 56px 20px; background: rgba(255,255,255,0.035); border-radius: 20px; border: 1px dashed rgba(255,255,255,0.16); color: #e4edf3; }
+ .market-empty h3 { margin-bottom: 10px; font-size: 1.25rem; }
+ .market-empty p { color: #a7bac8; }
+ .market-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 26px; flex-wrap: wrap; margin-bottom: 28px; }
+ .market-header-copy { max-width: 760px; }
+ .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #72e6c1; margin-bottom: 10px; }
+ .market-header .section-title { margin: 0; text-align: left; }
+ .market-lead { max-width: 720px; color: #aebfce; line-height: 1.75; margin-top: 12px; }
+ .market-buttons { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+ .market-buttons button { min-height: 42px; padding: 9px 16px; border-radius: 999px; background: rgba(255,255,255,0.045); color: #b7c8d5; border: 1px solid rgba(190,214,228,0.14); font: inherit; font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+ .market-buttons button:hover { background: rgba(114,230,193,0.1); color: #fff; border-color: rgba(114,230,193,0.38); }
+ .market-buttons .active { background: #75e7c2; color: #09241e; border-color: #75e7c2; }
+ .market-toolbar { display: grid; grid-template-columns: minmax(240px, 1fr) auto; align-items: center; gap: 18px; margin-bottom: 20px; }
+ .search-wrap { min-width: 0; position: relative; }
+ .search-wrap i { position: absolute; left: 17px; top: 50%; transform: translateY(-50%); color: #8ca4b4; pointer-events: none; }
+ .search-wrap input { width: 100%; min-height: 52px; padding: 14px 18px 14px 48px; border-radius: 14px; border: 1px solid rgba(190,214,228,0.16); background: rgba(255,255,255,0.045); color: #f5fafc; font: inherit; font-size: 0.92rem; }
+ .search-wrap input::placeholder { color: #8196a5; }
+ .search-wrap input:focus { outline: 2px solid rgba(117,231,194,0.7); outline-offset: 2px; border-color: transparent; }
+ .market-highlights { display: flex; gap: 8px; justify-content: flex-end; }
+ .market-highlights div { display: flex; flex-direction: column; justify-content: center; min-width: 142px; padding: 10px 13px; border: 1px solid rgba(190,214,228,0.12); border-radius: 12px; background: rgba(255,255,255,0.035); }
+ .market-highlights strong { color: #e6f4f3; font-size: 0.76rem; line-height: 1.4; }
+ .market-highlights span { margin-top: 3px; color: #91a6b4; font-size: 0.68rem; line-height: 1.4; }
+ .market-result-count { margin: 0 0 14px; color: #95a9b8; font-size: 0.82rem; }
+ .market-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+ .market-card { min-width: 0; background: #101923; border: 1px solid rgba(174,199,214,0.12); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease; }
+ .market-card:hover { transform: translateY(-4px); border-color: rgba(117,231,194,0.4); box-shadow: 0 18px 42px rgba(0,0,0,0.24); }
+ .market-card-media { position: relative; height: 300px; overflow: hidden; background: #e8f3fb; }
+ .market-card img { display: block; width: 100%; height: 100%; object-fit: contain; }
+ .market-card-body { flex: 1; padding: 17px; display: flex; flex-direction: column; gap: 12px; }
+ .market-card-body h3 { margin: 0; color: #f1f6f8; font-size: 1.08rem; line-height: 1.4; }
+ .market-card-body p { min-height: 3.2em; margin: 0; color: #9fb0bb; font-size: 0.82rem; line-height: 1.6; }
+ .product-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; color: #9fb0bb; font-size: 0.74rem; }
  .product-meta span { display: inline-flex; align-items: center; gap: 6px; }
- .market-badge { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 999px; background: rgba(212,122,255,0.18); color: #ffb5ff; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; }
- .product-features { margin: 0; padding-left: 16px; color: rgba(255,255,255,0.75); }
- .product-features li { margin-bottom: 8px; }
- .market-cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
- .market-cta .btn { flex: 1; min-width: 160px; }
- .market-footer-card { background: rgba(0,255,136,0.06); border: 1px solid rgba(0,255,136,0.16); border-radius: 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 28px; margin-top: 35px; }
- .market-footer-card h3 { margin: 0; color: white; font-size: 1.5rem; }
- .market-footer-card p { margin: 8px 0 0; color: #c4f8d4; }
+ .product-meta .market-category { color: #8ea3b1; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; }
+ .market-badge { position: absolute; top: 12px; left: 12px; display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: rgba(9,24,28,0.86); color: #a8f4db; font-size: 0.68rem; font-weight: 700; backdrop-filter: blur(8px); }
+ .market-price { padding-top: 10px; border-top: 1px solid rgba(190,214,228,0.1); color: #82e9c7; font-size: 1.08rem; font-weight: 700; }
+ .market-price span { display: block; margin-top: 2px; color: #8fa4af; font-size: 0.7rem; font-weight: 500; }
+ .market-stock { color: #bac8d0; font-size: 0.74rem; }
+ .product-features { margin: 0; padding-left: 17px; color: #a7b6c0; font-size: 0.76rem; }
+ .product-features li { margin-bottom: 5px; }
+ .market-cta { display: flex; gap: 8px; margin-top: auto; }
+ .market-cta .btn { flex: 1; justify-content: center; min-width: 0; min-height: 42px; padding: 10px 8px; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 0.7rem; letter-spacing: 0.01em; }
+ .market-cta .btn-green { box-shadow: none; }
+ .market-footer-card { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px; margin-top: 28px; border: 1px solid rgba(117,231,194,0.18); border-radius: 18px; background: linear-gradient(120deg, rgba(51,142,116,0.12), rgba(48,94,134,0.1)); }
+ .market-footer-card h3 { margin: 0; color: #eff8f5; font-size: 1.15rem; }
+ .market-footer-card p { max-width: 760px; margin: 7px 0 0; color: #a9beb8; font-size: 0.86rem; }
+ .market-footer-card .btn { flex: 0 0 auto; padding: 13px 18px; font-size: 0.76rem; }
+ body.light-mode #marketplace { background: radial-gradient(ellipse at 82% 0%, rgba(52,119,164,0.1), transparent 34%), #f3f7f8; }
+ body.light-mode .market-card { background: #fff; border-color: rgba(23,54,67,0.12); box-shadow: 0 8px 24px rgba(16,44,55,0.06); }
+ body.light-mode .market-card-body h3, body.light-mode .market-footer-card h3 { color: #18313b; }
+ body.light-mode .market-card-body p, body.light-mode .product-features, body.light-mode .market-stock, body.light-mode .market-price span { color: #526a74; }
+ body.light-mode .market-result-count, body.light-mode .market-lead { color: #5d747d; }
+ body.light-mode .market-highlights div { background: #fff; border-color: rgba(23,54,67,0.12); }
+ body.light-mode .market-highlights strong { color: #24424b; }
+ body.light-mode .market-highlights span { color: #647d86; }
+ body.light-mode .search-wrap input { background: #fff; border-color: rgba(23,54,67,0.18); color: #18313b; }
+ body.light-mode .market-buttons button { background: #fff; color: #405c66; border-color: rgba(23,54,67,0.15); }
+ body.light-mode .market-buttons .active { background: #16785b; color: #fff; border-color: #16785b; }
+ body.light-mode .market-footer-card { background: #e9f5f0; }
+ body.light-mode .market-footer-card p { color: #506d63; }
+ @media(max-width: 1100px) { .market-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+ @media(max-width: 900px) { .market-toolbar { grid-template-columns: minmax(0, 1fr); } .market-highlights { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); } .market-highlights div { min-width: 0; } }
+ @media(max-width: 768px) {
+     #marketplace { padding-top: 102px; }
+     .market-header { align-items: flex-start; flex-direction: column; gap: 20px; }
+     .market-buttons { width: 100%; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; }
+     .market-buttons button { flex: 0 0 auto; }
+     .market-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+     .market-card-media { height: 270px; }
+     .market-card-body { padding: 14px; gap: 10px; }
+     .market-card-body p { min-height: 0; }
+     .market-footer-card { align-items: flex-start; flex-direction: column; }
+ }
+ @media(max-width: 560px) {
+     #marketplace { padding: 92px 14px 56px; }
+     .market-close-row { margin-bottom: 12px; }
+     .market-header .section-title { font-size: clamp(1.7rem, 8vw, 2.4rem); }
+     .market-lead { font-size: 0.88rem; }
+     .market-highlights { grid-template-columns: minmax(0, 1fr); }
+     .market-highlights div { flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 13px; }
+     .market-highlights span { margin: 0; text-align: right; }
+     .market-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+     .market-card { display: flex; }
+     .market-card-media { height: 330px; }
+     .market-card-body { padding: 14px; }
+     .market-card-body h3 { font-size: 0.98rem; }
+     .product-features { display: none; }
+     .market-cta { flex-direction: column; }
+     .market-cta .btn { width: 100%; }
+     .market-footer-card .btn { width: 100%; }
+ }
+ @media(max-width: 380px) {
+     .market-card-media { height: 290px; }
+     .market-cta { flex-direction: row; }
+ }
  .signup-modal-content { max-width: 520px; }
  .signup-modal-content form .form-group input { margin-bottom: 20px; }
  .modal-content h2 { margin-top: 0; }
@@ -1480,49 +1536,68 @@
 
     // BZC MARKET
     const marketProducts = [
-      { id: 'p1', name: 'ByteZone ProBook 15', category: 'laptop', price: 'MWK 1,899,000', image: 'images/hero.jpg', label: 'Best Seller', description: '15.6" Intel Core i7, 16GB RAM, 512GB SSD, fingerprint login.', features: ['Fast startup', 'Full HD display', 'Business-grade security'], stock: 'In stock', warranty: '1 year warranty' },
-      { id: 'p2', name: 'BZC Workstation 17', category: 'laptop', price: 'MWK 2,799,000', image: 'images/hero2.jpeg', label: 'Recommended', description: '17.3" Ryzen 9, 32GB RAM, 1TB SSD, dedicated GPU.', features: ['Powerful multitasking', 'Extended battery', 'Office-ready'], stock: 'Limited stock', warranty: '1 year warranty' },
-      { id: 'p3', name: 'LaserPrint Ultra 5200', category: 'printer', price: 'MWK 1,499,000', image: 'images/image 1.jpeg', label: 'Fast Print', description: 'High-speed monochrome laser printer with wireless and USB connectivity.', features: ['6000 ppm', 'Mobile printing', 'Energy saver'], stock: 'In stock', warranty: '2 year warranty' },
-      { id: 'p4', name: 'SmartDoor FingerLock X', category: 'security', price: 'MWK 699,000', image: 'images/image 2.jpeg', label: 'Security Tech', description: 'Fingerprint access, PIN, key override and remote alerts.', features: ['Anti-tamper alarm', 'Audit logs', 'Weatherproof'], stock: 'In stock', warranty: '1 year warranty' },
-      { id: 'p5', name: 'ByteZone Rack Server S24', category: 'server', price: 'MWK 4,999,000', image: 'images/image 3.jpeg', label: 'Enterprise', description: 'Rack server with Xeon CPU, 64GB RAM, 2TB NVMe storage.', features: ['Redundant power', 'Remote management', 'Scalable'], stock: 'Pre-order', warranty: '3 year warranty' },
-      { id: 'p6', name: 'Gadget Hub Pack', category: 'accessory', price: 'MWK 339,000', image: 'images/image 4.jpeg', label: 'Bundle', description: 'Wireless mouse, keyboard, USB hub, and portable power bank.', features: ['Office essentials', 'Fast charging', 'Compact design'], stock: 'In stock', warranty: '6 month warranty' },
-      { id: 'p7', name: 'Smart Sensor Door Kit', category: 'security', price: 'MWK 499,000', image: 'images/image 5.jpeg', label: 'Home Secure', description: 'Motion detector, smart lock, and app notifications for doors.', features: ['Remote access', 'Battery backup', 'Easy install'], stock: 'In stock', warranty: '1 year warranty' },
-      { id: 'p8', name: 'ByteZone Mini Server', category: 'server', price: 'MWK 2,199,000', image: 'images/image 6.jpeg', label: 'Compact', description: 'Mini server for SMEs with 32GB RAM and 1TB SSD.', features: ['Low power', 'Quiet cooling', 'Ready for NAS'], stock: 'In stock', warranty: '2 year warranty' }
+      { id: 'laptop-1', name: 'Dell Latitude 5430', category: 'laptop', price: 'MWK 1,650,000', image: 'images/1.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i7 12th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours', '60-day layby accepted'] },
+      { id: 'laptop-2', name: 'Lenovo X1 Yoga G3', category: 'laptop', price: 'MWK 1,220,000', image: 'images/2.jpeg', label: 'Fairly used', description: '14-inch touchscreen, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Touchscreen, x360 convertible', 'Battery: 4-6 hours', '60-day layby accepted'] },
+      { id: 'laptop-3', name: 'Dell Latitude 7390', category: 'laptop', price: 'MWK 780,000', image: 'images/3.jpeg', label: 'Fairly used', description: '13-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
+      { id: 'laptop-4', name: 'HP 840 G7', category: 'laptop', price: 'MWK 1,340,000', image: 'images/4.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i5 10th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours', '60-day layby accepted'] },
+      { id: 'laptop-5', name: 'Dell Latitude 5420', category: 'laptop', price: 'MWK 1,230,000', image: 'images/5.jpeg', label: 'Fairly used', description: '14-inch Full HD display, Intel Core i5 11th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 6-8 hours'] },
+      { id: 'laptop-6', name: 'HP EliteBook 1040 G8', category: 'laptop', price: 'MWK 2,070,000', image: 'images/6.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i7 11th Gen, 16GB RAM, 512GB SSD.', features: ['Touchscreen, x360 convertible', 'Battery: 6-8 hours'] },
+      { id: 'laptop-7', name: 'Dell Latitude 7290', category: 'laptop', price: 'MWK 780,000', image: 'images/7.jpeg', label: 'Fairly used', description: '13-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
+      { id: 'laptop-8', name: 'Apple MacBook Air M1 (2020)', category: 'laptop', price: 'MWK 2,070,000', image: 'images/8.jpeg', label: 'Fairly used', description: '13-inch display, Apple M1 chip, 8GB RAM, 256GB SSD.', features: ['Battery: 3-5 hours'] },
+      { id: 'laptop-9', name: 'HP ProBook x360 11 EE G7', category: 'laptop', price: 'MWK 530,000', image: 'images/9.jpeg', label: 'Fairly used', description: '11-inch touchscreen, Intel Core m3, 4GB RAM, 200GB SSD.', features: ['Touchscreen, x360 convertible', 'Battery: 4-6 hours'] },
+      { id: 'laptop-10', name: 'HP 450 G6', category: 'laptop', price: 'MWK 1,080,000', image: 'images/10.jpeg', label: 'Fairly used', description: '15-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
+      { id: 'laptop-11', name: 'HP EliteBook 850 G6', category: 'laptop', price: 'MWK 1,260,000', image: 'images/11.jpeg', label: 'Fairly used', description: '15.6-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
+      { id: 'laptop-12', name: 'Dell Latitude 3120', category: 'laptop', price: 'MWK 600,000', image: 'images/12.jpeg', label: 'Fairly used', description: '11-inch touchscreen, Intel Pentium 10th Gen, 8GB RAM, 128GB storage.', features: ['Touchscreen, x360 convertible', 'Battery: 4-6 hours', '60-day layby accepted'] },
+      { id: 'laptop-13', name: 'Dell Latitude 7490', category: 'laptop', price: 'MWK 780,000', image: 'images/13.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i5 8th Gen, 8GB RAM, 256GB SSD.', features: ['Battery: 4-6 hours'] },
+      { id: 'laptop-14', name: 'Dell Latitude 7420', category: 'laptop', price: 'MWK 1,620,000', image: 'images/14.jpeg', label: 'Fairly used', description: '14-inch display, Intel Core i7 11th Gen, 16GB RAM, 256GB SSD.', features: ['Fingerprint reader', 'Battery: 4-6 hours'] },
+      { id: 'laptop-15', name: 'Microsoft Surface Laptop Go 2', category: 'laptop', price: 'MWK 1,020,000', image: 'images/15.jpeg', label: 'Fairly used', description: '12.4-inch touchscreen, Intel Core i5 10th Gen, 8GB RAM, 128GB SSD.', features: ['Touchscreen, super slim', 'Battery: 4-6 hours'] },
+      { id: 'server-r720xd', name: 'Dell PowerEdge R720xd', category: 'server', price: 'MWK 4,999,999', image: 'images/SERVER%20RACK%201.png', label: '2U rack server', description: 'Dell PowerEdge R720xd rack server in a 2U form factor.', features: ['Enterprise rack server', 'Price shown on product image'] },
+      { id: 'server-cabinet', name: 'Server Rack Cabinet', category: 'server', price: 'MWK 7,499,999', image: 'images/server%20rack%20cabinet.png', label: 'Server cabinet', description: 'Secure, high-capacity server rack cabinet for servers and networking equipment.', features: ['Secure design for equipment and data', 'Efficient cooling to maintain temperatures', 'Easy access for maintenance and management', 'Ideal for businesses, companies, and data centers'] }
     ];
 
     let currentMarketFilter = 'all';
     function filterMarket(category, button) {
       currentMarketFilter = category;
-      document.querySelectorAll('.market-buttons button').forEach(btn => btn.classList.remove('active'));
-      if (button) button.classList.add('active');
+      document.querySelectorAll('.market-buttons button').forEach(btn => {
+        const isActive = btn === button;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', String(isActive));
+      });
       renderMarketProducts();
     }
 
     function renderMarketProducts() {
-      const query = document.getElementById('marketSearch').value.toLowerCase();
+      const query = document.getElementById('marketSearch').value.trim().toLowerCase();
       const grid = document.getElementById('marketGrid');
+      const resultCount = document.getElementById('marketResultCount');
       grid.innerHTML = '';
       const filtered = marketProducts.filter(product => {
-        const matchesCategory = currentMarketFilter === 'all' || product.category === currentMarketFilter;
-        const matchesSearch = product.name.toLowerCase().includes(query) || product.description.toLowerCase().includes(query) || product.category.toLowerCase().includes(query);
+        const supportsTouchscreen = /touch|x360/i.test([product.description, ...product.features].join(' '));
+        const matchesCategory = currentMarketFilter === 'all' || product.category === currentMarketFilter || (currentMarketFilter === 'touchscreen' && supportsTouchscreen);
+        const searchableText = [product.name, product.description, product.category, product.label, product.price, ...product.features].join(' ').toLowerCase();
+        const matchesSearch = searchableText.includes(query);
         return matchesCategory && matchesSearch;
       });
+      resultCount.textContent = `Showing ${filtered.length} ${filtered.length === 1 ? 'product' : 'products'}`;
       if (!filtered.length) {
-        grid.innerHTML = '<div class="market-empty"><h3>No products matched your search.</h3><p>Try another keyword or browse all categories.</p></div>';
+        grid.innerHTML = '<div class="market-empty"><h3>No products found</h3><p>Try a different search or choose another category.</p></div>';
         return;
       }
       filtered.forEach(product => {
-        const card = document.createElement('div');
+        const card = document.createElement('article');
         card.className = 'market-card';
         card.innerHTML = `
-          <img src="${product.image}" alt="${product.name}">
+          <div class="market-card-media">
+            <img src="${product.image}" alt="${product.name}" loading="lazy" decoding="async">
+            <span class="market-badge">${product.label}</span>
+          </div>
           <div class="market-card-body">
-            <div class="product-meta"><span class="market-badge">${product.label}</span><span>${product.category.toUpperCase()}</span></div>
+            <div class="product-meta"><span class="market-category">${product.category.toUpperCase()}</span></div>
             <h3>${product.name}</h3>
             <p>${product.description}</p>
-            <div class="product-meta"><span><i class='fa-solid fa-money-bill-wave'></i> ${product.price}</span><span><i class='fa-solid fa-box'></i> ${product.stock}</span></div>
+            <div class="market-price">${product.price}</div>
             <ul class="product-features">${product.features.map(feature => `<li>${feature}</li>`).join('')}</ul>
-            <div class="market-cta"><button class="btn btn-green" onclick="openSignupModal()">PRE-ORDER</button><button class="btn btn-outline" onclick="openSignupModal()">REQUEST QUOTE</button></div>
+            <div class="market-cta"><button class="btn btn-green" type="button" onclick="openSignupModal()">Pre-order</button><button class="btn btn-outline" type="button" onclick="openSignupModal()">Request quote</button></div>
           </div>
         `;
         grid.appendChild(card);
@@ -1530,16 +1605,10 @@
     }
 
     function openMarket() {
-      const loader = document.getElementById('marketLoader');
       const market = document.getElementById('marketplace');
-      market.style.display = 'none';
-      loader.style.display = 'flex';
-      setTimeout(() => {
-        loader.style.display = 'none';
-        market.style.display = 'block';
-        renderMarketProducts();
-        market.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 3000);
+      market.style.display = 'block';
+      renderMarketProducts();
+      market.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     function closeMarket() { document.getElementById('marketplace').style.display = 'none'; }
     function openSignupModal() { document.getElementById('signupModal').style.display = 'block'; }
