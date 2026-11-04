@@ -29,6 +29,20 @@ app.set("trust proxy", process.env.NODE_ENV === "production" ? 1 : false);
 app.use(require("helmet")({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
+app.use((req, res, next) => {
+  const configuredSecret = process.env.BYTEZONE_PROXY_SECRET;
+  if (req.path === "/api/health") return next();
+  if (!configuredSecret) {
+    if (process.env.NODE_ENV === "production") return res.status(503).json({ error: "Portal proxy is not configured." });
+    return next();
+  }
+  const supplied = Buffer.from(req.get("x-bytezone-proxy-secret") || "");
+  const expected = Buffer.from(configuredSecret);
+  if (supplied.length !== expected.length || !crypto.timingSafeEqual(supplied, expected)) {
+    return res.status(403).json({ error: "Access must go through the ByteZone website." });
+  }
+  return next();
+});
 app.get("/operations.html", (req, res) => res.redirect(302, "/ops"));
 app.use(express.static(path.resolve(__dirname, "..", "public"), { index: false, dotfiles: "deny", maxAge: "1h" }));
 app.use("/images", express.static(path.resolve(__dirname, "..", "images"), { dotfiles: "deny", maxAge: "1d" }));
@@ -88,7 +102,8 @@ function ensureCsrf(req, res, next) {
     } catch {
       return res.status(403).json({ error: "Request origin verification failed." });
     }
-    if (requestOrigin !== `${req.protocol}://${req.get("host")}`) {
+    const expectedOrigin = process.env.BYTEZONE_PUBLIC_ORIGIN || `${req.protocol}://${req.get("host")}`;
+    if (requestOrigin !== expectedOrigin) {
       return res.status(403).json({ error: "Request origin verification failed." });
     }
   }

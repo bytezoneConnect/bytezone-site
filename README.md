@@ -53,6 +53,26 @@ No DigitalPersona or SecuGen vendor SDK is included. Install and secure a local 
 
 The bridge must not retain or log templates. Keep it bound to loopback or use HTTPS and a strong token. The app encrypts templates in the database; it never stores fingerprint images. If no bridge is configured or available, password verification is used. A failed fingerprint match is not treated as scanner failure.
 
+## Deploy the portal online (Netlify + Railway)
+
+Netlify serves the marketing site as static files; it cannot run `server.js` or retain the SQLite database and evidence files. `netlify.toml` now routes `/ops`, portal assets, and `/api/*` through a Netlify Function to the Railway Node service. The build publishes only the approved static website assets, not the application source. Railway runs the existing Node application with persistent storage for the database and encrypted evidence vault.
+
+1. Deploy this repository as a new Railway service using the repository root. Railway reads `railway.json`; wait for its generated HTTPS domain, for example `https://your-service.up.railway.app`.
+2. Add a Railway volume mounted at `/app/data`. Set these Railway service variables:
+   - `NODE_ENV=production`
+   - `BYTEZONE_DATABASE_PATH=/app/data/bytezone.sqlite`
+   - `BYTEZONE_VAULT_PATH=/app/data/vault`
+   - `BYTEZONE_ENCRYPTION_KEY` to a new 64-character hexadecimal key
+   - `BYTEZONE_PROXY_SECRET` to a new random value of at least 32 characters
+   - `BYTEZONE_PUBLIC_ORIGIN` to the exact HTTPS origin of the Netlify site, without a trailing slash (for example `https://your-site.netlify.app`)
+3. In Netlify site settings, configure the same repository and root base directory. Add these Functions environment variables (not client/build variables):
+   - `BYTEZONE_BACKEND_URL` set to the Railway HTTPS domain
+   - `BYTEZONE_PROXY_SECRET` set to the exact same secret as the Railway service
+   Deploy or trigger a new deploy so both the static build and function receive the configuration.
+4. Open `https://your-site.netlify.app/ops`. Netlify `/api/health` should return `{"status":"ok"}`. Create the first admin account using a Railway shell attached to the service and its mounted volume: run `npm run create-user`.
+
+The Railway domain is intentionally not hard-coded in the repository: it is assigned when the service is created. Keep the proxy secret and encryption key in the two hosts' secret/environment settings, never in Git. The Railway volume is required; the service refuses to start in production without the proxy secret and HTTPS public origin.
+
 ## Database migrations
 
 Ordered SQL migrations live in `migrations/` and are recorded in `schema_migrations`. The initial migration creates users/sessions, rental devices/history/payments, inventory/sales, removal tickets, encrypted vault-file metadata, and POS purchase inquiries. The first run seeds the four default rental devices.

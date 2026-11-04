@@ -3,4 +3,5 @@ node_modules/
 data/
 storage/
 public/app.css
+dist/
 npm-debug.log*

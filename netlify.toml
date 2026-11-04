@@ -1,0 +1,43 @@
+[build]
+command = "npm run build:netlify"
+publish = "dist"
+functions = "netlify/functions"
+
+[build.environment]
+NODE_VERSION = "20"
+
+[[redirects]]
+from = "/ops"
+to = "/.netlify/functions/backend/ops"
+status = 200
+force = true
+
+[[redirects]]
+from = "/operations.html"
+to = "/.netlify/functions/backend/operations.html"
+status = 200
+force = true
+
+[[redirects]]
+from = "/operations.js"
+to = "/.netlify/functions/backend/operations.js"
+status = 200
+force = true
+
+[[redirects]]
+from = "/app.css"
+to = "/.netlify/functions/backend/app.css"
+status = 200
+force = true
+
+[[redirects]]
+from = "/api"
+to = "/.netlify/functions/backend/api"
+status = 200
+force = true
+
+[[redirects]]
+from = "/api/*"
+to = "/.netlify/functions/backend/api/:splat"
+status = 200
+force = true
