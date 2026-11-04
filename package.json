@@ -1,0 +1,33 @@
+{
+  "name": "bytezone-connect",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ByteZone Connect operations system",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "prestart": "npm run build:css",
+    "start": "node server.js",
+    "predev": "npm run build:css",
+    "dev": "node --watch server.js",
+    "migrate": "node scripts/migrate.js",
+    "create-user": "node scripts/create-user.js",
+    "build:css": "tailwindcss -i ./src/input.css -o ./public/app.css --minify",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.2",
+    "prompts": "^2.4.2",
+    "sql.js": "^1.13.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

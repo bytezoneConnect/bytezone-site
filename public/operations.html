@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#07111c">
+    <title>ByteZone Operations</title>
+    <link rel="stylesheet" href="/app.css">
+  </head>
+  <body class="min-h-screen bg-bytezone-ink text-slate-100">
+    <header class="border-b border-white/10 bg-bytezone-panel">
+      <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4">
+        <a class="text-xl font-black tracking-wide text-bytezone-mint" href="/">BYTEZONE <span class="text-slate-100">OPS</span></a>
+        <div class="flex items-center gap-3">
+          <span id="user-label" class="text-sm text-slate-300"></span>
+          <button id="logout-button" class="hidden rounded-lg border border-white/20 px-4 py-2 text-sm hover:border-bytezone-mint" type="button">Sign out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl space-y-6 px-4 py-8">
+      <div id="notice" class="hidden rounded-xl border border-bytezone-mint/30 bg-bytezone-panel p-4 text-sm" role="status" aria-live="polite"></div>
+      <section id="auth-panel" class="brand-watermarked mx-auto max-w-xl rounded-2xl border border-white/10 bg-bytezone-panel p-6 shadow-xl">
+        <h1 class="text-2xl font-bold">ByteZone services</h1>
+        <p class="mt-2 text-sm text-slate-300">Sign in to rent devices, manage sales, or submit a private-content removal request.</p>
+        <form id="auth-form" class="mt-6 grid gap-4">
+          <label id="name-field" class="hidden text-sm">Full name
+            <input name="name" autocomplete="name" class="form-input" maxlength="120">
+          </label>
+          <label id="phone-field" class="hidden text-sm">Phone (optional)
+            <input name="phone" autocomplete="tel" class="form-input" maxlength="40">
+          </label>
+          <label class="text-sm">Email
+            <input name="email" type="email" autocomplete="username" class="form-input" maxlength="254" required>
+          </label>
+          <label class="text-sm">Password
+            <input name="password" type="password" autocomplete="current-password" class="form-input" minlength="12" required>
+          </label>
+          <label class="flex items-center gap-2 text-sm text-slate-300">
+            <input name="useBiometric" type="checkbox" class="accent-bytezone-mint">
+            Verify with fingerprint (password is used if the scanner is unavailable)
+          </label>
+          <button class="rounded-xl bg-bytezone-mint px-5 py-3 font-bold text-bytezone-ink hover:brightness-110" type="submit">Sign in</button>
+        </form>
+        <button id="register-toggle" class="mt-4 text-sm text-bytezone-blue underline" type="button">Create a customer account</button>
+        <p class="mt-5 border-t border-white/10 pt-4 text-xs leading-5 text-slate-400">Fingerprint enrollment requires a configured DigitalPersona/SecuGen-compatible local bridge. Password sign-in always remains available. Do not share passwords or ownership proof.</p>
+      </section>
+
+      <section id="workspace" class="hidden space-y-6">
+        <div class="brand-watermarked rounded-2xl border border-white/10 bg-bytezone-panel p-5">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[.2em] text-bytezone-mint">Malawi · MWK</p>
+              <h1 class="mt-1 text-2xl font-bold">Operations dashboard</h1>
+            </div>
+            <div id="role-badge" class="rounded-full border border-bytezone-mint/40 px-4 py-2 text-sm capitalize text-bytezone-mint"></div>
+          </div>
+        </div>
+
+        <section class="grid gap-6 lg:grid-cols-2">
+          <article class="panel">
+            <div class="flex items-center justify-between gap-3">
+              <div><h2 class="panel-title">Device rentals</h2><p class="panel-copy">Live billing, return times and overdue alerts.</p></div>
+              <button class="secondary-button" data-refresh="rentals" type="button">Refresh</button>
+            </div>
+            <div id="device-list" class="mt-4 grid gap-3"></div>
+            <form id="rental-form" class="mt-5 grid gap-3 border-t border-white/10 pt-5">
+              <h3 class="font-semibold">Check out a device</h3>
+              <label class="text-sm">Available device
+                <select name="deviceId" id="rental-device" class="form-input" required></select>
+              </label>
+              <label class="text-sm">Expected return
+                <input name="expectedReturnAt" id="expected-return" type="datetime-local" class="form-input" required>
+              </label>
+              <label id="customer-id-field" class="hidden text-sm">Customer account email
+                <input name="customerEmail" type="email" class="form-input" placeholder="Customer email">
+              </label>
+              <label id="deposit-field" class="hidden text-sm">Deposit (MWK)
+                <input name="depositMwk" type="number" min="0" step="1" value="0" class="form-input">
+              </label>
+              <button class="primary-button" type="submit">Check out</button>
+            </form>
+            <div id="rental-list" class="mt-5 grid gap-3"></div>
+          </article>
+
+          <article class="panel">
+            <h2 class="panel-title">Fingerprint security</h2>
+            <p class="panel-copy">Templates are AES-256-GCM encrypted; scanning runs through your configured local bridge.</p>
+            <p id="biometric-status" class="mt-4 text-sm text-slate-300">Checking scanner status…</p>
+            <form id="biometric-form" class="mt-4 grid gap-3">
+              <label class="text-sm">Confirm with your password to enroll
+                <input name="password" type="password" minlength="12" class="form-input" required>
+              </label>
+              <button class="secondary-button justify-center" type="submit">Enroll fingerprint</button>
+            </form>
+            <form id="ticket-form" class="mt-6 grid gap-3 border-t border-white/10 pt-5">
+              <h3 class="font-semibold">Private-content removal request</h3>
+              <label class="text-sm">Page URL (HTTPS)
+                <input name="url" type="url" class="form-input" placeholder="https://example.com/page" required>
+              </label>
+              <label class="text-sm">Proof of ownership
+                <textarea name="ownershipProof" class="form-input min-h-24" maxlength="5000" required></textarea>
+              </label>
+              <label class="text-sm">Ownership evidence file
+                <input name="proof" type="file" class="form-input" required>
+              </label>
+              <button class="primary-button" type="submit">Submit private request</button>
+              <div id="my-tickets" class="grid gap-2"></div>
+            </form>
+          </article>
+        </section>
+
+        <section id="staff-tools" class="hidden grid gap-6 lg:grid-cols-2">
+          <article id="device-admin" class="panel hidden">
+            <h2 class="panel-title">Device catalogue</h2>
+            <p class="panel-copy">Manage device names, rates and maintenance status.</p>
+            <form id="device-form" class="mt-4 grid gap-3 sm:grid-cols-2">
+              <label class="text-sm">Device name<input name="name" class="form-input" required maxlength="100"></label>
+              <label class="text-sm">Type<input name="type" class="form-input" required maxlength="50"></label>
+              <label class="text-sm">Rate (MWK)<input name="rateMwk" type="number" min="0" class="form-input" required></label>
+              <label class="text-sm">Billing unit<select name="billingUnit" class="form-input"><option value="hour">Per hour</option><option value="day">Per day</option></select></label>
+              <button class="primary-button sm:col-span-2" type="submit">Add device</button>
+            </form>
+            <div id="device-admin-list" class="mt-5 grid gap-2"></div>
+          </article>
+
+          <article id="pos-panel" class="panel hidden">
+            <div class="flex items-center justify-between gap-3">
+              <div><h2 class="panel-title">Point of sale</h2><p class="panel-copy">Scan a barcode or pick an item, then confirm payment.</p></div>
+              <button class="secondary-button" data-refresh="inventory" type="button">Refresh</button>
+            </div>
+            <form id="barcode-form" class="mt-4 flex gap-2">
+              <input name="barcode" id="barcode-input" class="form-input" placeholder="Scan or enter barcode" autocomplete="off">
+              <button class="secondary-button shrink-0" type="submit">Add</button>
+            </form>
+            <div id="pos-items" class="mt-4 grid gap-2"></div>
+            <div id="cart" class="mt-4 grid gap-2 border-t border-white/10 pt-4"></div>
+            <button id="checkout-button" class="primary-button mt-4 w-full" type="button">Confirm sale &amp; print receipt</button>
+          </article>
+
+          <article id="inventory-panel" class="panel hidden">
+            <h2 class="panel-title">Inventory management</h2>
+            <form id="inventory-form" class="mt-4 grid gap-3 sm:grid-cols-2">
+              <label class="text-sm">Item name<input name="name" class="form-input" required maxlength="120"></label>
+              <label class="text-sm">Barcode<input name="barcode" class="form-input" maxlength="80"></label>
+              <label class="text-sm">Price (MWK)<input name="priceMwk" type="number" min="0" class="form-input" required></label>
+              <label class="text-sm">Stock quantity<input name="quantity" type="number" min="0" class="form-input" required></label>
+              <button class="primary-button sm:col-span-2" type="submit">Add inventory item</button>
+            </form>
+            <div id="inventory-list" class="mt-5 grid gap-2"></div>
+          </article>
+
+          <article id="report-panel" class="panel hidden">
+            <h2 class="panel-title">Sales report</h2>
+            <form id="report-form" class="mt-4 flex gap-2">
+              <input name="date" type="date" class="form-input">
+              <button class="secondary-button" type="submit">Load report</button>
+            </form>
+            <div id="sales-report" class="mt-4 text-sm text-slate-300"></div>
+          </article>
+
+          <article id="ticket-admin-panel" class="panel hidden lg:col-span-2">
+            <div class="flex items-center justify-between gap-3">
+              <div><h2 class="panel-title">Removal requests</h2><p class="panel-copy">Review ownership evidence and update ticket progress.</p></div>
+              <button class="secondary-button" data-refresh="tickets" type="button">Refresh</button>
+            </div>
+            <div id="ticket-admin-list" class="mt-4 grid gap-3 md:grid-cols-2"></div>
+          </article>
+
+          <article id="pos-inquiries-panel" class="panel hidden lg:col-span-2">
+            <div class="flex items-center justify-between gap-3">
+              <div><h2 class="panel-title">ByteZone POS inquiries</h2><p class="panel-copy">Follow up about the MWK 4,900,899 package.</p></div>
+              <button class="secondary-button" data-refresh="inquiries" type="button">Refresh</button>
+            </div>
+            <div id="pos-inquiry-list" class="mt-4 grid gap-3 md:grid-cols-2"></div>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div><h2 class="panel-title">ByteZone POS package</h2><p class="panel-copy">Official package: <strong class="text-bytezone-mint">MWK 4,900,899</strong></p></div>
+            <button id="buy-pos-button" class="primary-button" type="button">Buy ByteZone POS</button>
+          </div>
+          <form id="pos-inquiry-form" class="mt-4 hidden grid gap-3 sm:grid-cols-2">
+            <label class="text-sm">Preferred contact details<input name="contact" class="form-input" required maxlength="250"></label>
+            <label class="text-sm">Message (optional)<input name="message" class="form-input" maxlength="2000"></label>
+            <button class="secondary-button sm:col-span-2" type="submit">Send payment inquiry</button>
+          </form>
+        </section>
+      </section>
+    </main>
+    <script src="/operations.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+node_modules/
+.env
+data/
+storage/
+public/app.css
+npm-debug.log*
