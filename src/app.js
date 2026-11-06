@@ -23,8 +23,9 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024, files: 1 },
 });
 const sessionHours = Number(process.env.BYTEZONE_SESSION_HOURS || 12);
-const ticketStatuses = new Set(["Submitted", "DMCA Sent", "In Review", "Removed", "Failed"]);
+const ticketStatuses = new Set(["Submitted", "Approved", "Rejected", "DMCA Sent", "In Review", "Removed", "Failed"]);
 const defaultGoogleClientId = "476466036015-8lomocr4u059678hk39n7p2jobdc5elt.apps.googleusercontent.com";
+const primaryAdminEmail = "gomesshumba97@gmail.com";
 
 app.disable("x-powered-by");
 app.set("trust proxy", process.env.NODE_ENV === "production" ? 1 : false);
@@ -60,6 +61,19 @@ app.get("/ops", (req, res, next) => {
 
 function asyncRoute(handler) {
   return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
+}
+
+function googleAuthRoute(handler) {
+  return asyncRoute(async (req, res, next) => {
+    try {
+      return await handler(req, res, next);
+    } catch (error) {
+      if (process.env.NODE_ENV !== "test") {
+        console.error("Google sign-in callback failed:", error.message);
+      }
+      throw error;
+    }
+  });
 }
 
 function fail(status, message) {
@@ -177,11 +191,12 @@ function requireAuth(req, res, next) {
     WHERE sessions.id_digest = ? AND sessions.expires_at > ?
   `).get(digest(rawSession), new Date().toISOString());
   if (!session) return res.status(401).json({ error: "Your session has expired. Sign in again." });
+  const profile = decryptJson(session.encrypted_profile);
   req.user = {
     id: session.id,
     role: session.role,
     passwordHash: session.password_hash,
-    profile: decryptJson(session.encrypted_profile),
+    profile,
   };
   return next();
 }
@@ -195,6 +210,12 @@ function requireRoles(...roles) {
 
 function isStaffRole(role) {
   return role === "admin" || role === "staff";
+}
+
+function promotePrimaryAdmin(userId, email) {
+  if (typeof email !== "string" || normalizeEmail(email) !== primaryAdminEmail) return null;
+  db.prepare("UPDATE users SET role = 'admin' WHERE id = ? AND role != 'admin'").run(userId);
+  return "admin";
 }
 
 function setSession(res, userId) {
@@ -236,7 +257,12 @@ async function getOrCreateGoogleUser(payload) {
   const subjectDigest = digest(`google:${payload.sub}`);
   const email = normalizeEmail(payload.email);
   let user = db.prepare("SELECT * FROM users WHERE google_sub_digest = ?").get(subjectDigest);
-  if (user) return user;
+  if (user) {
+    const linkedEmail = normalizeEmail(decryptJson(user.encrypted_profile).email);
+    if (linkedEmail !== email) fail(409, "The email for this Google account has changed. Contact an administrator.");
+    promotePrimaryAdmin(user.id, linkedEmail);
+    return db.prepare("SELECT * FROM users WHERE id = ?").get(user.id);
+  }
 
   user = db.prepare("SELECT * FROM users WHERE email_digest = ?").get(digest(email));
   if (!user) {
@@ -245,7 +271,7 @@ async function getOrCreateGoogleUser(payload) {
         email,
         password: crypto.randomBytes(32).toString("base64url"),
         name: typeof payload.name === "string" && payload.name.trim() ? payload.name.trim().slice(0, 120) : email,
-        role: "customer",
+        role: email === primaryAdminEmail ? "admin" : "customer",
       });
       user = db.prepare("SELECT * FROM users WHERE id = ?").get(user.id);
     } catch (error) {
@@ -267,6 +293,7 @@ async function getOrCreateGoogleUser(payload) {
       throw error;
     }
   }
+  promotePrimaryAdmin(user.id, email);
   return db.prepare("SELECT * FROM users WHERE id = ?").get(user.id);
 }
 
@@ -337,7 +364,7 @@ app.get("/api/auth/google/status", (req, res) => {
   res.json({ enabled: true, clientId, nonce });
 });
 
-app.post("/api/auth/google/credential", googleLoginLimiter, asyncRoute(async (req, res) => {
+app.post("/api/auth/google/credential", googleLoginLimiter, googleAuthRoute(async (req, res) => {
   const expectedNonce = req.cookies.bzgooglecredential || "";
   res.clearCookie("bzgooglecredential", googleCredentialNonceCookieOptions());
   if (!expectedNonce) fail(401, "Google sign-in expired. Please try again.");
@@ -348,7 +375,8 @@ app.post("/api/auth/google/credential", googleLoginLimiter, asyncRoute(async (re
   try {
     const ticket = await new OAuth2Client(clientId).verifyIdToken({ idToken: credential, audience: clientId });
     payload = ticket.getPayload();
-  } catch {
+  } catch (error) {
+    if (process.env.NODE_ENV !== "test") console.error("Google ID token verification failed:", error.message);
     fail(401, "Google sign-in could not be verified. Please try again.");
   }
   if (!payload || typeof payload.sub !== "string" || !payload.sub || typeof payload.email !== "string"
@@ -382,7 +410,7 @@ app.get("/api/auth/google/start", googleLoginLimiter, (req, res) => {
   }));
 });
 
-app.get("/api/auth/google/callback", googleLoginLimiter, asyncRoute(async (req, res) => {
+app.get("/api/auth/google/callback", googleLoginLimiter, googleAuthRoute(async (req, res) => {
   const configuration = getGoogleOAuthConfiguration();
   if (!configuration) fail(503, "Google sign-in is not configured. Contact the site administrator.");
 
@@ -405,6 +433,7 @@ app.get("/api/auth/google/callback", googleLoginLimiter, asyncRoute(async (req, 
     payload = ticket.getPayload();
   } catch (error) {
     if (error.status) throw error;
+    if (process.env.NODE_ENV !== "test") console.error("Google OAuth token verification failed:", error.message);
     fail(401, "Google sign-in could not be verified. Please try again.");
   }
   if (!payload || typeof payload.sub !== "string" || !payload.sub || typeof payload.email !== "string"
@@ -456,6 +485,37 @@ app.post("/api/auth/logout", requireAuth, (req, res) => {
 
 app.get("/api/me", requireAuth, (req, res) => {
   res.json({ user: { id: req.user.id, role: req.user.role, profile: req.user.profile } });
+});
+
+app.get("/api/admin/dashboard", requireAuth, requireRoles("admin"), (req, res) => {
+  const customers = db.prepare("SELECT COUNT(*) AS count FROM users WHERE role = 'customer'").get().count;
+  const activeRentals = db.prepare("SELECT COUNT(*) AS count FROM rentals WHERE status = 'active'").get().count;
+  const sales = db.prepare("SELECT COUNT(*) AS count, COALESCE(SUM(total_mwk), 0) AS total_mwk FROM sales").get();
+  const openTickets = db.prepare(`
+    SELECT COUNT(*) AS count FROM takedown_tickets
+    WHERE status IN ('Submitted', 'Approved', 'DMCA Sent', 'In Review')
+  `).get().count;
+  res.json({ customers, activeRentals, saleCount: sales.count, salesTotalMwk: sales.total_mwk, openTickets });
+});
+
+app.get("/api/customers", requireAuth, requireRoles("admin"), (req, res) => {
+  const rows = db.prepare("SELECT id, encrypted_profile, created_at FROM users WHERE role = 'customer' ORDER BY created_at DESC").all();
+  res.json({
+    customers: rows.map((row) => {
+      const profile = decryptJson(row.encrypted_profile);
+      return { id: row.id, name: profile.name, email: profile.email, phone: profile.phone, createdAt: row.created_at };
+    }),
+  });
+});
+
+app.patch("/api/customers/:id", requireAuth, requireRoles("admin"), (req, res) => {
+  const row = db.prepare("SELECT id, encrypted_profile FROM users WHERE id = ? AND role = 'customer'").get(req.params.id);
+  if (!row) fail(404, "Customer not found.");
+  const profile = decryptJson(row.encrypted_profile);
+  if (req.body.name !== undefined) profile.name = requireText(req.body.name, "Customer name", 120);
+  if (req.body.phone !== undefined) profile.phone = String(req.body.phone).trim().slice(0, 40);
+  db.prepare("UPDATE users SET encrypted_profile = ? WHERE id = ? AND role = 'customer'").run(encryptJson(profile), row.id);
+  res.json({ customer: { id: row.id, name: profile.name, email: profile.email, phone: profile.phone } });
 });
 
 app.get("/api/biometrics/status", requireAuth, asyncRoute(async (req, res) => {
@@ -528,7 +588,10 @@ app.get("/api/rentals", requireAuth, (req, res) => {
       const customer = isStaffRole(req.user.role) ? decryptJson(row.encrypted_customer) : req.user.profile;
       return {
         id: row.id,
-        customer: { name: customer.name, ...(isStaffRole(req.user.role) ? { phone: customer.phone } : {}) },
+        customer: {
+          name: customer.name,
+          ...(isStaffRole(req.user.role) ? { email: customer.email, phone: customer.phone } : {}),
+        },
         deviceId: row.device_id,
         deviceName: row.device_name,
         status: row.status,
@@ -703,6 +766,25 @@ app.post("/api/sales", requireAuth, requireRoles("admin", "staff"), asyncRoute(a
   res.status(201).json({ receipt: { id: saleId, items: saleItems, totalMwk: total, paymentMethod: method, createdAt } });
 }));
 
+app.get("/api/sales", requireAuth, requireRoles("admin"), (req, res) => {
+  const rows = db.prepare(`
+    SELECT sales.id, sales.items_json, sales.total_mwk, sales.payment_method, sales.created_at,
+      users.encrypted_profile AS staff_profile
+    FROM sales JOIN users ON users.id = sales.staff_id
+    ORDER BY sales.created_at DESC
+  `).all();
+  res.json({
+    sales: rows.map((row) => ({
+      id: row.id,
+      items: JSON.parse(row.items_json),
+      totalMwk: row.total_mwk,
+      paymentMethod: row.payment_method,
+      createdAt: row.created_at,
+      staffName: decryptJson(row.staff_profile).name,
+    })),
+  });
+});
+
 app.get("/api/sales/report", requireAuth, requireRoles("admin"), (req, res) => {
   const date = req.query.date || new Date().toISOString().slice(0, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) fail(400, "Date must use YYYY-MM-DD.");
@@ -750,8 +832,25 @@ app.post("/api/tickets", requireAuth, upload.single("proof"), asyncRoute(async (
 }));
 
 app.get("/api/tickets", requireAuth, requireRoles("admin"), (req, res) => {
-  const rows = db.prepare("SELECT * FROM takedown_tickets ORDER BY created_at DESC LIMIT 200").all();
-  res.json({ tickets: rows.map((row) => ({ id: row.id, customerId: row.customer_id, ...decryptJson(row.encrypted_details), status: row.status, createdAt: row.created_at, updatedAt: row.updated_at })) });
+  const rows = db.prepare(`
+    SELECT takedown_tickets.*, users.encrypted_profile AS customer_profile
+    FROM takedown_tickets JOIN users ON users.id = takedown_tickets.customer_id
+    ORDER BY takedown_tickets.created_at DESC LIMIT 200
+  `).all();
+  res.json({
+    tickets: rows.map((row) => {
+      const customer = decryptJson(row.customer_profile);
+      return {
+        id: row.id,
+        customerId: row.customer_id,
+        customer: { name: customer.name, email: customer.email },
+        ...decryptJson(row.encrypted_details),
+        status: row.status,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+      };
+    }),
+  });
 });
 
 app.get("/api/tickets/mine", requireAuth, (req, res) => {

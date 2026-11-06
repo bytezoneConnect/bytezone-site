@@ -17,6 +17,39 @@ function notify(message, error = false) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+async function loadAdminDashboard() {
+  if (!isAdmin()) return;
+  const stats = await request("/api/admin/dashboard");
+  byId("stat-customers").textContent = stats.customers.toLocaleString();
+  byId("stat-active-rentals").textContent = stats.activeRentals.toLocaleString();
+  byId("stat-sales-count").textContent = stats.saleCount.toLocaleString();
+  byId("stat-sales-total").textContent = money(stats.salesTotalMwk);
+  byId("stat-open-tickets").textContent = stats.openTickets.toLocaleString();
+}
+
+async function loadCustomers() {
+  if (!isAdmin()) return;
+  const { customers } = await request("/api/customers");
+  byId("customer-list").innerHTML = customers.map((customer) => `
+    <form class="grid gap-2 rounded-lg border border-white/10 p-3 sm:grid-cols-[1fr_1fr_1fr_auto]" data-edit-customer="${escapeHtml(customer.id)}">
+      <div class="self-center text-sm"><strong>${escapeHtml(customer.email)}</strong><small class="block text-slate-400">Joined ${new Date(customer.createdAt).toLocaleDateString()}</small></div>
+      <input name="name" class="form-input" value="${escapeHtml(customer.name)}" aria-label="Name for ${escapeHtml(customer.email)}" required maxlength="120">
+      <input name="phone" class="form-input" value="${escapeHtml(customer.phone || "")}" aria-label="Phone for ${escapeHtml(customer.email)}" maxlength="40">
+      <button class="secondary-button justify-center" type="submit">Save</button>
+    </form>`).join("") || '<p class="text-sm text-slate-400">No customers yet.</p>';
+}
+
+async function loadSales() {
+  if (!isAdmin()) return;
+  const { sales } = await request("/api/sales");
+  byId("sales-history-list").innerHTML = sales.map((sale) => `
+    <article class="rounded-xl border border-white/10 p-4">
+      <div class="flex items-center justify-between gap-2"><strong>${money(sale.totalMwk)}</strong><small>${new Date(sale.createdAt).toLocaleString()}</small></div>
+      <p class="mt-1 text-xs text-slate-400">${escapeHtml(sale.staffName)} · ${escapeHtml(sale.paymentMethod)}</p>
+      <ul class="mt-2 text-sm text-slate-300">${sale.items.map((item) => `<li>${escapeHtml(item.name)} × ${item.quantity} · ${money(item.lineTotalMwk)}</li>`).join("")}</ul>
+    </article>`).join("") || '<p class="text-sm text-slate-400">No sales recorded.</p>';
+}
+
 async function request(path, options = {}) {
   const headers = new Headers(options.headers || {});
   if (options.body && !(options.body instanceof FormData)) headers.set("content-type", "application/json");
@@ -64,10 +97,14 @@ function showWorkspace() {
   byId("role-badge").textContent = state.user?.role || "";
   byId("staff-tools").classList.toggle("hidden", !isStaff());
   byId("device-admin").classList.toggle("hidden", !isAdmin());
+  byId("pos-panel").classList.toggle("hidden", !isStaff());
   byId("inventory-panel").classList.toggle("hidden", !isAdmin());
   byId("report-panel").classList.toggle("hidden", !isAdmin());
   byId("ticket-admin-panel").classList.toggle("hidden", !isAdmin());
   byId("pos-inquiries-panel").classList.toggle("hidden", !isAdmin());
+  byId("admin-dashboard-panel").classList.toggle("hidden", !isAdmin());
+  byId("customer-management-panel").classList.toggle("hidden", !isAdmin());
+  byId("sales-history-panel").classList.toggle("hidden", !isAdmin());
   byId("customer-id-field").classList.toggle("hidden", !isStaff());
   byId("deposit-field").classList.toggle("hidden", !isStaff());
   byId("rental-form").classList.toggle("hidden", !isStaff() && state.user?.role !== "customer");
@@ -108,7 +145,7 @@ async function loadRentals() {
   byId("rental-list").innerHTML = result.rentals.map((rental) => `
     <div class="rounded-xl border ${rental.overdue ? "border-amber-400/60" : "border-white/10"} bg-bytezone-ink/70 p-4">
       <div class="flex flex-wrap items-center justify-between gap-2">
-        <strong>${escapeHtml(rental.deviceName)}${isStaff() ? ` · ${escapeHtml(rental.customer.name)}` : ""}</strong>
+        <strong>${escapeHtml(rental.deviceName)}${isStaff() ? ` · ${escapeHtml(rental.customer.name)}${rental.customer.email ? ` (${escapeHtml(rental.customer.email)})` : ""}` : ""}</strong>
         ${rental.overdue ? '<span class="text-xs font-bold text-amber-300">OVERDUE</span>' : ""}
       </div>
       <p class="mt-2 text-xs text-slate-400">Expected ${new Date(rental.expectedReturnAt).toLocaleString()} · Deposit ${money(rental.depositMwk)} (${escapeHtml(rental.depositStatus)})</p>
@@ -152,11 +189,13 @@ async function loadTickets() {
     byId("ticket-admin-list").innerHTML = tickets.map((ticket) => `
       <article class="rounded-xl border border-white/10 p-4">
         <div class="flex items-center justify-between gap-2"><strong>${escapeHtml(ticket.status)}</strong><small>${new Date(ticket.createdAt).toLocaleDateString()}</small></div>
+        <p class="mt-2 text-sm">${escapeHtml(ticket.customer.name)} · ${escapeHtml(ticket.customer.email)}</p>
         <a class="mt-2 block break-all text-sm text-bytezone-blue underline" href="${escapeHtml(ticket.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(ticket.url)}</a>
         <p class="mt-2 text-sm text-slate-300">${escapeHtml(ticket.ownershipProof)}</p>
         <a class="mt-2 inline-block text-sm text-bytezone-mint underline" href="/api/vault/${encodeURIComponent(ticket.proofFileId)}">Download encrypted evidence</a>
+        ${ticket.status === "Submitted" ? `<div class="mt-3 flex gap-2"><button class="secondary-button" data-ticket-decision="Approved" data-ticket-id="${escapeHtml(ticket.id)}" type="button">Approve</button><button class="secondary-button" data-ticket-decision="Rejected" data-ticket-id="${escapeHtml(ticket.id)}" type="button">Reject</button></div>` : ""}
         <select class="form-input mt-3" data-ticket-status="${escapeHtml(ticket.id)}">
-          ${["Submitted", "DMCA Sent", "In Review", "Removed", "Failed"].map((status) => `<option ${status === ticket.status ? "selected" : ""}>${status}</option>`).join("")}
+          ${["Submitted", "Approved", "Rejected", "DMCA Sent", "In Review", "Removed", "Failed"].map((status) => `<option ${status === ticket.status ? "selected" : ""}>${status}</option>`).join("")}
         </select>
       </article>`).join("") || '<p class="text-sm text-slate-400">No requests submitted.</p>';
   } else {
@@ -196,7 +235,8 @@ function confirmSensitiveAction(label) {
 async function refreshAll() {
   try {
     await loadDevices();
-    await Promise.all([loadRentals(), loadInventory(), loadTickets(), loadInquiries(), loadBiometricStatus()]);
+    const adminTasks = isAdmin() ? [loadAdminDashboard(), loadCustomers(), loadSales()] : [];
+    await Promise.all([loadRentals(), loadInventory(), loadTickets(), loadInquiries(), loadBiometricStatus(), ...adminTasks]);
   } catch (error) {
     notify(error.message, true);
   }
@@ -433,21 +473,39 @@ document.addEventListener("click", async (event) => {
         method: "PATCH", body: jsonBody({ status: target.value }),
       });
       notify("Ticket status updated.");
+      await Promise.all([loadTickets(), loadAdminDashboard()]);
+    }
+    if (target.dataset.ticketDecision) {
+      await request(`/api/tickets/${encodeURIComponent(target.dataset.ticketId)}`, {
+        method: "PATCH", body: jsonBody({ status: target.dataset.ticketDecision }),
+      });
+      notify(`Removal request ${target.dataset.ticketDecision.toLowerCase()}.`);
+      await Promise.all([loadTickets(), loadAdminDashboard()]);
     }
     if (target.dataset.refresh === "rentals") await loadRentals();
     if (target.dataset.refresh === "inventory") await loadInventory();
     if (target.dataset.refresh === "tickets") await loadTickets();
     if (target.dataset.refresh === "inquiries") await loadInquiries();
+    if (target.dataset.refresh === "customers") await loadCustomers();
+    if (target.dataset.refresh === "sales") await loadSales();
   } catch (error) { notify(error.message, true); }
 });
 
 document.addEventListener("submit", async (event) => {
   const deviceForm = event.target.closest("form[data-edit-device]");
   const itemForm = event.target.closest("form[data-edit-item]");
-  if (!deviceForm && !itemForm) return;
+  const customerForm = event.target.closest("form[data-edit-customer]");
+  if (!deviceForm && !itemForm && !customerForm) return;
   event.preventDefault();
   try {
-    if (deviceForm) {
+    if (customerForm) {
+      const values = Object.fromEntries(new FormData(customerForm).entries());
+      await request(`/api/customers/${encodeURIComponent(customerForm.dataset.editCustomer)}`, {
+        method: "PATCH", body: jsonBody(values),
+      });
+      notify("Customer details updated.");
+      await loadCustomers();
+    } else if (deviceForm) {
       const values = Object.fromEntries(new FormData(deviceForm).entries());
       await request(`/api/devices/${encodeURIComponent(deviceForm.dataset.editDevice)}`, {
         method: "PATCH", body: jsonBody({ rateMwk: Number(values.rateMwk), status: values.status }),
@@ -488,7 +546,8 @@ async function initialize() {
               method: "POST",
               body: jsonBody({ credential }),
             });
-            finishLogin(result);
+            csrfToken = result.csrfToken;
+            window.location.assign("/ops");
           } catch (error) {
             notify(error.message, true);
           }

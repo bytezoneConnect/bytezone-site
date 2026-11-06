@@ -14,7 +14,7 @@ process.env.NODE_ENV = "test";
 
 const { app, createUser } = require("../src/app");
 const { db, migrate } = require("../src/database");
-const { decryptJson } = require("../src/security");
+const { decryptJson, digest } = require("../src/security");
 
 test("authenticated rentals, encrypted ownership evidence, sales, and admin workflows", async (t) => {
   await migrate();
@@ -137,6 +137,8 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
   assert.equal(clientIdOnlyLogin.response.status, 200);
   assert.equal(clientIdOnlyLogin.body.user.id, customerId);
   csrfToken = clientIdOnlyLogin.body.csrfToken;
+  assert.equal((await call("/api/customers")).response.status, 403);
+  assert.equal((await call("/api/sales")).response.status, 403);
 
   await call("/api/auth/google/status");
   const missingGoogleCredential = await call("/api/auth/google/credential", { method: "POST" });
@@ -150,6 +152,35 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
   });
   assert.equal(invalidNonceLogin.response.status, 401);
   process.env.GOOGLE_CLIENT_SECRET = googleClientSecret;
+
+  const unverifiedPrimaryRegistration = await call("/api/auth/register", {
+    method: "POST",
+    body: { email: "gomesshumba97@gmail.com", password: "unverified-primary-password", name: "Primary Admin" },
+  });
+  assert.equal(unverifiedPrimaryRegistration.response.status, 201);
+  assert.equal(unverifiedPrimaryRegistration.body.user.role, "customer");
+  csrfToken = unverifiedPrimaryRegistration.body.csrfToken;
+  assert.equal((await call("/api/admin/dashboard")).response.status, 403);
+
+  const primaryAdminStatus = await call("/api/auth/google/status");
+  googleIdentity = {
+    sub: "google-primary-admin-subject",
+    email: "gomesshumba97@gmail.com",
+    email_verified: true,
+    name: "Primary Admin",
+    nonce: primaryAdminStatus.body.nonce,
+  };
+  const primaryAdminLogin = await call("/api/auth/google/credential", {
+    method: "POST",
+    body: { credential: "mock-google-id-token" },
+  });
+  assert.equal(primaryAdminLogin.response.status, 200);
+  assert.equal(primaryAdminLogin.body.user.role, "admin");
+  assert.equal(db.prepare("SELECT role FROM users WHERE email_digest = ?").get(digest("gomesshumba97@gmail.com")).role, "admin");
+  assert.equal((await call("/api/admin/dashboard")).response.status, 200);
+  csrfToken = primaryAdminLogin.body.csrfToken;
+  const customerList = await call("/api/customers");
+  assert.ok(customerList.body.customers.some((customer) => customer.email === "customer@example.test"));
 
   async function startGoogleSignIn(profile) {
     const response = await call("/api/auth/google/start", { redirect: "manual" });
@@ -234,6 +265,8 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
   proof.set("proof", new Blob(["ownership proof"], { type: "text/plain" }), "proof.txt");
   const ticket = await call("/api/tickets", { method: "POST", form: proof });
   assert.equal(ticket.response.status, 201);
+  assert.equal((await call("/api/tickets/mine")).body.tickets.length, 1);
+  assert.equal((await call("/api/tickets")).response.status, 403);
   const savedTicket = db.prepare("SELECT encrypted_details FROM takedown_tickets WHERE id = ?").get(ticket.body.ticket.id);
   assert.equal(savedTicket.encrypted_details.includes("example.test"), false);
   const ticketDetails = decryptJson(savedTicket.encrypted_details);
@@ -248,6 +281,10 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
   });
   assert.equal(adminLogin.response.status, 200);
   csrfToken = adminLogin.body.csrfToken;
+  assert.equal((await call("/api/customers")).body.customers[0].email, "customer@example.test");
+  const customerForEdit = (await call("/api/customers")).body.customers.find((item) => item.email === "customer@example.test");
+  const updatedCustomer = await call(`/api/customers/${customerForEdit.id}`, { method: "PATCH", body: { phone: "0999000001" } });
+  assert.equal(updatedCustomer.body.customer.phone, "0999000001");
 
   const inquiries = await call("/api/pos-inquiries");
   assert.equal(inquiries.body.inquiries[0].contact, "customer@example.test / 0999000000");
@@ -258,6 +295,11 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
 
   const adminTickets = await call("/api/tickets");
   assert.equal(adminTickets.body.tickets[0].url, "https://example.test/private-page");
+  assert.equal(adminTickets.body.tickets[0].customer.email, "customer@example.test");
+  const approvedTicket = await call(`/api/tickets/${ticket.body.ticket.id}`, { method: "PATCH", body: { status: "Approved" } });
+  assert.equal(approvedTicket.body.ticket.status, "Approved");
+  const rejectedTicket = await call(`/api/tickets/${ticket.body.ticket.id}`, { method: "PATCH", body: { status: "Rejected" } });
+  assert.equal(rejectedTicket.body.ticket.status, "Rejected");
   const updatedTicket = await call(`/api/tickets/${ticket.body.ticket.id}`, { method: "PATCH", body: { status: "In Review" } });
   assert.equal(updatedTicket.body.ticket.status, "In Review");
 
@@ -302,6 +344,14 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
   const report = await call("/api/sales/report");
   assert.equal(report.response.status, 200);
   assert.equal(report.body.totalMwk, 3000);
+  const salesHistory = await call("/api/sales");
+  assert.equal(salesHistory.body.sales.length, 1);
+  assert.equal(salesHistory.body.sales[0].staffName, "Test Admin");
+  const dashboardStats = await call("/api/admin/dashboard");
+  assert.equal(dashboardStats.body.activeRentals, 0);
+  assert.equal((await call("/api/rentals")).body.rentals.length, 2);
+  assert.equal(dashboardStats.body.saleCount, 1);
+  assert.equal(dashboardStats.body.salesTotalMwk, 3000);
   const inventory = await call("/api/inventory");
   assert.equal(inventory.body.items[0].quantity, 1);
 
@@ -315,4 +365,9 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
   const googleCustomer = (await call("/api/me")).body.user;
   assert.equal(googleCustomer.role, "customer");
   assert.equal(googleCustomer.profile.email, "google-only@example.test");
+  assert.equal((await call("/api/rentals")).body.rentals.length, 0);
+  assert.equal((await call("/api/tickets/mine")).body.tickets.length, 0);
+  assert.equal((await call("/api/tickets")).response.status, 403);
+  assert.equal((await call("/api/customers")).response.status, 403);
+  assert.equal((await call("/api/sales")).response.status, 403);
 });

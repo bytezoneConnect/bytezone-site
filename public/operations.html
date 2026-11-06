@@ -61,6 +61,14 @@
           </div>
         </div>
 
+        <section id="admin-dashboard-panel" class="hidden grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <article class="panel"><p class="panel-copy">Customers</p><p id="stat-customers" class="mt-2 text-2xl font-bold text-bytezone-mint">0</p></article>
+          <article class="panel"><p class="panel-copy">Active rentals</p><p id="stat-active-rentals" class="mt-2 text-2xl font-bold text-bytezone-mint">0</p></article>
+          <article class="panel"><p class="panel-copy">All sales</p><p id="stat-sales-count" class="mt-2 text-2xl font-bold text-bytezone-mint">0</p></article>
+          <article class="panel"><p class="panel-copy">Sales total</p><p id="stat-sales-total" class="mt-2 text-2xl font-bold text-bytezone-mint">MWK 0</p></article>
+          <article class="panel"><p class="panel-copy">Open removal requests</p><p id="stat-open-tickets" class="mt-2 text-2xl font-bold text-bytezone-mint">0</p></article>
+        </section>
+
         <section class="grid gap-6 lg:grid-cols-2">
           <article class="panel">
             <div class="flex items-center justify-between gap-3">
@@ -115,6 +123,14 @@
         </section>
 
         <section id="staff-tools" class="hidden grid gap-6 lg:grid-cols-2">
+          <article id="customer-management-panel" class="panel hidden lg:col-span-2">
+            <div class="flex items-center justify-between gap-3">
+              <div><h2 class="panel-title">Customers</h2><p class="panel-copy">Manage customer contact details.</p></div>
+              <button class="secondary-button" data-refresh="customers" type="button">Refresh</button>
+            </div>
+            <div id="customer-list" class="mt-4 grid gap-3"></div>
+          </article>
+
           <article id="device-admin" class="panel hidden">
             <h2 class="panel-title">Device catalogue</h2>
             <p class="panel-copy">Manage device names, rates and maintenance status.</p>
@@ -161,6 +177,14 @@
               <button class="secondary-button" type="submit">Load report</button>
             </form>
             <div id="sales-report" class="mt-4 text-sm text-slate-300"></div>
+          </article>
+
+          <article id="sales-history-panel" class="panel hidden lg:col-span-2">
+            <div class="flex items-center justify-between gap-3">
+              <div><h2 class="panel-title">All sales</h2><p class="panel-copy">Full sales history and receipts.</p></div>
+              <button class="secondary-button" data-refresh="sales" type="button">Refresh</button>
+            </div>
+            <div id="sales-history-list" class="mt-4 grid gap-3 md:grid-cols-2"></div>
           </article>
 
           <article id="ticket-admin-panel" class="panel hidden lg:col-span-2">
