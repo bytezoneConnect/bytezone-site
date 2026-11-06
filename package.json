@@ -12,6 +12,7 @@
     "migrate": "node scripts/migrate.js",
     "create-user": "node scripts/create-user.js",
     "build:css": "tailwindcss -i ./src/input.css -o ./public/app.css --minify",
+    "build": "npm run build:netlify",
     "prebuild:netlify": "npm run build:css",
     "build:netlify": "node scripts/build-netlify.js",
     "test": "node --test"

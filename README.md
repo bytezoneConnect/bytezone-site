@@ -31,7 +31,7 @@ Requirements: Node.js 20 or newer and npm.
 
    Use the `admin` role for device pricing, inventory and reports, and takedown ticket management. Customer accounts can register from the portal.
 
-`npm start` builds the Tailwind stylesheet and runs pending migrations. To apply migrations separately, use `npm run migrate`. `npm test` runs the focused API/security tests.
+`npm start` builds the Tailwind stylesheet and runs pending migrations. `npm run build` (or `npm run build:netlify`) creates the static Netlify deployment output in `dist/`; `npm run build:css` only compiles the portal stylesheet. `VITE_API_URL` is not used: this is not a Vite app, and Netlify proxies `/api/*` to Railway using its server-side `BYTEZONE_BACKEND_URL` and `BYTEZONE_PROXY_SECRET` settings. To apply migrations separately, use `npm run migrate`. `npm test` runs the focused API/security tests.
 
 ## Security and operations
 

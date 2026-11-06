@@ -42,7 +42,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 503,
       headers: { "content-type": "application/json", "cache-control": "no-store" },
-      body: JSON.stringify({ error: "ByteZone portal backend is not configured. Contact the site administrator." }),
+      body: JSON.stringify({ error: "ByteZone portal backend is not configured. Set BYTEZONE_BACKEND_URL to the Railway HTTPS URL and BYTEZONE_PROXY_SECRET to the matching Railway secret in Netlify Functions environment variables, then redeploy." }),
     };
   }
 

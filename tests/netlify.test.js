@@ -88,6 +88,7 @@ test("Netlify backend proxy rejects missing configuration and paths outside the 
   delete process.env.BYTEZONE_PROXY_SECRET;
   const unconfigured = await handler({ path: "/.netlify/functions/backend/ops", httpMethod: "GET" });
   assert.equal(unconfigured.statusCode, 503);
+  assert.match(JSON.parse(unconfigured.body).error, /BYTEZONE_BACKEND_URL.*BYTEZONE_PROXY_SECRET/);
 
   process.env.BYTEZONE_BACKEND_URL = "https://backend.example";
   process.env.BYTEZONE_PROXY_SECRET = "test-proxy-secret-with-more-than-32-characters";
