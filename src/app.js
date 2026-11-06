@@ -1,6 +1,7 @@
 const crypto = require("node:crypto");
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const { OAuth2Client } = require("google-auth-library");
 const multer = require("multer");
 const rateLimit = require("express-rate-limit");
 const path = require("node:path");
@@ -23,6 +24,7 @@ const upload = multer({
 });
 const sessionHours = Number(process.env.BYTEZONE_SESSION_HOURS || 12);
 const ticketStatuses = new Set(["Submitted", "DMCA Sent", "In Review", "Removed", "Failed"]);
+const defaultGoogleClientId = "476466036015-8lomocr4u059678hk39n7p2jobdc5elt.apps.googleusercontent.com";
 
 app.disable("x-powered-by");
 app.set("trust proxy", process.env.NODE_ENV === "production" ? 1 : false);
@@ -50,7 +52,7 @@ app.get("/", (req, res) => res.sendFile(path.resolve(__dirname, "..", "index.htm
 app.get("/sitemap.xml", (req, res) => res.sendFile(path.resolve(__dirname, "..", "sitemap.xml")));
 app.get("/googlea569bbac5b256e52.html", (req, res) => res.sendFile(path.resolve(__dirname, "..", "googlea569bbac5b256e52.html")));
 app.get("/ops", (req, res, next) => {
-  res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
+  res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.googleusercontent.com; connect-src 'self' https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
   res.sendFile(path.resolve(__dirname, "..", "public", "operations.html"), (error) => {
     if (error) next(error);
   });
@@ -89,6 +91,50 @@ function cookieOptions(maxAge) {
     sameSite: "strict",
     path: "/",
     maxAge,
+  };
+}
+
+function getGoogleOAuthConfiguration() {
+  const clientId = getGoogleClientId();
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const publicOrigin = process.env.BYTEZONE_PUBLIC_ORIGIN;
+  if (!clientSecret || !publicOrigin) return null;
+
+  let origin;
+  try {
+    origin = new URL(publicOrigin);
+  } catch {
+    return null;
+  }
+  if (origin.origin !== publicOrigin || (process.env.NODE_ENV === "production" && origin.protocol !== "https:")) return null;
+
+  const redirectUri = new URL("/api/auth/google/callback", origin).toString();
+  return {
+    clientId,
+    client: new OAuth2Client(clientId, clientSecret, redirectUri),
+    publicOrigin,
+  };
+}
+
+function getGoogleClientId() {
+  return process.env.GOOGLE_CLIENT_ID || defaultGoogleClientId;
+}
+
+function googleCredentialNonceCookieOptions(maxAge) {
+  return {
+    ...cookieOptions(maxAge),
+    sameSite: "strict",
+    path: "/api/auth/google/credential",
+  };
+}
+
+function googleStateCookieOptions(maxAge) {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/api/auth/google/callback",
+    ...(maxAge === undefined ? {} : { maxAge }),
   };
 }
 
@@ -186,6 +232,44 @@ async function createUser({ email, password, name, phone = "", role = "customer"
   return { id, profile, role };
 }
 
+async function getOrCreateGoogleUser(payload) {
+  const subjectDigest = digest(`google:${payload.sub}`);
+  const email = normalizeEmail(payload.email);
+  let user = db.prepare("SELECT * FROM users WHERE google_sub_digest = ?").get(subjectDigest);
+  if (user) return user;
+
+  user = db.prepare("SELECT * FROM users WHERE email_digest = ?").get(digest(email));
+  if (!user) {
+    try {
+      user = await createUser({
+        email,
+        password: crypto.randomBytes(32).toString("base64url"),
+        name: typeof payload.name === "string" && payload.name.trim() ? payload.name.trim().slice(0, 120) : email,
+        role: "customer",
+      });
+      user = db.prepare("SELECT * FROM users WHERE id = ?").get(user.id);
+    } catch (error) {
+      if (error.status !== 409) throw error;
+      user = db.prepare("SELECT * FROM users WHERE email_digest = ?").get(digest(email));
+      if (!user) throw error;
+    }
+  }
+
+  if (user.google_sub_digest && user.google_sub_digest !== subjectDigest) {
+    fail(409, "This email is already linked to a different Google account.");
+  }
+  if (!user.google_sub_digest) {
+    try {
+      db.prepare("UPDATE users SET google_sub_digest = ? WHERE id = ? AND google_sub_digest IS NULL")
+        .run(subjectDigest, user.id);
+    } catch (error) {
+      if (error.code === "SQLITE_CONSTRAINT_UNIQUE") fail(409, "This Google account is already linked to another user.");
+      throw error;
+    }
+  }
+  return db.prepare("SELECT * FROM users WHERE id = ?").get(user.id);
+}
+
 async function verifyStepUp(req) {
   if (req.body.useBiometric === true) {
     const result = await biometrics.verify(req.user.id);
@@ -226,6 +310,13 @@ const registrationLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: "Too many account creation attempts. Try again later." },
 });
+const googleLoginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many Google sign-in attempts. Try again in 15 minutes." },
+});
 
 app.get("/api/csrf", (req, res) => {
   const token = crypto.randomBytes(32).toString("base64url");
@@ -237,6 +328,99 @@ app.post("/api/auth/register", registrationLimiter, asyncRoute(async (req, res) 
   const user = await createUser({ ...req.body, role: "customer" });
   const csrfToken = setSession(res, user.id);
   res.status(201).json({ user: { id: user.id, role: user.role, profile: user.profile }, csrfToken });
+}));
+
+app.get("/api/auth/google/status", (req, res) => {
+  const clientId = getGoogleClientId();
+  const nonce = crypto.randomBytes(32).toString("base64url");
+  res.cookie("bzgooglecredential", nonce, googleCredentialNonceCookieOptions(10 * 60 * 1000));
+  res.json({ enabled: true, clientId, nonce });
+});
+
+app.post("/api/auth/google/credential", googleLoginLimiter, asyncRoute(async (req, res) => {
+  const expectedNonce = req.cookies.bzgooglecredential || "";
+  res.clearCookie("bzgooglecredential", googleCredentialNonceCookieOptions());
+  if (!expectedNonce) fail(401, "Google sign-in expired. Please try again.");
+
+  const credential = requireText(req.body?.credential, "Google credential", 16384);
+  const clientId = getGoogleClientId();
+  let payload;
+  try {
+    const ticket = await new OAuth2Client(clientId).verifyIdToken({ idToken: credential, audience: clientId });
+    payload = ticket.getPayload();
+  } catch {
+    fail(401, "Google sign-in could not be verified. Please try again.");
+  }
+  if (!payload || typeof payload.sub !== "string" || !payload.sub || typeof payload.email !== "string"
+    || payload.email_verified !== true) {
+    fail(401, "Google sign-in requires a verified email address.");
+  }
+  const expectedNonceBytes = Buffer.from(expectedNonce);
+  const receivedNonceBytes = Buffer.from(typeof payload.nonce === "string" ? payload.nonce : "");
+  if (expectedNonceBytes.length !== receivedNonceBytes.length || !crypto.timingSafeEqual(expectedNonceBytes, receivedNonceBytes)) {
+    fail(401, "Google sign-in verification failed. Please try again.");
+  }
+
+  const user = await getOrCreateGoogleUser(payload);
+  const csrfToken = setSession(res, user.id);
+  res.json({ user: { id: user.id, role: user.role, profile: decryptJson(user.encrypted_profile) }, csrfToken });
+}));
+
+app.get("/api/auth/google/start", googleLoginLimiter, (req, res) => {
+  const configuration = getGoogleOAuthConfiguration();
+  if (!configuration) return res.status(503).json({ error: "Google sign-in is not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET on Railway and BYTEZONE_PUBLIC_ORIGIN to the Netlify site origin." });
+
+  const state = crypto.randomBytes(32).toString("base64url");
+  const nonce = crypto.randomBytes(32).toString("base64url");
+  res.cookie("bzgoogleoauth", `${state}.${nonce}`, googleStateCookieOptions(10 * 60 * 1000));
+  return res.redirect(configuration.client.generateAuthUrl({
+    access_type: "online",
+    nonce,
+    prompt: "select_account",
+    scope: ["openid", "email", "profile"],
+    state,
+  }));
+});
+
+app.get("/api/auth/google/callback", googleLoginLimiter, asyncRoute(async (req, res) => {
+  const configuration = getGoogleOAuthConfiguration();
+  if (!configuration) fail(503, "Google sign-in is not configured. Contact the site administrator.");
+
+  const [expectedState, expectedNonce, extraStatePart] = String(req.cookies.bzgoogleoauth || "").split(".");
+  const receivedState = typeof req.query.state === "string" ? req.query.state : "";
+  res.clearCookie("bzgoogleoauth", googleStateCookieOptions());
+  const expectedBytes = Buffer.from(expectedState || "");
+  const receivedBytes = Buffer.from(receivedState);
+  if (!expectedState || !expectedNonce || extraStatePart !== undefined
+    || expectedBytes.length !== receivedBytes.length || !crypto.timingSafeEqual(expectedBytes, receivedBytes)) {
+    fail(400, "Google sign-in verification failed. Please try again.");
+  }
+  if (req.query.error || typeof req.query.code !== "string") fail(401, "Google sign-in was cancelled or could not be completed.");
+
+  let payload;
+  try {
+    const { tokens } = await configuration.client.getToken(req.query.code);
+    if (!tokens.id_token) fail(401, "Google did not return a verified identity.");
+    const ticket = await configuration.client.verifyIdToken({ idToken: tokens.id_token, audience: configuration.clientId });
+    payload = ticket.getPayload();
+  } catch (error) {
+    if (error.status) throw error;
+    fail(401, "Google sign-in could not be verified. Please try again.");
+  }
+  if (!payload || typeof payload.sub !== "string" || !payload.sub || typeof payload.email !== "string"
+    || payload.email_verified !== true) {
+    fail(401, "Google sign-in requires a verified email address.");
+  }
+  const expectedNonceBytes = Buffer.from(expectedNonce);
+  const receivedNonceBytes = Buffer.from(typeof payload.nonce === "string" ? payload.nonce : "");
+  if (expectedNonceBytes.length !== receivedNonceBytes.length || !crypto.timingSafeEqual(expectedNonceBytes, receivedNonceBytes)) {
+    fail(401, "Google sign-in verification failed. Please try again.");
+  }
+
+  const user = await getOrCreateGoogleUser(payload);
+  const csrfToken = setSession(res, user.id);
+  res.cookie("bzcsrf", csrfToken, { ...cookieOptions(sessionHours * 60 * 60 * 1000), httpOnly: false });
+  return res.redirect(`${configuration.publicOrigin}/ops`);
 }));
 
 app.post("/api/auth/login", loginLimiter, asyncRoute(async (req, res) => {

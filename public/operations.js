@@ -32,6 +32,30 @@ function jsonBody(value) {
   return JSON.stringify(value);
 }
 
+function loadGoogleIdentityServices() {
+  if (window.google?.accounts?.id) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.onload = () => window.google?.accounts?.id
+      ? resolve()
+      : reject(new Error("Google sign-in could not be loaded."));
+    script.onerror = () => reject(new Error("Google sign-in could not be loaded."));
+    document.head.append(script);
+  });
+}
+
+function finishLogin(result) {
+  state.user = result.user;
+  csrfToken = result.csrfToken;
+  showWorkspace();
+  const defaultReturn = new Date(Date.now() + 60 * 60 * 1000);
+  defaultReturn.setMinutes(defaultReturn.getMinutes() - defaultReturn.getTimezoneOffset());
+  byId("expected-return").value = defaultReturn.toISOString().slice(0, 16);
+  notify(`Welcome, ${state.user.profile.name}.`);
+}
+
 function showWorkspace() {
   byId("auth-panel").classList.toggle("hidden", Boolean(state.user));
   byId("workspace").classList.toggle("hidden", !state.user);
@@ -209,13 +233,7 @@ byId("auth-form").addEventListener("submit", async (event) => {
   if (body.useBiometric) body.password = "";
   try {
     const result = await request(state.register ? "/api/auth/register" : "/api/auth/login", { method: "POST", body: jsonBody(body) });
-    state.user = result.user;
-    csrfToken = result.csrfToken;
-    showWorkspace();
-    const defaultReturn = new Date(Date.now() + 60 * 60 * 1000);
-    defaultReturn.setMinutes(defaultReturn.getMinutes() - defaultReturn.getTimezoneOffset());
-    byId("expected-return").value = defaultReturn.toISOString().slice(0, 16);
-    notify(`Welcome, ${state.user.profile.name}.`);
+    finishLogin(result);
   } catch (error) {
     if (body.useBiometric && !error.message.includes("Fingerprint did not match")) {
       const password = window.prompt("Scanner unavailable. Enter your password to continue:");
@@ -455,6 +473,39 @@ async function initialize() {
   try {
     const csrf = await fetch("/api/csrf", { credentials: "same-origin" });
     csrfToken = (await csrf.json()).csrfToken;
+    try {
+      const googleStatusResponse = await fetch("/api/auth/google/status", { credentials: "same-origin" });
+      const googleStatus = await googleStatusResponse.json();
+      const googleEnabled = googleStatusResponse.ok && googleStatus.enabled === true;
+      if (!googleEnabled) throw new Error("Google sign-in is not configured for this site yet.");
+      await loadGoogleIdentityServices();
+      window.google.accounts.id.initialize({
+        client_id: googleStatus.clientId,
+        nonce: googleStatus.nonce,
+        callback: async ({ credential }) => {
+          try {
+            const result = await request("/api/auth/google/credential", {
+              method: "POST",
+              body: jsonBody({ credential }),
+            });
+            finishLogin(result);
+          } catch (error) {
+            notify(error.message, true);
+          }
+        },
+      });
+      window.google.accounts.id.renderButton(byId("google-signin-button"), {
+        type: "standard",
+        theme: "outline",
+        size: "large",
+        text: "continue_with",
+        shape: "rectangular",
+        width: 360,
+      });
+      byId("google-signin-status").textContent = "Sign in or create a customer account with Google.";
+    } catch (error) {
+      byId("google-signin-status").textContent = error.message || "Google sign-in is currently unavailable.";
+    }
     try {
       const { user } = await request("/api/me");
       state.user = user;
