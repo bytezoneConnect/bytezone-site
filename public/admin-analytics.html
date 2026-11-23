@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1633">
+  <meta name="robots" content="noindex, nofollow">
+  <title>ByteZoneConnect Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #0a1633;
+      --gold: #e8b84b;
+      --canvas: #f3f2f1;
+      --ink: #1b1a19;
+      --muted: #605e5c;
+      --line: #e6e5e3;
+      --green: #107c41;
+      --red: #c4314b;
+      --shadow: 0 2px 8px rgba(20,33,61,.07), 0 10px 24px rgba(20,33,61,.035);
+      font-family: "Segoe UI", Inter, Arial, sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; background: var(--canvas); color: var(--ink); }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    [hidden] { display: none !important; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; clip-path: inset(50%); }
+
+    .login-screen { min-height: 100vh; display: grid; place-items: center; padding: 28px; overflow: hidden; position: relative; background: radial-gradient(ellipse at 18% 12%,rgba(52,80,132,.42),transparent 35%),linear-gradient(135deg,#08132c,#0d1b3c 55%,#14264b); }
+    .login-screen::before,.login-screen::after { position: absolute; content: ""; border: 1px solid rgba(232,184,75,.16); border-radius: 50%; pointer-events: none; }
+    .login-screen::before { width: 580px; height: 580px; right: -210px; top: -190px; }
+    .login-screen::after { width: 420px; height: 420px; right: -130px; top: -110px; }
+    .login-card { z-index: 1; width: min(100%,460px); padding: 42px; border: 1px solid rgba(255,255,255,.68); border-radius: 18px; background: rgba(255,255,255,.97); box-shadow: 0 28px 90px rgba(0,0,0,.32); }
+    .brand-mark { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 13px; background: var(--gold); color: var(--navy); font-size: 15px; font-weight: 800; letter-spacing: -.06em; box-shadow: 0 8px 18px rgba(232,184,75,.22); }
+    .login-card .brand-mark { margin-bottom: 28px; }
+    .login-card h1 { margin: 0; color: var(--navy); font-size: clamp(24px,5vw,30px); letter-spacing: -.035em; line-height: 1.2; }
+    .login-subtitle { margin: 10px 0 30px; color: var(--muted); font-size: 14px; }
+    .field-label { display: block; margin-bottom: 8px; color: #333; font-size: 13px; font-weight: 600; }
+    .auth-input { width: 100%; height: 46px; padding: 0 13px; border: 1px solid #8a8886; border-radius: 5px; background: #fff; outline: 0; }
+    .auth-input:focus { border-color: #315a9a; box-shadow: 0 0 0 2px rgba(49,90,154,.18); }
+    .login-error { min-height: 21px; margin: 9px 0 12px; color: var(--red); font-size: 13px; }
+    .unlock-button { width: 100%; min-height: 46px; border: 0; border-radius: 5px; background: var(--navy); color: white; font-weight: 600; transition: background .2s,transform .2s; }
+    .unlock-button:hover { background: #1b376a; transform: translateY(-1px); }
+    .login-note { margin: 25px 0 0; padding-top: 16px; border-top: 1px solid var(--line); color: #797775; font-size: 12px; text-align: center; }
+    .return-link { display: block; margin-top: 14px; color: #315a9a; font-size: 12px; text-align: center; text-decoration: none; }
+    .return-link:hover { text-decoration: underline; }
+
+    .dashboard-shell { min-height: 100vh; display: flex; }
+    .sidebar { position: fixed; z-index: 12; inset: 0 auto 0 0; width: 248px; display: flex; flex-direction: column; padding: 20px 14px 16px; background: var(--navy); color: white; transition: width .22s,transform .22s; }
+    .sidebar-brand { display: flex; align-items: center; gap: 12px; height: 50px; padding: 0 8px; overflow: hidden; white-space: nowrap; }
+    .sidebar-brand .brand-mark { width: 38px; height: 38px; flex: 0 0 38px; border-radius: 10px; font-size: 12px; }
+    .brand-name { font-size: 14px; font-weight: 700; }
+    .brand-caption { display: block; margin-top: 3px; color: #b6c1d5; font-size: 10px; letter-spacing: .04em; }
+    .side-label { margin: 34px 11px 11px; color: #8e9bb5; font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .side-nav { display: grid; gap: 5px; }
+    .nav-item { width: 100%; min-height: 44px; display: flex; align-items: center; gap: 14px; padding: 0 12px; overflow: hidden; border: 0; border-radius: 6px; background: transparent; color: #d7deeb; text-align: left; white-space: nowrap; transition: background .2s,color .2s; }
+    .nav-item svg { width: 19px; height: 19px; flex: 0 0 19px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+    .nav-item:hover { background: rgba(255,255,255,.09); color: white; }
+    .nav-item.active { background: rgba(232,184,75,.16); color: var(--gold); box-shadow: inset 3px 0 var(--gold); }
+    .sidebar-foot { margin-top: auto; padding: 13px 10px 0; border-top: 1px solid rgba(255,255,255,.12); color: #9eabc2; font-size: 11px; line-height: 1.7; }
+    .workspace { width: calc(100% - 248px); min-width: 0; margin-left: 248px; transition: width .22s,margin .22s; }
+    .topbar { position: sticky; z-index: 8; top: 0; min-height: 70px; display: flex; align-items: center; gap: 18px; padding: 0 30px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.95); backdrop-filter: blur(12px); }
+    .icon-button { position: relative; width: 38px; height: 38px; display: grid; flex: 0 0 auto; place-items: center; border: 1px solid transparent; border-radius: 6px; background: transparent; color: #41404a; }
+    .icon-button:hover { border-color: var(--line); background: #faf9f8; }
+    .icon-button svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+    .menu-button { display: none; }
+    .search-box { position: relative; width: min(320px,30vw); }
+    .search-box svg { position: absolute; top: 11px; left: 12px; width: 17px; height: 17px; fill: none; stroke: #777; stroke-width: 1.8; pointer-events: none; }
+    .search-box input { width: 100%; height: 38px; padding: 0 12px 0 38px; border: 1px solid #d2d0ce; border-radius: 5px; outline: 0; background: #faf9f8; font-size: 13px; }
+    .search-box input:focus { border-color: #315a9a; box-shadow: 0 0 0 2px rgba(49,90,154,.13); background: white; }
+    .topbar-spacer { flex: 1; }
+    .date-select { height: 38px; max-width: 145px; padding: 0 31px 0 11px; border: 1px solid #d2d0ce; border-radius: 5px; background: white; color: #34333a; font-size: 12px; }
+    .notification-wrap { position: relative; }
+    .profile { display: flex; align-items: center; gap: 9px; }
+    .avatar { width: 34px; height: 34px; display: block; border: 1px solid #e8eef8; border-radius: 50%; background: #e8eef8; object-fit: cover; object-position: center; }
+    .profile-name { color: #333; font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .logout-button { height: 34px; padding: 0 11px; border: 1px solid var(--line); border-radius: 5px; background: white; color: #49474b; font-size: 12px; white-space: nowrap; }
+    .logout-button:hover { border-color: #c4314b; color: #a4262c; }
+    .site-link { color: #315a9a; font-size: 12px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+    .site-link:hover { text-decoration: underline; }
+    .main-content { max-width: 1600px; margin: 0 auto; padding: 27px 30px 36px; }
+    .page-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 21px; }
+    .page-heading h1 { margin: 0; color: #1a1a1a; font-size: clamp(22px,2.5vw,29px); font-weight: 600; letter-spacing: -.035em; }
+    .page-heading p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .heading-meta { color: #777; font-size: 11px; white-space: nowrap; }
+    .live-indicator { display: inline-flex; align-items: center; gap: 6px; margin-left: 9px; color: var(--green); font-size: 10px; white-space: nowrap; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #21a366; box-shadow: 0 0 0 3px #e6f4ea; animation: live-pulse 1.8s ease-in-out infinite; }
+    .live-indicator.stale { color: #a4262c; }
+    .live-indicator.stale .live-dot { background: #c4314b; box-shadow: 0 0 0 3px #fde7e9; animation: none; }
+    @keyframes live-pulse { 50% { box-shadow: 0 0 0 6px rgba(33,163,102,0); } }
+    .export-actions { display: flex; gap: 8px; margin-bottom: 17px; }
+    .export-button { min-height: 35px; display: inline-flex; align-items: center; gap: 7px; padding: 0 11px; border: 1px solid #c8c6c4; border-radius: 5px; background: white; color: #35343a; font-size: 11px; font-weight: 600; }
+    .export-button:hover { border-color: #7d7a78; background: #faf9f8; }
+    .export-button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: 16px; align-items: stretch; }
+    .card { position: relative; isolation: isolate; min-width: 0; overflow: hidden; border: 1px solid rgba(23,40,67,.045); border-radius: 12px; background: white; box-shadow: var(--shadow); transition: transform .2s,box-shadow .2s; }
+    .card::after { position: absolute; z-index: 0; right: 12px; bottom: 10px; width: 96px; height: 96px; background: url("../images/97.png") center / contain no-repeat; content: ""; opacity: .18; pointer-events: none; }
+    .card > * { position: relative; z-index: 1; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(20,33,61,.09),0 16px 34px rgba(20,33,61,.05); }
+    .kpi-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
+    .kpi-card { padding: 17px 18px 13px; }
+    .kpi-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .kpi-label { color: #5f5d5b; font-size: 12px; font-weight: 500; }
+    .kpi-icon { width: 33px; height: 33px; display: grid; place-items: center; border-radius: 9px; background: #f2f4f8; color: var(--navy); }
+    .kpi-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+    .kpi-value { margin: 13px 0 8px; color: #161820; font-size: clamp(20px,2.3vw,27px); font-weight: 700; letter-spacing: -.04em; white-space: nowrap; }
+    .kpi-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .trend-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 7px; border-radius: 999px; background: #eaf5ee; color: var(--green); font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .trend-badge.negative { background: #fde7e9; color: var(--red); }
+    .trend-badge svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .trend-caption { overflow: hidden; color: #777; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .sparkline { width: 70px; height: 25px; flex: 0 0 auto; }
+    .sparkline polyline { fill: none; stroke: #1b8b57; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .chart-card,.metric-card { min-width: 0; padding: 17px 18px 14px; }
+    .chart-card.large { grid-column: span 8; }
+    .chart-card.small { grid-column: span 4; }
+    .chart-card.half { grid-column: span 6; }
+    .card-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+    .card-heading h2,.metric-card h2 { margin: 0; color: #202127; font-size: 14px; font-weight: 600; }
+    .card-heading p,.metric-card .subheading { margin: 4px 0 0; color: #777; font-size: 10px; }
+    .chart-tabs { display: flex; gap: 2px; padding: 3px; border-radius: 6px; background: #f3f2f1; }
+    .chart-tab { padding: 5px 8px; border: 0; border-radius: 4px; background: transparent; color: #686666; font-size: 10px; }
+    .chart-tab.active { background: white; color: var(--navy); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+    .chart-area { position: relative; height: 226px; }
+    .chart-area.donut-area { height: 218px; }
+    .chart-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; margin-top: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 7px; min-width: 0; color: #5d5b59; font-size: 10px; }
+    .legend-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; }
+    .legend-item span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .metric-card { grid-column: span 4; }
+    .metric-card.wide { grid-column: span 8; }
+    .metric-card.full { grid-column: 1 / -1; }
+    .stat-primary { display: flex; align-items: baseline; gap: 8px; margin: 13px 0 17px; }
+    .stat-primary strong { color: #181922; font-size: 30px; letter-spacing: -.04em; }
+    .stat-primary span,.stat-tile span { color: #777; font-size: 10px; }
+    .stat-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-tile { padding: 11px; border: 1px solid #efeeec; border-radius: 8px; background: #fcfbfa; }
+    .stat-tile strong { display: block; color: #202127; font-size: 17px; }
+    .progress-row { margin: 14px 0; }
+    .progress-label { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 6px; color: #555; font-size: 11px; }
+    .progress-label strong { color: #333; font-size: 11px; font-weight: 600; }
+    .progress-track { height: 7px; overflow: hidden; border-radius: 99px; background: #eeedeb; }
+    .progress-fill { height: 100%; border-radius: inherit; background: #4169a1; }
+    .progress-fill.gold { background: var(--gold); }
+    .progress-fill.green { background: #21a366; }
+    .uptime-value { display: flex; align-items: center; gap: 9px; margin: 20px 0 4px; color: var(--green); font-size: 30px; font-weight: 700; letter-spacing: -.04em; }
+    .status-dot { width: 9px; height: 9px; display: inline-block; border-radius: 50%; background: #21a366; box-shadow: 0 0 0 4px #e6f4ea; }
+    .status-caption { color: #73716f; font-size: 11px; }
+    .cloud-usage { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 21px; }
+    .cloud-item { padding: 12px 8px; border: 1px solid #efeeec; border-radius: 8px; text-align: center; }
+    .cloud-item strong { display: block; color: #17213a; font-size: 18px; }
+    .cloud-item span { color: #777; font-size: 10px; }
+    .exam-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 18px 0; }
+    .exam-top strong { display: block; color: #18203a; font-size: 27px; }
+    .exam-top span { color: #777; font-size: 10px; }
+    .pass-badge { padding: 7px 9px; border-radius: 7px; background: #eaf5ee; color: var(--green); font-size: 12px; font-weight: 700; }
+    .table-wrap { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { padding: 9px 10px; border-bottom: 1px solid var(--line); color: #767472; font-size: 10px; font-weight: 600; white-space: nowrap; }
+    td { padding: 12px 10px; border-bottom: 1px solid #f0efed; color: #38373c; font-size: 11px; white-space: nowrap; }
+    tr:last-child td { border-bottom: 0; }
+    .service-cell { display: flex; align-items: center; gap: 9px; color: #202127; font-weight: 600; }
+    .service-mark { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 7px; background: #f1f3f8; color: #1b376a; font-size: 10px; font-weight: 700; }
+    .growth { color: var(--green); font-weight: 600; }
+    .feed { display: grid; }
+    .feed-row { display: grid; grid-template-columns: 31px 1fr auto; align-items: start; gap: 11px; padding: 13px 0; border-bottom: 1px solid #f0efed; }
+    .feed-row:last-child { border-bottom: 0; }
+    .feed-icon { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; background: #eff3f9; color: #315a9a; font-size: 10px; font-weight: 700; }
+    .feed-copy strong,.upcoming-copy strong { display: block; color: #2b2a30; font-size: 11px; font-weight: 600; }
+    .feed-copy span,.upcoming-copy span { display: block; margin-top: 4px; color: #6f6d6b; font-size: 10px; }
+    .feed-time { padding-top: 2px; color: #85827f; font-size: 9px; white-space: nowrap; }
+    .upcoming-row { display: flex; align-items: flex-start; gap: 11px; padding: 12px 0; border-bottom: 1px solid #f0efed; }
+    .upcoming-row:last-child { border-bottom: 0; }
+    .calendar-mark { width: 34px; height: 36px; flex: 0 0 34px; display: grid; place-items: center; border: 1px solid #efeeec; border-radius: 7px; background: #fcfbfa; color: #1b376a; font-size: 10px; font-weight: 700; }
+    .upcoming-copy { min-width: 0; }
+    .upcoming-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .toast { position: fixed; z-index: 40; right: 24px; bottom: 24px; max-width: calc(100vw - 32px); padding: 13px 17px; border-radius: 8px; background: #163f2b; color: white; box-shadow: 0 8px 24px rgba(0,0,0,.2); font-size: 12px; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .2s,transform .2s; }
+    .toast.visible { opacity: 1; transform: translateY(0); }
+    .mobile-scrim { display: none; }
+    .sidebar-collapsed .sidebar { width: 76px; padding-right: 10px; padding-left: 10px; }
+    .sidebar-collapsed .sidebar-brand { justify-content: center; padding: 0; }
+    .sidebar-collapsed .brand-copy,.sidebar-collapsed .nav-label,.sidebar-collapsed .side-label,.sidebar-collapsed .sidebar-foot { display: none; }
+    .sidebar-collapsed .nav-item { justify-content: center; padding: 0; }
+    .sidebar-collapsed .workspace { width: calc(100% - 76px); margin-left: 76px; }
+    @media (max-width:1120px) {
+      .kpi-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .chart-card.large { grid-column: span 7; }
+      .chart-card.small { grid-column: span 5; }
+      .metric-card,.metric-card.wide { grid-column: span 6; }
+    }
+    @media (max-width:760px) {
+      .sidebar { width: 248px; transform: translateX(-100%); box-shadow: 12px 0 30px rgba(0,0,0,.16); }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .sidebar-collapsed .sidebar { width: 248px; }
+      .sidebar-collapsed .brand-copy,.sidebar-collapsed .nav-label,.sidebar-collapsed .side-label,.sidebar-collapsed .sidebar-foot { display: initial; }
+      .sidebar-collapsed .sidebar-brand { justify-content: flex-start; padding: 0 8px; }
+      .sidebar-collapsed .nav-item { justify-content: flex-start; padding: 0 12px; }
+      .workspace,.sidebar-collapsed .workspace { width: 100%; margin-left: 0; }
+      .mobile-scrim.visible { position: fixed; z-index: 11; inset: 0; display: block; background: rgba(4,12,29,.42); }
+      .topbar { min-height: 62px; gap: 8px; padding: 0 14px; }
+      .menu-button { display: grid; }
+      .collapse-button { display: none; }
+      .search-box { width: min(200px,32vw); }
+      .search-box input,.date-select { height: 36px; }
+      .profile-name { display: none; }
+      .site-link { display: none; }
+      .logout-button { padding: 0 8px; font-size: 11px; }
+      .main-content { padding: 21px 16px 30px; }
+      .chart-card.large,.chart-card.small,.chart-card.half { grid-column: 1 / -1; }
+      .metric-card,.metric-card.wide { grid-column: span 6; }
+    }
+    @media (max-width:520px) {
+      .search-box { width: 37px; flex: 0 0 37px; }
+      .search-box input { padding: 0; border-color: transparent; background: transparent; color: transparent; cursor: pointer; }
+      .search-box input:focus,.search-box input:not(:placeholder-shown) { position: absolute; z-index: 2; top: 0; right: -2px; width: min(240px,calc(100vw - 145px)); padding: 0 10px 0 36px; border-color: #d2d0ce; background: white; color: #222; cursor: text; }
+      .search-box svg { left: 10px; }
+      .topbar { gap: 5px; padding: 0 10px; }
+      .date-select { width: 106px; padding-left: 7px; font-size: 10px; }
+      .notification-wrap .icon-button { width: 32px; }
+      .profile { display: none; }
+      .logout-button { height: 32px; }
+      .page-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .heading-meta { white-space: normal; }
+      .kpi-grid { grid-template-columns: 1fr; gap: 11px; }
+      .kpi-card { padding: 15px 16px 12px; }
+      .kpi-value { margin-top: 8px; font-size: 25px; }
+      .chart-card,.metric-card { padding: 15px; }
+      .metric-card,.metric-card.wide { grid-column: 1 / -1; }
+      .chart-area { height: 210px; }
+      .export-actions { width: 100%; }
+      .export-button { flex: 1; justify-content: center; }
+      .feed-row { grid-template-columns: 30px 1fr; }
+      .feed-time { grid-column: 2; padding: 0; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      *,*::before,*::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+    @media print {
+      .sidebar,.topbar,.export-actions,.toast { display: none !important; }
+      .workspace { width: 100%; margin: 0; }
+      .main-content { padding: 0; }
+      .card { break-inside: avoid; box-shadow: none; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+  <section class="login-screen" id="loginGate" aria-labelledby="loginTitle">
+    <form class="login-card" id="loginForm">
+      <div class="brand-mark" aria-hidden="true">BZ</div>
+      <h1 id="loginTitle">ByteZoneConnect Analytics</h1>
+      <p class="login-subtitle">Internal Dashboard - Authorized Access Only</p>
+      <label class="field-label" for="adminEmail">Admin email</label>
+      <input id="adminEmail" class="auth-input" type="email" autocomplete="username" required aria-describedby="loginError">
+      <label class="field-label" for="adminPassword" style="margin-top:16px">Password</label>
+      <input id="adminPassword" class="auth-input" type="password" autocomplete="current-password" required aria-describedby="loginError">
+      <p class="login-error" id="loginError" role="alert" aria-live="polite"></p>
+      <button class="unlock-button" id="loginButton" type="submit">Sign in</button>
+      <p class="login-note">Sign in with your ByteZone administrator account.</p>
+      <a class="return-link" href="/">Back to ByteZoneConnect</a>
+    </form>
+  </section>
+
+  <div class="dashboard-shell" id="dashboard" hidden>
+    <div class="mobile-scrim" id="mobileScrim"></div>
+    <aside class="sidebar" id="sidebar" aria-label="Dashboard navigation">
+      <div class="sidebar-brand">
+        <div class="brand-mark" aria-hidden="true">BZ</div>
+        <div class="brand-copy"><span class="brand-name">ByteZoneConnect</span><span class="brand-caption">ANALYTICS CENTER</span></div>
+      </div>
+      <p class="side-label">Workspace</p>
+      <nav class="side-nav">
+        <button class="nav-item active" type="button" data-section="overview" title="Overview">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/><rect x="3" y="14" width="8" height="7" rx="1"/></svg><span class="nav-label">Overview</span>
+        </button>
+        <button class="nav-item" type="button" data-section="revenue" title="Revenue">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19V5m0 14h18"/><path d="m6 15 4-4 3 2 6-7"/><path d="M16 6h3v3"/></svg><span class="nav-label">Revenue</span>
+        </button>
+        <button class="nav-item" type="button" data-section="clients" title="Clients">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20zM16 5.5a3 3 0 0 1 0 5.8M17 14a5 5 0 0 1 3.5 4.8V20h-3"/></svg><span class="nav-label">Clients</span>
+        </button>
+        <button class="nav-item" type="button" data-section="projects" title="Projects">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5h16v13H4zM8 7.5V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2.5M4 12h16M10 12v2h4v-2"/></svg><span class="nav-label">Projects</span>
+        </button>
+        <button class="nav-item" type="button" data-section="support" title="Support">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-2a8 8 0 0 1 16 0v2M4 13H3v4h4v-4H4Zm16 0h1v4h-4v-4h3ZM17 19a5 5 0 0 1-5 2h-1"/></svg><span class="nav-label">Support</span>
+        </button>
+        <button class="nav-item" type="button" data-section="infrastructure" title="Infrastructure">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="7" rx="1.5"/><rect x="4" y="14" width="16" height="7" rx="1.5"/><path d="M8 6.5h.01M8 17.5h.01M12 6.5h5M12 17.5h5"/></svg><span class="nav-label">Infrastructure</span>
+        </button>
+      </nav>
+      <div class="sidebar-foot">Administrator access<br>Live account data</div>
+    </aside>
+    <main class="workspace" id="workspace">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="mobileMenuButton" type="button" aria-label="Open navigation">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <button class="icon-button collapse-button" id="collapseButton" type="button" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M7 12h13"/></svg>
+        </button>
+        <label class="search-box">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+          <input id="dashboardSearch" type="search" placeholder="Search dashboard" aria-label="Search dashboard">
+        </label>
+        <div class="topbar-spacer"></div>
+        <a class="site-link" href="/" aria-label="Return to ByteZoneConnect website">Website</a>
+        <label class="sr-only" for="dateFilter">Filter dashboard date range</label>
+        <select class="date-select" id="dateFilter" aria-label="Date filter">
+          <option>Today</option><option>This Week</option><option selected>This Month</option>
+        </select>
+        <div class="profile"><img class="avatar" src="../images/97.png" alt="" aria-hidden="true"><span class="profile-name" id="adminName">Administrator</span></div>
+        <button class="logout-button" id="logoutButton" type="button">Log Out</button>
+      </header>
+      <div class="main-content">
+        <div class="page-heading">
+          <div><h1 id="pageTitle">Overview</h1><p id="pageSubtitle">A clear view of your business performance and operations.</p></div>
+          <span class="heading-meta">Last updated: <span id="lastUpdated"></span><span class="live-indicator stale" id="liveIndicator" role="status"><span class="live-dot" aria-hidden="true"></span><span id="liveStatusText">Waiting for connection</span></span></span>
+        </div>
+        <div class="export-actions">
+          <button class="export-button" id="exportPdf" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h5M9 13h6M9 17h6"/></svg>Export PDF</button>
+          <button class="export-button" id="exportExcel" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h5M9 12l5 6M14 12l-5 6"/></svg>Export Excel</button>
+        </div>
+        <div class="dashboard-grid" id="dashboardGrid"></div>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    (() => {
+      "use strict";
+      const loginGate = document.getElementById("loginGate");
+      const dashboard = document.getElementById("dashboard");
+      const loginForm = document.getElementById("loginForm");
+      const emailInput = document.getElementById("adminEmail");
+      const passwordInput = document.getElementById("adminPassword");
+      const loginError = document.getElementById("loginError");
+      const charts = {};
+      const apiBaseUrl = window.location.port === "5500"
+        ? window.location.protocol + "//" + window.location.hostname + ":3000"
+        : "";
+      let csrfToken = "";
+      let data;
+      let apiData;
+      let activeRange = "This Month";
+      let activeTrend = "Monthly";
+      let activeSection = "overview";
+      let toastTimer;
+      let liveRefreshTimer;
+      let liveRefreshInProgress = false;
+      let lastApiSnapshot = "";
+      let lastLiveError = "";
+      const icons = {
+        wallet: '<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 9h18M16 14h.01M7 6V4h12"/>',
+        calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18M8 14h3m-3 3h3"/>',
+        chart: '<path d="M3 20V4m0 16h18"/><path d="m6 15 4-4 3 2 6-7"/>',
+        trend: '<path d="M4 17 10 11l4 4 7-9"/><path d="M15 6h6v6"/>'
+      };
+      const headings = {
+        overview: ["Overview", "A clear view of your business performance and operations."],
+        revenue: ["Revenue", "Track income trends, product mix, and monthly performance."],
+        clients: ["Clients", "Explore your client portfolio and service relationships."],
+        projects: ["Projects", "Keep an eye on delivery progress and upcoming milestones."],
+        support: ["Support", "Monitor ticket health and customer response performance."],
+        infrastructure: ["Infrastructure", "Review hosting capacity, cloud usage, and availability."]
+      };
+
+      function money(amount) {
+        return "MWK " + Number(amount).toLocaleString("en-US");
+      }
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, (character) => ({
+          "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        })[character]);
+      }
+
+      async function request(path, options) {
+        const requestOptions = options || {};
+        const headers = new Headers(requestOptions.headers || {});
+        const method = (requestOptions.method || "GET").toUpperCase();
+        if (requestOptions.body) headers.set("Content-Type", "application/json");
+        if (!["GET", "HEAD"].includes(method)) headers.set("X-CSRF-Token", csrfToken);
+        const response = await fetch(apiBaseUrl + path, { credentials: "include", ...requestOptions, headers });
+        if (response.status === 204) return null;
+        const contentType = response.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          throw new Error("The analytics service returned an invalid response. Confirm the ByteZone server is running on port 3000.");
+        }
+        const result = await response.json();
+        if (!response.ok) {
+          const error = new Error(result.error || "The analytics request failed.");
+          error.status = response.status;
+          throw error;
+        }
+        return result;
+      }
+
+      function startOfDay(date) {
+        const start = new Date(date);
+        start.setHours(0, 0, 0, 0);
+        return start;
+      }
+
+      function startOfWeek(date) {
+        const start = startOfDay(date);
+        start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+        return start;
+      }
+
+      function startOfMonth(date) {
+        const start = startOfDay(date);
+        start.setDate(1);
+        return start;
+      }
+
+      function sumSales(sales, start, end) {
+        return sales.reduce((sum, sale) => {
+          const createdAt = new Date(sale.createdAt);
+          return createdAt >= start && createdAt < end ? sum + sale.totalMwk : sum;
+        }, 0);
+      }
+
+      function changeLabel(current, previous) {
+        if (!previous) return current ? "New" : "0%";
+        const change = ((current - previous) / previous) * 100;
+        return (change > 0 ? "+" : "") + change.toFixed(1) + "%";
+      }
+
+      function changeClass(current, previous) {
+        if (current === previous) return "";
+        return current > previous ? "positive" : "negative";
+      }
+
+      function buildSparkline(sales, days) {
+        const now = new Date();
+        const points = [];
+        for (let offset = days - 1; offset >= 0; offset -= 1) {
+          const day = startOfDay(now);
+          day.setDate(day.getDate() - offset);
+          const end = new Date(day);
+          end.setDate(end.getDate() + 1);
+          points.push(sumSales(sales, day, end));
+        }
+        return points;
+      }
+
+      function buildTrend(sales, period, filterStart, now) {
+        const periodStart = period === "Daily" ? startOfDay(now)
+          : period === "Weekly" ? startOfWeek(now)
+            : startOfMonth(now);
+        const start = filterStart > periodStart ? filterStart : periodStart;
+        const labels = [];
+        const values = [];
+        if (period === "Daily") {
+          for (let hour = 0; hour <= now.getHours(); hour += 1) {
+            const bucketStart = new Date(startOfDay(now));
+            bucketStart.setHours(hour);
+            const bucketEnd = new Date(bucketStart);
+            bucketEnd.setHours(hour + 1);
+            labels.push((hour % 12 || 12) + (hour < 12 ? " AM" : " PM"));
+            values.push(sumSales(sales, bucketStart, bucketEnd));
+          }
+          return { labels, values };
+        }
+        const cursor = startOfDay(start);
+        const endDate = startOfDay(now);
+        while (cursor <= endDate) {
+          const bucketStart = new Date(cursor);
+          const bucketEnd = new Date(cursor);
+          bucketEnd.setDate(bucketEnd.getDate() + 1);
+          labels.push(bucketStart.toLocaleDateString(undefined, { month: "short", day: "numeric" }));
+          values.push(sumSales(sales, bucketStart, bucketEnd));
+          cursor.setDate(cursor.getDate() + 1);
+        }
+        return { labels, values };
+      }
+
+      function buildDashboardData(stats, sales, range) {
+        const now = new Date();
+        const today = startOfDay(now);
+        const week = startOfWeek(now);
+        const month = startOfMonth(now);
+        const selectedStart = range === "Today" ? today : range === "This Week" ? week : month;
+        const previousStart = new Date(selectedStart);
+        const periodElapsed = now.getTime() - selectedStart.getTime();
+        if (range === "Today") previousStart.setDate(previousStart.getDate() - 1);
+        else if (range === "This Week") previousStart.setDate(previousStart.getDate() - 7);
+        else previousStart.setMonth(previousStart.getMonth() - 1);
+        const previousEnd = new Date(Math.min(previousStart.getTime() + periodElapsed, selectedStart.getTime()));
+        const visibleSales = sales.filter((sale) => {
+          const createdAt = new Date(sale.createdAt);
+          return createdAt >= selectedStart && createdAt < now;
+        });
+        const previousSales = sales.filter((sale) => {
+          const createdAt = new Date(sale.createdAt);
+          return createdAt >= previousStart && createdAt < previousEnd;
+        });
+        const summarizeSales = (records) => {
+          const income = records.reduce((sum, sale) => sum + sale.totalMwk, 0);
+          const items = records.reduce((sum, sale) =>
+            sum + sale.items.reduce((itemSum, item) => itemSum + item.quantity, 0), 0);
+          return {
+            income,
+            transactions: records.length,
+            average: records.length ? income / records.length : 0,
+            items
+          };
+        };
+        const currentSummary = summarizeSales(visibleSales);
+        const previousSummary = summarizeSales(previousSales);
+        const makeKpi = (label, icon, value, previous, displayValue, format) => {
+          return {
+            label, icon, value, displayValue, format,
+            comparison: "vs previous period",
+            change: changeLabel(value, previous),
+            changeClass: changeClass(value, previous),
+            sparkline: buildSparkline(sales, 8)
+          };
+        };
+        const kpis = [
+          makeKpi("Income (" + range + ")", "wallet", currentSummary.income, previousSummary.income, money(currentSummary.income), "money"),
+          makeKpi("Transactions (" + range + ")", "calendar", currentSummary.transactions, previousSummary.transactions, currentSummary.transactions.toLocaleString("en-US"), "count"),
+          makeKpi("Average Sale (" + range + ")", "chart", currentSummary.average, previousSummary.average, money(Math.round(currentSummary.average)), "money"),
+          makeKpi("Items Sold (" + range + ")", "trend", currentSummary.items, previousSummary.items, currentSummary.items.toLocaleString("en-US"), "count")
+        ];
+        const itemTotals = new Map();
+        visibleSales.forEach((sale) => sale.items.forEach((item) => {
+          const previous = itemTotals.get(item.name) || { name: item.name, units: 0, revenue: 0 };
+          previous.units += item.quantity;
+          previous.revenue += item.lineTotalMwk;
+          itemTotals.set(item.name, previous);
+        }));
+        const allProducts = [...itemTotals.values()].sort((left, right) => right.revenue - left.revenue);
+        const products = allProducts.slice(0, 5);
+        const palette = ["#0a1633", "#4169a1", "#e8b84b", "#78a6c8", "#a9b5c5"];
+        const totalRevenue = allProducts.reduce((sum, item) => sum + item.revenue, 0);
+        const currentYear = now.getFullYear();
+        const monthlyIncome = Array.from({ length: now.getMonth() + 1 }, (_, index) => {
+          const start = new Date(currentYear, index, 1);
+          const end = new Date(currentYear, index + 1, 1);
+          return { month: start.toLocaleDateString(undefined, { month: "short" }), amount: sumSales(sales, start, end < now ? end : now) };
+        });
+        const recentSales = [...visibleSales].sort((left, right) => new Date(right.createdAt) - new Date(left.createdAt)).slice(0, 5);
+        const unavailable = "Not available";
+        const dashboardStats = {
+          clients: stats.customers,
+          newClients: unavailable,
+          clientRetention: unavailable,
+          projects: unavailable,
+          completedProjects: unavailable,
+          projectsDue: unavailable,
+          openTickets: stats.openTickets,
+          resolvedToday: unavailable,
+          responseMinutes: unavailable,
+          responseTargetMinutes: null,
+          uptime: unavailable,
+          cpu: null, memory: null, storage: null,
+          azure: unavailable, aws: unavailable, onPrem: unavailable,
+          candidates: unavailable, sessions: unavailable, passRate: unavailable,
+          activeRentals: stats.activeRentals
+        };
+        const trends = {
+          Daily: buildTrend(sales, "Daily", selectedStart, now),
+          Weekly: buildTrend(sales, "Weekly", selectedStart, now),
+          Monthly: buildTrend(sales, "Monthly", selectedStart, now)
+        };
+        const activity = recentSales.map((sale) => ({
+          type: "sale",
+          title: "Sale recorded",
+          detail: money(sale.totalMwk) + " · " + sale.items.map((item) => item.name).join(", "),
+          time: new Date(sale.createdAt).toLocaleString()
+        }));
+        const filters = Object.fromEntries(["Today", "This Week", "This Month"].map((filter) => [filter, { kpis, stats: dashboardStats }]));
+        const productBreakdown = products.map((item, index) => ({
+          name: item.name,
+          percentage: totalRevenue ? Math.round((item.revenue / totalRevenue) * 100) : 0,
+          color: palette[index % palette.length]
+        }));
+        const otherRevenue = totalRevenue - products.reduce((sum, item) => sum + item.revenue, 0);
+        if (otherRevenue > 0) {
+          productBreakdown.push({
+            name: "Other products",
+            percentage: Math.round((otherRevenue / totalRevenue) * 100),
+            color: "#a9b5c5"
+          });
+        }
+        return {
+          filters,
+          services: products.map((item) => ({ ...item })),
+          revenue: {
+            services: productBreakdown,
+            trends,
+            monthlyIncome
+          },
+          activity,
+          upcoming: [{ type: "info", title: "Not available", detail: "No project or exam schedule is connected.", when: "" }],
+          updatedAt: now.toLocaleString()
+        };
+      }
+
+      function sparkline(points) {
+        const max = Math.max(...points);
+        const min = Math.min(...points);
+        const span = max - min || 1;
+        const coordinates = points.map((point, index) => {
+          const x = (index / (points.length - 1)) * 68 + 2;
+          const y = 22 - ((point - min) / span) * 18;
+          return x.toFixed(1) + "," + y.toFixed(1);
+        }).join(" ");
+        return '<svg class="sparkline" viewBox="0 0 72 26" role="img" aria-label="Income trend sparkline"><title>' +
+          points.join(", ") + '</title><polyline points="' + coordinates + '"/></svg>';
+      }
+
+      function progressRow(label, value, style) {
+        if (typeof value !== "number" || !Number.isFinite(value)) {
+          return '<div class="progress-row"><div class="progress-label"><span>' + label + '</span><strong>Not available</strong></div></div>';
+        }
+        return '<div class="progress-row"><div class="progress-label"><span>' + label +
+          '</span><strong>' + value + '%</strong></div><div class="progress-track" role="progressbar" aria-label="' +
+          label + '" aria-valuenow="' + value + '" aria-valuemin="0" aria-valuemax="100"><div class="progress-fill ' +
+          (style || "") + '" style="width:' + value + '%"></div></div></div>';
+      }
+
+      function formatKpiValue(item, value) {
+        const rounded = Math.round(value);
+        return item.format === "money" ? money(rounded) : rounded.toLocaleString("en-US");
+      }
+
+      function animateKpiValues(kpis, previousValues) {
+        const elements = document.querySelectorAll("#dashboardGrid .kpi-value");
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        kpis.forEach((item, index) => {
+          const element = elements[index];
+          const end = item.value;
+          const start = Number.isFinite(previousValues[index]) ? previousValues[index] : 0;
+          element.dataset.value = String(end);
+          if (reduceMotion || start === end) {
+            element.textContent = item.displayValue;
+            return;
+          }
+          const startedAt = performance.now();
+          const duration = 900;
+          const update = (now) => {
+            const progress = Math.min((now - startedAt) / duration, 1);
+            const easedProgress = 1 - Math.pow(1 - progress, 3);
+            element.textContent = formatKpiValue(item, start + (end - start) * easedProgress);
+            if (progress < 1) requestAnimationFrame(update);
+            else element.textContent = item.displayValue;
+          };
+          requestAnimationFrame(update);
+        });
+      }
+
+      function renderDashboard() {
+        const current = data.filters[activeRange];
+        const stats = current.stats;
+        const previousKpiValues = Array.from(document.querySelectorAll("#dashboardGrid .kpi-value"))
+          .map((element) => Number(element.dataset.value));
+        const kpis = current.kpis.map((item) =>
+          '<article class="card kpi-card searchable" data-sections="overview,revenue" data-search="' + item.label.toLowerCase() + '">' +
+            '<div class="kpi-top"><span class="kpi-label">' + item.label + '</span><span class="kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24">' + icons[item.icon] + '</svg></span></div>' +
+            '<div class="kpi-value" data-value="' + item.value + '">' + item.displayValue + '</div>' +
+            '<div class="kpi-bottom"><span class="trend-badge ' + item.changeClass + '">' + item.change + '</span>' +
+            '<span class="trend-caption">' + item.comparison + '</span>' + sparkline(item.sparkline) + '</div></article>'
+        ).join("");
+        const serviceRows = data.services.map((service) =>
+          '<tr class="searchable" data-search="' + escapeHtml(service.name.toLowerCase()) + '"><td><span class="service-cell"><span class="service-mark">' + escapeHtml(service.name.slice(0, 1)) + '</span>' + escapeHtml(service.name) + '</span></td>' +
+          '<td>' + service.units + '</td><td>' + money(service.revenue) + '</td><td class="growth">Recorded sales</td></tr>'
+        ).join("") || '<tr><td colspan="4">No product sales in the selected period.</td></tr>';
+        const activityRows = data.activity.map((item) =>
+          '<div class="feed-row searchable" data-search="' + escapeHtml((item.title + " " + item.detail).toLowerCase()) + '">' +
+          '<span class="feed-icon" aria-hidden="true">' + escapeHtml(item.type.slice(0, 1).toUpperCase()) + '</span><span class="feed-copy"><strong>' + escapeHtml(item.title) +
+          '</strong><span>' + escapeHtml(item.detail) + '</span></span><span class="feed-time">' + escapeHtml(item.time) + '</span></div>'
+        ).join("") || '<p class="status-caption">No sales recorded in the selected period.</p>';
+        const upcomingRows = data.upcoming.map((item) =>
+          '<div class="upcoming-row searchable" data-search="' + (item.title + " " + item.detail).toLowerCase() + '">' +
+          '<span class="calendar-mark" aria-hidden="true">' + escapeHtml(item.type.slice(0, 1).toUpperCase()) + '</span><span class="upcoming-copy"><strong>' +
+          escapeHtml(item.title) + '</strong><span>' + escapeHtml(item.detail + (item.when ? ' · ' + item.when : "")) + '</span></span></div>'
+        ).join("");
+
+        document.getElementById("dashboardGrid").innerHTML =
+          '<div class="kpi-grid">' + kpis + '</div>' +
+          '<article class="card chart-card large searchable" data-sections="overview,revenue" data-search="revenue overview sales"><div class="card-heading"><div><h2>Revenue Overview</h2><p>Recorded sales · hover a point for details</p></div>' +
+          '<div class="chart-tabs" role="tablist" aria-label="Revenue chart period">' +
+          ["Daily", "Weekly", "Monthly"].map((period) => '<button class="chart-tab ' + (activeTrend === period ? "active" : "") + '" type="button" role="tab" aria-selected="' + (activeTrend === period) + '" data-trend="' + period + '">' + period + '</button>').join("") +
+          '</div></div><div class="chart-area"><canvas id="revenueTrend" aria-label="Revenue trend chart"></canvas></div></article>' +
+          '<article class="card chart-card small searchable" data-sections="overview,revenue" data-search="sales by product recorded items"><div class="card-heading"><div><h2>Sales by Product</h2><p>Share of recorded sales in the selected period</p></div></div><div class="chart-area donut-area"><canvas id="serviceDonut" aria-label="Sales by product doughnut chart"></canvas></div><div class="chart-legend" id="serviceLegend"></div></article>' +
+          '<article class="card chart-card half searchable" data-sections="overview,revenue" data-search="monthly income"><div class="card-heading"><div><h2>Monthly Income</h2><p>Recorded sales this year · MWK</p></div></div><div class="chart-area"><canvas id="monthlyIncome" aria-label="Monthly income bar chart"></canvas></div></article>' +
+          '<article class="card metric-card searchable" data-sections="overview,clients" data-search="customer accounts active rentals"><h2>Customer Accounts</h2><p class="subheading">Registered customer accounts</p><div class="stat-primary"><strong>' + stats.clients + '</strong><span>accounts</span></div><div class="stat-pair"><div class="stat-tile"><strong>' + stats.activeRentals + '</strong><span>Active rentals</span></div><div class="stat-tile"><strong>Not available</strong><span>New this month</span></div></div></article>' +
+          '<article class="card metric-card searchable" data-sections="overview,projects" data-search="projects not available"><h2>Project Portfolio</h2><p class="subheading">Project tracking is not connected</p><div class="stat-primary"><strong>Not available</strong></div><div class="status-caption">No project records are stored in the connected system.</div></article>' +
+          '<article class="card metric-card searchable" data-sections="overview,support" data-search="content removal requests open tickets"><h2>Open Content Requests</h2><p class="subheading">Tracked in the connected system</p><div class="stat-primary"><strong>' + stats.openTickets + '</strong><span>open requests</span></div><div class="status-caption">Support response and resolution metrics are not tracked here.</div></article>' +
+          '<article class="card metric-card searchable" data-sections="overview,infrastructure" data-search="system uptime not available"><h2>System Uptime</h2><p class="subheading">Monitoring data is not connected</p><div class="uptime-value">Not available</div><div class="status-caption">No uptime monitor is configured for this dashboard.</div></article>' +
+          '<article class="card metric-card searchable" data-sections="overview,infrastructure" data-search="server health cpu memory storage"><h2>Server Health</h2><p class="subheading">Resource utilisation</p>' +
+          progressRow("CPU", stats.cpu, "") + progressRow("Memory", stats.memory, "gold") + progressRow("Storage", stats.storage, "green") + '</article>' +
+          '<article class="card metric-card searchable" data-sections="overview,infrastructure" data-search="cloud usage not available"><h2>Cloud Usage</h2><p class="subheading">Infrastructure data is not connected</p><div class="cloud-usage"><div class="cloud-item"><strong>Not available</strong><span>Azure</span></div><div class="cloud-item"><strong>Not available</strong><span>AWS</span></div><div class="cloud-item"><strong>Not available</strong><span>On-Prem</span></div></div></article>' +
+          '<article class="card metric-card searchable" data-sections="overview,clients" data-search="exam centre not available"><h2>Exam Centre</h2><p class="subheading">Exam records are not connected</p><div class="stat-primary"><strong>Not available</strong></div><div class="status-caption">No candidate or session data is stored in the connected system.</div></article>' +
+          '<article class="card metric-card wide searchable" data-sections="overview,revenue" data-search="top products units revenue sales"><h2>Top Products</h2><p class="subheading">Items in recorded sales for the selected period</p><div class="table-wrap"><table><thead><tr><th>Product</th><th>Units Sold</th><th>Revenue</th><th>Source</th></tr></thead><tbody>' + serviceRows + '</tbody></table></div></article>' +
+          '<article class="card metric-card wide searchable" data-sections="overview,revenue" data-search="recent sales activity"><h2>Recent Sales</h2><p class="subheading">Latest recorded transactions in the selected period</p><div class="feed">' + activityRows + '</div></article>' +
+          '<article class="card metric-card full searchable" data-sections="overview,projects" data-search="upcoming schedule not available"><h2>Upcoming</h2><p class="subheading">Scheduling data is not connected</p><div class="stat-pair">' + upcomingRows + '</div></article>';
+
+        document.querySelectorAll(".chart-tab").forEach((button) => {
+          button.addEventListener("click", () => {
+            activeTrend = button.dataset.trend;
+            document.querySelectorAll(".chart-tab").forEach((tab) => {
+              const selected = tab === button;
+              tab.classList.toggle("active", selected);
+              tab.setAttribute("aria-selected", String(selected));
+            });
+            updateTrendChart();
+          });
+        });
+        animateKpiValues(current.kpis, previousKpiValues);
+        renderCharts();
+        applySection(document.querySelector(".nav-item.active").dataset.section);
+        applySearch(document.getElementById("dashboardSearch").value);
+      }
+
+      function renderCharts() {
+        const areas = document.querySelectorAll(".chart-area");
+        if (typeof Chart === "undefined") {
+          areas.forEach((area) => {
+            area.innerHTML = '<p role="status" style="padding:18px;color:#777;font-size:12px">Charts could not load. Check your connection and refresh.</p>';
+          });
+          return;
+        }
+        const palette = data.revenue.services.map((service) => service.color);
+        document.getElementById("serviceLegend").innerHTML = data.revenue.services.map((service) =>
+          '<div class="legend-item"><span class="legend-dot" style="background:' + service.color + '"></span><span>' + escapeHtml(service.name) + ' · ' + service.percentage + '%</span></div>'
+        ).join("");
+        Object.keys(charts).forEach((key) => {
+          charts[key].destroy();
+          delete charts[key];
+        });
+        const trend = data.revenue.trends[activeTrend];
+        charts.trend = new Chart(document.getElementById("revenueTrend"), {
+          type: "line",
+          data: { labels: trend.labels, datasets: [{ label: "Revenue", data: trend.values, borderColor: "#315a9a", backgroundColor: "rgba(49,90,154,.12)", borderWidth: 2, pointRadius: 2.5, pointHoverRadius: 5, pointBackgroundColor: "#fff", pointBorderWidth: 2, fill: true, tension: .36 }] },
+          options: { maintainAspectRatio: false, interaction: { intersect: false, mode: "index" }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context) => " " + money(context.raw) } } }, scales: { x: { grid: { display: false }, ticks: { color: "#777", maxTicksLimit: 8, font: { size: 9 } } }, y: { beginAtZero: true, grid: { color: "#f0efed" }, ticks: { color: "#777", font: { size: 9 }, callback: (value) => "MWK " + Number(value).toLocaleString("en-US") } } } }
+        });
+        if (data.revenue.services.length) {
+          charts.donut = new Chart(document.getElementById("serviceDonut"), {
+            type: "doughnut",
+            data: { labels: data.revenue.services.map((service) => service.name), datasets: [{ data: data.revenue.services.map((service) => service.percentage), backgroundColor: palette, borderColor: "#fff", borderWidth: 3, hoverOffset: 6 }] },
+            options: { maintainAspectRatio: false, cutout: "68%", plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context) => " " + context.label + ": " + context.raw + "%" } } } }
+          });
+        } else {
+          document.getElementById("serviceDonut").parentElement.innerHTML = '<p role="status" style="padding:18px;color:#777;font-size:12px">No product sales in this period.</p>';
+        }
+        const bestMonth = Math.max(...data.revenue.monthlyIncome.map((month) => month.amount));
+        charts.monthly = new Chart(document.getElementById("monthlyIncome"), {
+          type: "bar",
+          data: { labels: data.revenue.monthlyIncome.map((month) => month.month), datasets: [{ label: "Income", data: data.revenue.monthlyIncome.map((month) => month.amount), backgroundColor: data.revenue.monthlyIncome.map((month) => bestMonth > 0 && month.amount === bestMonth ? "#e8b84b" : "#cbd5e3"), borderRadius: 5, maxBarThickness: 26 }] },
+          options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context) => " " + money(context.raw) } } }, scales: { x: { grid: { display: false }, ticks: { color: "#777", font: { size: 9 } } }, y: { beginAtZero: true, grid: { color: "#f0efed" }, ticks: { color: "#777", maxTicksLimit: 5, font: { size: 9 }, callback: (value) => "MWK " + (Number(value) / 1000000).toFixed(0) + "m" } } } }
+        });
+      }
+
+      function updateTrendChart() {
+        if (!charts.trend) return;
+        const trend = data.revenue.trends[activeTrend];
+        charts.trend.data.labels = trend.labels;
+        charts.trend.data.datasets[0].data = trend.values;
+        charts.trend.update();
+      }
+
+      function applySection(section) {
+        activeSection = section;
+        document.querySelectorAll(".nav-item").forEach((button) => {
+          const active = button.dataset.section === section;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-current", active ? "page" : "false");
+        });
+        document.getElementById("pageTitle").textContent = headings[section][0];
+        document.getElementById("pageSubtitle").textContent = headings[section][1];
+        document.getElementById("sidebar").classList.remove("mobile-open");
+        document.getElementById("mobileScrim").classList.remove("visible");
+        applySearch(document.getElementById("dashboardSearch").value);
+      }
+
+      function applySearch(query) {
+        const search = query.trim().toLowerCase();
+        document.querySelectorAll(".searchable").forEach((item) => {
+          if (item.matches("[data-sections]")) {
+            const inSection = item.dataset.sections.split(",").includes(activeSection);
+            const matches = !search || (item.dataset.search + " " + item.textContent).toLowerCase().includes(search);
+            item.hidden = !inSection || !matches;
+          } else if (item.closest("[data-sections]") && item.matches("tr")) {
+            item.hidden = Boolean(search) && !(item.dataset.search + " " + item.textContent).toLowerCase().includes(search);
+          }
+        });
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("visible");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("visible"), 3200);
+      }
+
+      function downloadCsv() {
+        const stats = data.filters[activeRange].stats;
+        const rows = [
+          ["Metric", "Value"],
+          ...data.filters[activeRange].kpis.map((item) => [item.label, item.displayValue]),
+          ["Customer Accounts", stats.clients],
+          ["Active Rentals", stats.activeRentals],
+          ["Open Content Requests", stats.openTickets],
+          ...data.services.map((service) => [service.name + " Revenue", money(service.revenue)])
+        ];
+        const escape = (value) => '"' + String(value).replace(/"/g, '""') + '"';
+        const blob = new Blob([rows.map((row) => row.map(escape).join(",")).join("\r\n")], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "bytezone-analytics.csv";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      function setLiveStatus(message, failed) {
+        const indicator = document.getElementById("liveIndicator");
+        indicator.classList.toggle("stale", failed);
+        document.getElementById("liveStatusText").textContent = message;
+      }
+
+      function stopLiveRefresh() {
+        window.clearInterval(liveRefreshTimer);
+        liveRefreshTimer = null;
+      }
+
+      function apiSnapshot(summary, sales) {
+        const now = new Date();
+        return JSON.stringify([
+          summary, sales, activeRange,
+          now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()
+        ]);
+      }
+
+      function startLiveRefresh() {
+        stopLiveRefresh();
+        liveRefreshTimer = window.setInterval(() => {
+          if (document.visibilityState === "visible") void refreshLiveData();
+        }, 15000);
+      }
+
+      async function refreshLiveData() {
+        if (liveRefreshInProgress || !apiData || dashboard.hidden) return;
+        liveRefreshInProgress = true;
+        try {
+          const [summary, salesResult] = await Promise.all([
+            request("/api/admin/dashboard"),
+            request("/api/sales")
+          ]);
+          const snapshot = apiSnapshot(summary, salesResult.sales);
+          apiData = { summary, sales: salesResult.sales };
+          data = buildDashboardData(summary, salesResult.sales, activeRange);
+          document.getElementById("lastUpdated").textContent = data.updatedAt;
+          setLiveStatus("Live · checking every 15 seconds", false);
+          if (snapshot !== lastApiSnapshot) {
+            lastApiSnapshot = snapshot;
+            renderDashboard();
+          }
+          lastLiveError = "";
+        } catch (error) {
+          if (error.status === 401 || error.status === 403) {
+            stopLiveRefresh();
+            dashboard.hidden = true;
+            loginGate.hidden = false;
+            loginError.textContent = error.status === 401
+              ? "Your session expired. Please sign in again."
+              : "Administrator access is required.";
+            setLiveStatus("Sign-in required", true);
+          } else {
+            setLiveStatus("Refresh failed · retrying", true);
+            if (error.message !== lastLiveError) {
+              showToast("Live revenue refresh failed: " + error.message);
+              lastLiveError = error.message;
+            }
+          }
+        } finally {
+          liveRefreshInProgress = false;
+        }
+      }
+
+      async function showDashboard(user) {
+        if (user.role !== "admin") throw new Error("Administrator access is required.");
+        const [summary, salesResult] = await Promise.all([
+          request("/api/admin/dashboard"),
+          request("/api/sales")
+        ]);
+        apiData = { summary, sales: salesResult.sales };
+        lastApiSnapshot = apiSnapshot(summary, salesResult.sales);
+        data = buildDashboardData(summary, salesResult.sales, activeRange);
+        document.getElementById("adminName").textContent = user.profile.name;
+        document.getElementById("lastUpdated").textContent = data.updatedAt;
+        setLiveStatus("Live · checking every 15 seconds", false);
+        loginGate.hidden = true;
+        dashboard.hidden = false;
+        renderDashboard();
+        startLiveRefresh();
+      }
+
+      async function initialize() {
+        try {
+          const response = await fetch(apiBaseUrl + "/api/csrf", { credentials: "include" });
+          if (!response.ok) throw new Error("Unable to reach the ByteZone server.");
+          const result = await response.json();
+          if (!result.csrfToken) throw new Error("The server did not provide a session token.");
+          csrfToken = result.csrfToken;
+          try {
+            const session = await request("/api/me");
+            if (session.user.role === "admin") await showDashboard(session.user);
+            else loginError.textContent = "Administrator access is required.";
+          } catch (error) {
+            if (error.status !== 401) throw error;
+          }
+        } catch (error) {
+          loginError.textContent = error.message + " Open Analytics from the website while the ByteZone server is running.";
+        }
+      }
+
+      loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        loginError.textContent = "";
+        const button = document.getElementById("loginButton");
+        button.disabled = true;
+        button.textContent = "Signing in…";
+        try {
+          const result = await request("/api/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email: emailInput.value.trim(), password: passwordInput.value })
+          });
+          csrfToken = result.csrfToken;
+          if (result.user.role !== "admin") {
+            await request("/api/auth/logout", { method: "POST" });
+            throw new Error("Administrator access is required.");
+          }
+          await showDashboard(result.user);
+          passwordInput.value = "";
+        } catch (error) {
+          loginError.textContent = error.message;
+        } finally {
+          button.disabled = false;
+          button.textContent = "Sign in";
+        }
+      });
+      document.getElementById("logoutButton").addEventListener("click", async () => {
+        try {
+          await request("/api/auth/logout", { method: "POST" });
+          stopLiveRefresh();
+          apiData = null;
+          lastApiSnapshot = "";
+          dashboard.hidden = true;
+          loginGate.hidden = false;
+          emailInput.value = "";
+          passwordInput.value = "";
+          loginError.textContent = "";
+          emailInput.focus();
+        } catch (error) {
+          showToast(error.message);
+        }
+      });
+      document.getElementById("dateFilter").addEventListener("change", (event) => {
+        activeRange = event.target.value;
+        data = buildDashboardData(apiData.summary, apiData.sales, activeRange);
+        lastApiSnapshot = apiSnapshot(apiData.summary, apiData.sales);
+        renderDashboard();
+      });
+      document.querySelectorAll(".nav-item").forEach((button) => {
+        button.addEventListener("click", () => applySection(button.dataset.section));
+      });
+      document.getElementById("dashboardSearch").addEventListener("input", (event) => applySearch(event.target.value));
+      document.getElementById("collapseButton").addEventListener("click", () => {
+        const shell = document.getElementById("dashboard");
+        shell.classList.toggle("sidebar-collapsed");
+        const collapsed = shell.classList.contains("sidebar-collapsed");
+        document.getElementById("collapseButton").setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+        document.getElementById("collapseButton").title = collapsed ? "Expand sidebar" : "Collapse sidebar";
+      });
+      document.getElementById("mobileMenuButton").addEventListener("click", () => {
+        document.getElementById("sidebar").classList.add("mobile-open");
+        document.getElementById("mobileScrim").classList.add("visible");
+      });
+      document.getElementById("mobileScrim").addEventListener("click", () => {
+        document.getElementById("sidebar").classList.remove("mobile-open");
+        document.getElementById("mobileScrim").classList.remove("visible");
+      });
+      document.getElementById("exportPdf").addEventListener("click", () => {
+        window.print();
+        showToast("Print view ready. Choose Save as PDF to export.");
+      });
+      document.getElementById("exportExcel").addEventListener("click", () => {
+        downloadCsv();
+        showToast("Analytics export downloaded.");
+      });
+      initialize();
+    })();
+  </script>
+</body>
+</html>

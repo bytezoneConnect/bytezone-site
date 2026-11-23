@@ -50,6 +50,12 @@ app.get("/operations.html", (req, res) => res.redirect(302, "/ops"));
 app.use(express.static(path.resolve(__dirname, "..", "public"), { index: false, dotfiles: "deny", maxAge: "1h" }));
 app.use("/images", express.static(path.resolve(__dirname, "..", "images"), { dotfiles: "deny", maxAge: "1d" }));
 app.get("/", (req, res) => res.sendFile(path.resolve(__dirname, "..", "index.html")));
+app.get("/admin-analytics", (req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  res.sendFile(path.resolve(__dirname, "..", "public", "admin-analytics.html"), (error) => {
+    if (error) next(error);
+  });
+});
 app.get("/sitemap.xml", (req, res) => res.sendFile(path.resolve(__dirname, "..", "sitemap.xml")));
 app.get("/googlea569bbac5b256e52.html", (req, res) => res.sendFile(path.resolve(__dirname, "..", "googlea569bbac5b256e52.html")));
 app.get("/ops", (req, res, next) => {
