@@ -1,5 +1,5 @@
 const BACKEND_PREFIX = "/.netlify/functions/backend";
-const ALLOWED_PATHS = ["/ops", "/operations.html", "/operations.js", "/app.css", "/api"];
+const ALLOWED_PATHS = ["/ops", "/operations.html", "/operations.js", "/app.css", "/admin-analytics", "/api"];
 const HOP_BY_HOP_HEADERS = new Set([
   "connection",
   "content-encoding",
