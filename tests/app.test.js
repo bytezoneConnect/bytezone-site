@@ -18,6 +18,15 @@ const { decryptJson, digest } = require("../src/security");
 
 test("authenticated rentals, encrypted ownership evidence, sales, and admin workflows", async (t) => {
   await migrate();
+  const publicInquiryMigration = db.prepare("SELECT name FROM schema_migrations WHERE name = ?").get("004_public_inquiries.sql");
+  assert.ok(publicInquiryMigration);
+  assert.deepEqual(
+    db.prepare("PRAGMA table_info(public_inquiries)").all().map((column) => column.name),
+    ["id", "encrypted_details", "created_at"],
+  );
+  await migrate();
+  assert.equal(db.prepare("SELECT name FROM schema_migrations WHERE name = ?").all("004_public_inquiries.sql").length, 1);
+
   const server = app.listen(0);
   await new Promise((resolve) => server.once("listening", resolve));
   t.after(async () => {
@@ -74,9 +83,10 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
     }
   }
 
-  async function call(url, { method = "GET", body, form, redirect = "follow" } = {}) {
+  async function call(url, { method = "GET", body, form, redirect = "follow", requestOrigin, csrfHeader = csrfToken } = {}) {
     const headers = { cookie: [...cookies].map(([key, value]) => `${key}=${value}`).join("; ") };
-    if (method !== "GET") headers["x-csrf-token"] = csrfToken;
+    if (requestOrigin) headers.origin = requestOrigin;
+    if (method !== "GET" && csrfHeader !== null) headers["x-csrf-token"] = csrfHeader;
     if (body !== undefined) headers["content-type"] = "application/json";
     const response = await fetch(`${origin}${url}`, {
       method,
@@ -93,6 +103,26 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
 
   const csrfResponse = await call("/api/csrf");
   csrfToken = csrfResponse.body.csrfToken;
+  const contactInquiry = {
+    type: "Website contact request",
+    name: "Test Prospect",
+    email: "prospect@example.test",
+    phone: "0999 000 001",
+    service: "IT Security",
+    message: "Please provide an IT security consultation.",
+  };
+  assert.equal((await call("/api/public-inquiries", {
+    method: "POST",
+    body: contactInquiry,
+    requestOrigin: "https://bytezone.example",
+    csrfHeader: null,
+  })).response.status, 403);
+  assert.equal((await call("/api/public-inquiries", {
+    method: "POST",
+    body: contactInquiry,
+    requestOrigin: "https://other.example",
+  })).response.status, 403);
+
   assert.equal((await call("/api/auth/google/status")).body.clientId, "test-google-client-id");
   const googleClientId = process.env.GOOGLE_CLIENT_ID;
   delete process.env.GOOGLE_CLIENT_ID;
@@ -109,6 +139,133 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
   assert.equal((await call("/api/health")).body.status, "ok");
   assert.equal((await call("/")).response.status, 200);
   assert.equal((await call("/ops")).response.status, 200);
+
+  function assertStoredInquiry(result, expected) {
+    assert.equal(result.response.status, 201);
+    assert.match(result.body.inquiryId, /^[0-9a-f-]{36}$/);
+    const stored = db.prepare("SELECT id, encrypted_details, created_at FROM public_inquiries WHERE id = ?")
+      .get(result.body.inquiryId);
+    assert.ok(stored);
+    assert.equal(stored.id, result.body.inquiryId);
+    assert.ok(!stored.encrypted_details.includes(expected.email));
+    assert.deepEqual(decryptJson(stored.encrypted_details), expected);
+    assert.ok(!Number.isNaN(Date.parse(stored.created_at)));
+  }
+
+  const contactResult = await call("/api/public-inquiries", {
+    method: "POST",
+    body: contactInquiry,
+    requestOrigin: "https://bytezone.example",
+  });
+  assertStoredInquiry(contactResult, contactInquiry);
+
+  const signupResult = await call("/api/public-inquiries", {
+    method: "POST",
+    body: {
+      type: "Website newsletter and market signup",
+      name: "Website signup",
+      email: "Signup@example.test",
+      phone: "+265 999 000 003",
+      service: "Marketplace and updates",
+      message: "Please add this person to ByteZoneConnect updates and market launch notifications.",
+      _subject: "New ByteZoneConnect Signup!",
+      _captcha: "false",
+    },
+    requestOrigin: "https://bytezone.example",
+  });
+  assertStoredInquiry(signupResult, {
+    type: "Website newsletter and market signup",
+    name: "Website signup",
+    email: "signup@example.test",
+    phone: "+265 999 000 003",
+    service: "Marketplace and updates",
+    message: "Please add this person to ByteZoneConnect updates and market launch notifications.",
+  });
+
+  const enrollmentResult = await call("/api/public-inquiries", {
+    method: "POST",
+    body: {
+      name: "Test Student",
+      email: "student@example.test",
+      whatsapp: "0999000002",
+      course: "Full Stack Web Dev - MWK 255,000",
+      message: "I would like to enroll.",
+    },
+    requestOrigin: "https://bytezone.example",
+  });
+  assertStoredInquiry(enrollmentResult, {
+    type: "Academy enrollment",
+    name: "Test Student",
+    email: "student@example.test",
+    phone: "0999000002",
+    service: "Full Stack Web Dev - MWK 255,000",
+    message: "I would like to enroll.",
+  });
+
+  const missingName = await call("/api/public-inquiries", {
+    method: "POST",
+    body: { ...contactInquiry, name: " " },
+    requestOrigin: "https://bytezone.example",
+  });
+  assert.equal(missingName.response.status, 400);
+  const invalidEmail = await call("/api/public-inquiries", {
+    method: "POST",
+    body: { ...contactInquiry, email: "not-an-email" },
+    requestOrigin: "https://bytezone.example",
+  });
+  assert.equal(invalidEmail.response.status, 400);
+  const phoneOnlyPlus = await call("/api/public-inquiries", {
+    method: "POST",
+    body: { ...contactInquiry, phone: "+" },
+    requestOrigin: "https://bytezone.example",
+  });
+  assert.equal(phoneOnlyPlus.response.status, 400);
+  const phoneWithoutDigits = await call("/api/public-inquiries", {
+    method: "POST",
+    body: { ...contactInquiry, phone: "letters" },
+    requestOrigin: "https://bytezone.example",
+  });
+  assert.equal(phoneWithoutDigits.response.status, 400);
+  const enrollmentWithoutPhone = await call("/api/public-inquiries", {
+    method: "POST",
+    body: {
+      name: "Student Without Phone",
+      email: "student-without-phone@example.test",
+      course: "Full Stack Web Dev - MWK 255,000",
+      message: "I would like to enroll.",
+    },
+    requestOrigin: "https://bytezone.example",
+  });
+  assert.equal(enrollmentWithoutPhone.response.status, 400);
+  assert.equal(db.prepare("SELECT COUNT(*) AS count FROM public_inquiries").get().count, 3);
+
+  db.exec(`
+    CREATE TRIGGER reject_public_inquiry BEFORE INSERT ON public_inquiries
+    BEGIN SELECT RAISE(ABORT, 'sensitive database failure'); END
+  `);
+  const databaseFailure = await call("/api/public-inquiries", {
+    method: "POST",
+    body: contactInquiry,
+    requestOrigin: "https://bytezone.example",
+  });
+  db.exec("DROP TRIGGER reject_public_inquiry");
+  assert.equal(databaseFailure.response.status, 500);
+  assert.equal(databaseFailure.body.error, "The request could not be completed. Contact the system administrator.");
+
+  const lastAllowedInquiry = await call("/api/public-inquiries", {
+    method: "POST",
+    body: { ...contactInquiry, email: "repeat@example.test" },
+    requestOrigin: "https://bytezone.example",
+  });
+  assert.equal(lastAllowedInquiry.response.status, 201);
+  const countBeforeRateLimit = db.prepare("SELECT COUNT(*) AS count FROM public_inquiries").get().count;
+  const rateLimited = await call("/api/public-inquiries", {
+    method: "POST",
+    body: { ...contactInquiry, email: "rate-limited@example.test" },
+    requestOrigin: "https://bytezone.example",
+  });
+  assert.equal(rateLimited.response.status, 429);
+  assert.equal(db.prepare("SELECT COUNT(*) AS count FROM public_inquiries").get().count, countBeforeRateLimit);
 
   const customerPassword = "customer-password-12";
   const registration = await call("/api/auth/register", {
@@ -278,6 +435,7 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
   const adminLogin = await call("/api/auth/login", {
     method: "POST",
     body: { email: admin.profile.email, password: adminPassword },
+    requestOrigin: "https://bytezone.example",
   });
   assert.equal(adminLogin.response.status, 200);
   csrfToken = adminLogin.body.csrfToken;

@@ -24,6 +24,11 @@ const upload = multer({
 });
 const sessionHours = Number(process.env.BYTEZONE_SESSION_HOURS || 12);
 const ticketStatuses = new Set(["Submitted", "Approved", "Rejected", "DMCA Sent", "In Review", "Removed", "Failed"]);
+const publicInquiryTypes = new Set([
+  "Website contact request",
+  "Website newsletter and market signup",
+  "Academy enrollment",
+]);
 const defaultGoogleClientId = "476466036015-8lomocr4u059678hk39n7p2jobdc5elt.apps.googleusercontent.com";
 const primaryAdminEmail = "gomesshumba97@gmail.com";
 
@@ -93,6 +98,11 @@ function requireText(value, label, maxLength = 200) {
     fail(400, `${label} is required and must be at most ${maxLength} characters.`);
   }
   return value.trim();
+}
+
+function optionalText(value, label, maxLength) {
+  if (value === undefined || value === null || value === "") return "";
+  return requireText(value, label, maxLength);
 }
 
 function requireMoney(value, label, allowZero = true) {
@@ -350,12 +360,57 @@ const googleLoginLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: "Too many Google sign-in attempts. Try again in 15 minutes." },
 });
+const publicInquiryLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many enquiries. Please try again later." },
+});
 
 app.get("/api/csrf", (req, res) => {
   const token = crypto.randomBytes(32).toString("base64url");
   res.cookie("bzcsrf", token, { ...cookieOptions(24 * 60 * 60 * 1000), httpOnly: false });
   res.json({ csrfToken: token });
 });
+
+app.post("/api/public-inquiries", publicInquiryLimiter, asyncRoute(async (req, res) => {
+  const body = req.body;
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    fail(400, "A valid enquiry object is required.");
+  }
+
+  const hasCourse = body.course !== undefined && body.course !== null && body.course !== "";
+  const type = requireText(body.type ?? (hasCourse ? "Academy enrollment" : undefined), "Inquiry type", 60);
+  if (!publicInquiryTypes.has(type)) fail(400, "Inquiry type is invalid.");
+  if (body.phone && body.whatsapp && body.phone !== body.whatsapp) {
+    fail(400, "Phone and WhatsApp values must match.");
+  }
+  if (body.service && body.course && body.service !== body.course) {
+    fail(400, "Service and course values must match.");
+  }
+
+  const name = requireText(body.name, "Name", 120);
+  const email = normalizeEmail(requireText(body.email, "Email address", 254));
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    fail(400, "Email address must be valid.");
+  }
+  const phone = optionalText(body.phone || body.whatsapp, "Phone number", 50);
+  if (phone && (!/^\+?[0-9().\-\s]+$/.test(phone) || !/\d/.test(phone))) {
+    fail(400, "Phone number must contain digits and use a valid phone format.");
+  }
+  if (type === "Academy enrollment" && !phone) {
+    fail(400, "A WhatsApp number is required for academy enrollment.");
+  }
+  const service = requireText(body.service || body.course, "Service or course", 120);
+  const message = requireText(body.message, "Message", 3000);
+  const details = { type, name, email, phone, service, message };
+  const inquiryId = newId();
+  db.prepare("INSERT INTO public_inquiries (id, encrypted_details, created_at) VALUES (?, ?, ?)")
+    .run(inquiryId, encryptJson(details), new Date().toISOString());
+
+  res.status(201).json({ inquiryId });
+}));
 
 app.post("/api/auth/register", registrationLimiter, asyncRoute(async (req, res) => {
   const user = await createUser({ ...req.body, role: "customer" });
