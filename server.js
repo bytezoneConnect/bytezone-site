@@ -8,9 +8,15 @@ async function start() {
     if (!process.env.BYTEZONE_PROXY_SECRET || process.env.BYTEZONE_PROXY_SECRET.length < 32) {
       throw new Error("Production requires a 32-character BYTEZONE_PROXY_SECRET shared with Netlify.");
     }
-    const publicOrigin = new URL(process.env.BYTEZONE_PUBLIC_ORIGIN || "http://invalid");
-    if (publicOrigin.protocol !== "https:" || publicOrigin.pathname !== "/") {
-      throw new Error("Production requires BYTEZONE_PUBLIC_ORIGIN set to the HTTPS Netlify site origin.");
+    const configuredPublicOrigin = process.env.BYTEZONE_PUBLIC_ORIGIN || "";
+    let publicOrigin;
+    try {
+      publicOrigin = new URL(configuredPublicOrigin);
+    } catch {
+      throw new Error("Production requires BYTEZONE_PUBLIC_ORIGIN set to the exact HTTPS site origin without a trailing slash.");
+    }
+    if (publicOrigin.protocol !== "https:" || publicOrigin.origin !== configuredPublicOrigin) {
+      throw new Error("Production requires BYTEZONE_PUBLIC_ORIGIN set to the exact HTTPS site origin without a trailing slash.");
     }
   }
   await migrate();

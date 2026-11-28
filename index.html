@@ -362,14 +362,14 @@
             </div>
 
             <div class="nav-right">
-                <button class="visitor-box" type="button" onclick="document.getElementById('liveUpdates').scrollIntoView({ behavior: 'smooth', block: 'start' })">
-                    <div class="visitor-label"><span id="visitorsIcon">👁</span><span id="visitorText">LIVE VISITORS</span></div>
-                    <div id="visitorsValue">847</div>
+                <button class="visitor-box" type="button" onclick="document.getElementById('contact').scrollIntoView({ behavior: 'smooth', block: 'start' })">
+                    <div class="visitor-label"><i class="fa-solid fa-headset" aria-hidden="true"></i><span>LOCAL SUPPORT</span></div>
+                    <div>Mzuzu, Malawi</div>
                 </button>
                 
                <div class="money-ticker">
-    <div class="money-label">LIVE REVENUE</div>
-    <div id="moneyValue" class="up"><span id="moneyArrow">↑</span> MWK 2,500,000</div>
+    <div class="money-label">SERVICE COVERAGE</div>
+    <div id="moneyValue" class="up"><span id="moneyArrow"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span> 14 Solutions</div>
 </div>
 
                <div class="forex-ticker" aria-label="Live foreign exchange rates">
@@ -388,15 +388,12 @@
         <ul class="nav-links-dropdown" id="navLinks">
             <li><a href="#home" onclick="closeMenu()">Home</a></li>
             <li><a href="#services" onclick="closeMenu()">Services</a></li>
-            <li><a id="operationsPortalLink" href="/ops">Device rental &amp; POS portal</a></li>
-            <li><a href="#networkLab" onclick="closeMenu()">Network Lab</a></li>
-            <li><a href="#inspire" onclick="closeMenu()">Inspire</a></li>
-            <li><a href="#courses" onclick="closeMenu()">Courses</a></li>
+            <li><a href="#courses" onclick="closeMenu()">Academy</a></li>
             <li><a href="#portfolio" onclick="closeMenu()">Portfolio</a></li>
+            <li><button type="button" onclick="openMarket(); closeMenu();">Marketplace</button></li>
+            <li><a id="operationsPortalLink" href="/ops">Device rental &amp; POS portal</a></li>
+            <li><a id="analyticsPortalLink" href="public/admin-analytics.html" onclick="closeMenu()">Analytics</a></li>
             <li><a href="#about" onclick="closeMenu()">About</a></li>
-            <li><a href="#blog" onclick="closeMenu()">Blog</a></li>
-            <li><a href="#gallery" onclick="closeMenu()">Gallery</a></li>
-            <li><a href="#team" onclick="closeMenu()">Our Team</a></li>
             <li><a href="#faq" onclick="closeMenu()">FAQ</a></li>
             <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
             <li><button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode"><i class="fa-solid fa-moon"></i> Dark mode</button></li>
@@ -416,8 +413,17 @@
             <div class="btn-group">
                 <a href="#courses" class="btn btn-academy">JOIN ACADEMY <i class="fa-solid fa-graduation-cap"></i></a>
                 <a href="#" onclick="openMarket(); return false;" class="btn btn-market">SHOP MARKET <i class="fa-solid fa-store"></i></a>
-                <a href="#" onclick="openSignupModal(); return false;" class="btn btn-signup">SIGN UP</a>
+                <a href="#contact" class="btn btn-signup">REQUEST A QUOTE</a>
             </div>
+        </div>
+    </section>
+
+    <section class="trust-strip" aria-label="ByteZoneConnect capabilities">
+        <div class="container trust-strip-grid">
+            <div><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span><strong>Secure solutions</strong><small>Designed for reliability</small></span></div>
+            <div><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span><strong>Malawi coverage</strong><small>Local technical support</small></span></div>
+            <div><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i><span><strong>Certified learning</strong><small>Professional technology training</small></span></div>
+            <div><i class="fa-solid fa-headset" aria-hidden="true"></i><span><strong>Client support</strong><small>Contact the ByteZone team</small></span></div>
         </div>
     </section>
 
@@ -522,7 +528,15 @@
             <h2 class="section-title">Premium <span>Services</span></h2>
             <div class="services-grid">
                 <div class="service-card"><img src="images/service-web.jpg"><i class="fa-solid fa-code" style="color:var(--blue)"></i><h3 style="color:var(--blue)" class="clickable-title" onclick="openService('web')">Web Development</h3><div class="price-tag" style="color:var(--green)">From MWK 255,000</div><p>Enterprise websites and web applications.</p></div>
-                <div class="service-card"><img src="images/service-app.jpg"><i class="fa-solid fa-laptop-code" style="color:var(--purple)"></i><h3 style="color:var(--purple)" class="clickable-title" onclick="openService('software')">Software Solutions</h3><div class="price-tag" style="color:var(--green)">From MWK 500,000</div><p>Custom ERP, POS, and management systems.</p></div>
+                <div class="service-card enterprise-service-card"><i class="fa-solid fa-code" style="color:var(--blue)" aria-hidden="true"></i><h3 style="color:var(--blue)" class="clickable-title" onclick="openService('software')">Software Solutions</h3><p>We have experienced software developers that have a track record of numerous software deployments.</p><ul class="enterprise-service-list"><li>Custom Software Development</li><li>Enterprise Applications</li><li>Web &amp; Mobile Solutions</li><li>System Integration</li><li>API Development</li></ul></div>
+                <div class="service-card enterprise-service-card"><i class="fa-solid fa-cloud" style="color:var(--green)" aria-hidden="true"></i><h3 style="color:var(--green)" class="clickable-title" onclick="openService('enterpriseCloud')">Enterprise Cloud Services</h3><p>Transform your infrastructure with our comprehensive cloud solutions.</p><div class="cloud-subcards"><div class="cloud-subcard"><strong>IaaS</strong><span>Infrastructure as a Service</span></div><div class="cloud-subcard"><strong>PaaS</strong><span>Platform as a Service</span></div><div class="cloud-subcard"><strong>SaaS</strong><span>Software as a Service</span></div><div class="cloud-subcard"><strong>BaaS</strong><span>Backup as a Service</span></div></div></div>
+                <div class="service-card enterprise-service-card"><i class="fa-solid fa-desktop" style="color:var(--purple)" aria-hidden="true"></i><h3 style="color:var(--purple)" class="clickable-title" onclick="openService('virtualization')">Virtualization</h3><p>We are experts in virtualization solutions including VMware, IBM Power VM, Oracle VM, Windows Hypervisor and many more.</p><ul class="enterprise-service-list"><li>VMware vSphere</li><li>IBM PowerVM</li><li>Oracle VM Server</li><li>Microsoft Hyper-V</li><li>Virtual Desktop Infrastructure (VDI)</li></ul></div>
+                <div class="service-card enterprise-service-card"><i class="fa-solid fa-database" style="color:var(--yellow)" aria-hidden="true"></i><h3 style="color:var(--yellow)" class="clickable-title" onclick="openService('databases')">Databases</h3><p>We provide expert database solutions backed by certified engineers, ensuring high performance, security, and reliability across your data platforms.</p><ul class="enterprise-service-list"><li>Oracle Database Solutions</li><li>Microsoft SQL Server Management</li><li>IBM DB2 Administration</li><li>Database Design &amp; Optimization</li><li>Backup, Recovery &amp; Performance Tuning</li></ul></div>
+                <div class="service-card enterprise-service-card"><i class="fa-solid fa-network-wired" style="color:var(--orange)" aria-hidden="true"></i><h3 style="color:var(--orange)" class="clickable-title" onclick="openService('integration')">Systems Integration</h3><p>We provide seamless integration of systems and technologies to improve efficiency, data flow, and business continuity across your organization.</p><ul class="enterprise-service-list"><li>Data Consolidation</li><li>System Virtualization</li><li>Data Replication</li><li>API &amp; Third-Party Integration</li><li>Disaster Recovery Solutions</li></ul></div>
+                <div class="service-card enterprise-service-card"><i class="fa-solid fa-laptop" style="color:var(--blue)" aria-hidden="true"></i><h3 style="color:var(--blue)" class="clickable-title" onclick="openService('endUser')">End-User Computing</h3><p>We deliver secure and efficient end-user computing solutions that empower your workforce with reliable access to applications, data, and collaboration tools.</p><ul class="enterprise-service-list"><li>Virtual Desktop Infrastructure (VDI)</li><li>Device Management &amp; Support</li><li>Software Deployment &amp; Updates</li><li>Remote Work &amp; Mobility Solutions</li></ul></div>
+                <div class="service-card enterprise-service-card"><i class="fa-solid fa-graduation-cap" style="color:var(--pink)" aria-hidden="true"></i><h3 style="color:var(--pink)" class="clickable-title" onclick="openService('exam')">Exam Centre</h3><p>We provide secure and professional examination services as an accredited testing centre for leading global certification bodies, including Pearson VUE, Prometric, ICDL, and Microsoft Certification.</p><ul class="enterprise-service-list"><li>Computer-Based Testing (CBT) Delivery</li><li>Secure Exam Administration</li><li>Candidate Registration Support</li><li>Accredited Testing Environment</li><li>International Certification Programs</li></ul></div>
+                <div class="service-card enterprise-service-card"><i class="fa-solid fa-shield-halved" style="color:var(--red)" aria-hidden="true"></i><h3 style="color:var(--red)" class="clickable-title" onclick="openService('security')">IT Security</h3><p>We have a team of IT security experts experienced in all aspects of cyber security.</p><ul class="enterprise-service-list"><li>Perimeter Security &amp; Firewalls</li><li>Vulnerability Assessment</li><li>Penetration Testing</li><li>Security Audits</li><li>Zero-Day Protection</li></ul></div>
+                <div class="service-card enterprise-service-card"><i class="fa-solid fa-gears" style="color:var(--green)" aria-hidden="true"></i><h3 style="color:var(--green)" class="clickable-title" onclick="openService('operatingSystems')">Operating Systems Support</h3><p>Expert support and management for enterprise operating systems to keep your environment stable, secure, and optimized.</p><ul class="enterprise-service-list"><li>Windows Server Support</li><li>Linux Administration</li><li>Patch Management &amp; Updates</li><li>Performance Monitoring</li><li>OS Security Hardening</li></ul></div>
                 <div class="service-card"><img src="images/services.jpg"><i class="fa-solid fa-network-wired" style="color:var(--orange)"></i><h3 style="color:var(--orange)" class="clickable-title" onclick="openService('network')">Network Infrastructure</h3><div class="price-tag" style="color:var(--green)">From MWK 300,000</div><p>Secure LAN/WAN and cloud architecture.</p></div>
                 <div class="service-card"><img src="images/services1.jpeg"><i class="fa-solid fa-screwdriver-wrench" style="color:var(--pink)"></i><h3 style="color:var(--pink)" class="clickable-title" onclick="openService('it')">IT Support & CCTV</h3><div class="price-tag" style="color:var(--green)">From MWK 250,000</div><p>24/7 technical support and surveillance.</p></div>
                 <div class="service-card"><img src="images/image 5.jpeg"><i class="fa-solid fa-bullhorn" style="color:var(--yellow)"></i><h3 style="color:var(--yellow)" class="clickable-title" onclick="openService('marketing')">Digital Marketing</h3><div class="price-tag" style="color:var(--green)">MWK 459,000</div><p>Brand strategy and ad campaigns.</p></div>
@@ -847,11 +861,14 @@
         <div class="container">
             <h2 class="section-title">Let's <span>Connect</span></h2>
             <a href="mailto:bytezone@bytezoneconnectmw.com" class="contact-email"><i class="fa-solid fa-envelope" style="color:var(--red)"></i> bytezone@bytezoneconnectmw.com</a>
-            <form class="contact-form" action="https://formspree.io/f/info@bytezoneconnectmw.com" method="POST">
-                <div class="form-group"><input type="text" name="name" placeholder="Your Name" required></div>
-                <div class="form-group"><input type="email" name="email" placeholder="Your Email" required></div>
-                <div class="form-group"><textarea name="message" rows="5" placeholder="Tell us about your project..." required></textarea></div>
-                <button type="submit" class="btn" style="width:100%; border:none;">Send Message</button>
+            <form class="contact-form">
+                <input type="hidden" name="type" value="Website contact request">
+                <div class="form-group"><input type="text" name="name" placeholder="Your Name" maxlength="120" required></div>
+                <div class="form-group"><input type="email" name="email" placeholder="Your Email" maxlength="254" required></div>
+                <div class="form-group"><input type="tel" name="phone" placeholder="Phone / WhatsApp (optional)" maxlength="50"></div>
+                <div class="form-group"><select name="service" required><option value="">Select a service</option><option>Software Solutions</option><option>Enterprise Cloud Services</option><option>Virtualization</option><option>Databases</option><option>Systems Integration</option><option>End-User Computing</option><option>Exam Centre</option><option>IT Security</option><option>Operating Systems Support</option><option>Network Infrastructure</option><option>Web Development</option><option>Digital Marketing</option><option>ByteZone Academy</option><option>Marketplace</option></select></div>
+                <div class="form-group"><textarea name="message" rows="5" placeholder="Tell us about your project, timeline, and budget..." maxlength="3000" required></textarea></div>
+                <button type="submit" class="btn" style="width:100%; border:none;">Send Enquiry</button>
             </form>
             <div class="social-icons">
                 <a href="mailto:bytezone@bytezoneconnectmw.com"><i class="fa-solid fa-envelope"></i></a>
@@ -916,6 +933,28 @@
  .service-card:hover { transform: translateY(-15px); border-color: var(--green); box-shadow: 0 15px 50px rgba(0,255,136,0.3); }
  .service-card i { font-size: 3.5rem; margin-bottom: 20px; }
  .service-card img { width: 100%; height: 280px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; }
+ .enterprise-service-card { cursor: pointer; }
+ .enterprise-service-card > i { display: block; }
+ .enterprise-service-card p { margin: 12px 0 18px; }
+ .enterprise-service-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; text-align: left; }
+ .enterprise-service-list li { padding: 8px 10px; border: 1px solid rgba(0,175,255,0.16); border-radius: 10px; background: rgba(0,175,255,0.05); color: #d7d7d7; font-size: 0.78rem; line-height: 1.35; }
+ .cloud-subcards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+ .cloud-subcard { padding: 14px 10px; border: 1px solid rgba(0,255,136,0.24); border-radius: 12px; background: rgba(0,255,136,0.06); }
+ .cloud-subcard strong { display: block; color: var(--green); font-family: 'Orbitron', sans-serif; font-size: 1rem; }
+ .cloud-subcard span { display: block; margin-top: 4px; color: #d7d7d7; font-size: 0.68rem; line-height: 1.35; }
+ body.light-mode .enterprise-service-list li,
+ body.light-mode .cloud-subcard span { color: #263944; }
+ .trust-strip { padding: 28px 30px !important; border-top: 1px solid rgba(143,190,209,0.12); border-bottom: 1px solid rgba(143,190,209,0.12); background: rgba(8,18,29,0.78); }
+ .trust-strip-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+ .trust-strip-grid > div { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 12px 14px; border-right: 1px solid rgba(143,190,209,0.12); }
+ .trust-strip-grid > div:last-child { border-right: 0; }
+ .trust-strip-grid i { color: var(--green); font-size: 1.15rem; }
+ .trust-strip-grid strong, .trust-strip-grid small { display: block; }
+ .trust-strip-grid strong { color: #edf8f5; font-size: 0.84rem; }
+ .trust-strip-grid small { color: #98abb6; margin-top: 2px; font-size: 0.72rem; }
+ body.light-mode .trust-strip { background: rgba(245,249,250,0.95); }
+ body.light-mode .trust-strip-grid strong { color: #18313b; }
+ body.light-mode .trust-strip-grid small { color: #607680; }
  .inspire-card { border-color: var(--pink); }
  .inspire-card img { height: 350px; }
  .inspire-card:hover { animation: inspireHover 2s ease-in-out infinite; box-shadow: 0 0 50px var(--pink); border-color: var(--green); }
@@ -1064,7 +1103,8 @@
  .testimonial-card { background: var(--glass); backdrop-filter: blur(10px); padding: 35px; border-radius: 20px; border-left: 4px solid var(--green); transition: 0.4s; }
  .testimonial-card:hover { transform: translateY(-10px); border-color: var(--blue); box-shadow: 0 10px 40px rgba(0,175,255,0.3); }
  .contact-form { background: var(--glass); backdrop-filter: blur(10px); padding: 60px; border-radius: 20px; max-width: 750px; margin: 40px auto 0; border: 1px solid rgba(0,255,136,0.2); }
- .form-group input,.form-group textarea { width: 100%; padding: 18px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; border-radius: 12px; font-family: 'Poppins'; margin-bottom: 20px; font-size: 1rem; }
+ .form-group input,.form-group textarea,.form-group select { width: 100%; padding: 18px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; border-radius: 12px; font-family: 'Poppins'; margin-bottom: 20px; font-size: 1rem; }
+ .form-group select option { color: #111; background: #fff; }
         body.light-mode .form-group input, body.light-mode .form-group textarea { background: #FFF; color: #0F0F1A; border-color: #ddd; }
  .social-icons { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-top: 50px; }
  .social-icons a { width: 75px; height: 75px; background: linear-gradient(135deg, var(--red), var(--green), var(--blue)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; transition: 0.4s; text-decoration: none; }
@@ -1229,6 +1269,34 @@
         .modal-content { margin: 3vh auto; padding: 22px 16px; }
     }
 
+    .nav-links-dropdown li button {
+        width: 100%;
+        padding: 13px 4px;
+        border: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        background: transparent;
+        color: #d7e7ec;
+        text-align: left;
+        font: inherit;
+        font-size: 0.98rem;
+        cursor: pointer;
+    }
+    .nav-links-dropdown li button:hover { padding-left: 10px; color: #78edc9; }
+    .service-card { border-radius: 18px; }
+    .service-card .price-tag { letter-spacing: -0.02em; }
+    .section-title { letter-spacing: -0.035em; }
+    .contact-form { border-radius: 18px; }
+    :focus-visible { outline: 3px solid #78edc9; outline-offset: 3px; }
+    @media(max-width: 992px) {
+        .trust-strip-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .trust-strip-grid > div:nth-child(2) { border-right: 0; }
+    }
+    @media(max-width: 560px) {
+        .trust-strip { padding: 18px 14px !important; }
+        .trust-strip-grid { grid-template-columns: 1fr; gap: 6px; }
+        .trust-strip-grid > div { border-right: 0; border-bottom: 1px solid rgba(143,190,209,0.10); }
+        .trust-strip-grid > div:last-child { border-bottom: 0; }
+    }
     @media(max-width: 360px) {
         .container { padding-right: 12px; padding-left: 12px; }
         section { padding-right: 12px; padding-left: 12px; }
@@ -1263,7 +1331,7 @@
         <option value="Mobile App Development - MWK 500,000">Mobile App Development - MWK 500,000</option>
         <option value="UI/UX & Digital Marketing - MWK 459,000">UI/UX & Digital Marketing - MWK 459,000</option>
       </select>
-      <textarea name="message" placeholder="Why do you want to join?"></textarea>
+      <textarea name="message" placeholder="Why do you want to join?" maxlength="3000" required></textarea>
       <button type="submit">SUBMIT APPLICATION</button>
     </form>
     <p id="successMsg" style="display:none; color:#00ff88; text-align:center;">✅ Application Sent! We'll contact you on WhatsApp.</p>
@@ -1275,10 +1343,13 @@
         <span class="close" onclick="closeSignupModal()">&times;</span>
         <h2>Join ByteZoneConnect</h2>
         <p>Sign up with your email to receive exclusive market launches, gadget drops, pricing alerts, and local deals from BZC.</p>
-        <form id="signupForm" action="https://formsubmit.co/bytezoneconnect@gmail.com" method="POST">
+        <form id="signupForm">
             <input type="hidden" name="_subject" value="New ByteZoneConnect Signup!">
             <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="https://bytezoneconnectmw.netlify.app/thankyou.html">
+            <input type="hidden" name="type" value="Website newsletter and market signup">
+            <input type="hidden" name="name" value="Website signup">
+            <input type="hidden" name="service" value="Marketplace and updates">
+            <input type="hidden" name="message" value="Please add this person to ByteZoneConnect updates and market launch notifications.">
             <div class="form-group"><input type="email" name="email" placeholder="Email Address" required></div>
             <button type="submit" class="btn" style="width:100%; border:none;">SIGN UP WITH EMAIL</button>
         </form>
@@ -1307,62 +1378,6 @@
     updateDigitalClock();
     setInterval(updateDigitalClock, 50);
 
-    // LIVE MONEY TICKER - RESETS AT 06:00 AM
-    let currentMoney = 2500000;
-    let lastUpdateTime = Date.now();
-    const moneyEl = document.getElementById('moneyValue');
-    const arrowEl = document.getElementById('moneyArrow');
-
-    function checkReset() {
-        const now = new Date();
-        const lastReset = localStorage.getItem('bytezone_last_reset');
-        const today6am = new Date();
-        today6am.setHours(6, 0, 0, 0);
-        
-        if(!lastReset || new Date(lastReset) < today6am) {
-            currentMoney = 2500000; // Reset to base
-            localStorage.setItem('bytezone_last_reset', now.toISOString());
-        }
-    }
-    checkReset();
-
-    const savedMoney = localStorage.getItem('bytezone_money');
-    if(savedMoney){ currentMoney = parseInt(savedMoney); }
-    moneyEl.innerHTML = `<span id="moneyArrow">↑</span> MWK ${currentMoney.toLocaleString()}`;
-
-    function simulateMoneyChange(shouldSave = true) {
-        const now = new Date();
-        const hour = now.getHours();
-        const isDay = hour >= 6 && hour < 18;
-        const upChance = isDay? 0.85 : 0.65;
-        const shouldGoUp = Math.random() < upChance;
-        const changeAmount = Math.floor(Math.random() * 8000) + 1000;
-
-        if(shouldGoUp) {
-            currentMoney += changeAmount;
-            arrowEl.textContent = '↑';
-            arrowEl.style.color = 'var(--green)';
-            moneyEl.className = 'up ticker-flash';
-        } else {
-            currentMoney = Math.max(500000, currentMoney - changeAmount);
-            arrowEl.textContent = '↓';
-            arrowEl.style.color = 'var(--red)';
-            moneyEl.className = 'down ticker-flash';
-        }
-
-        moneyEl.innerHTML = `<span id="moneyArrow">${arrowEl.textContent}</span> MWK ${currentMoney.toLocaleString()}`;
-        if(shouldSave){ localStorage.setItem('bytezone_money', currentMoney); }
-        setTimeout(() => { moneyEl.classList.remove('ticker-flash'); }, 500);
-    }
-
-    function updateMoneyTicker() {
-        checkReset();
-        simulateMoneyChange(true);
-        const nextUpdate = Math.random() * 2000 + 2000;
-        setTimeout(updateMoneyTicker, nextUpdate);
-    }
-    updateMoneyTicker();
-
     // LIVE FOREX RATES
     const forexRatesEl = document.getElementById('forexRates');
     async function updateForexRates() {
@@ -1388,29 +1403,6 @@
     updateForexRates();
     setInterval(updateForexRates, 8 * 1000);
 
-    // VISITORS COUNTER
-    let visitors = Math.floor(Math.random() * 200) + 650;
-    const visitorsEl = document.getElementById('visitorsValue');
-    const visitorTextEl = document.getElementById('visitorText');
-    let showVisitors = true;
-    setInterval(() => {
-        showVisitors = !showVisitors;
-        visitorTextEl.textContent = showVisitors ? 'LIVE VISITORS' : 'BYTEZONECONNECT';
-    }, 5000);
-    function updateVisitors() {
-        const spike = Math.random();
-        if(spike > 0.95) { visitors += Math.floor(Math.random() * 100) + 50; }
-        else if(spike > 0.7) { visitors += Math.floor(Math.random() * 10) + 1; }
-        else { visitors -= Math.floor(Math.random() * 8) + 1; }
-        if(visitors > 950) visitors = 950;
-        if(visitors < 40) visitors = 40;
-        visitorsEl.textContent = visitors.toLocaleString();
-        visitorsEl.classList.add('up');
-        setTimeout(() => visitorsEl.classList.remove('up'), 400);
-        setTimeout(updateVisitors, Math.random() * 1500 + 1000);
-    }
-    updateVisitors();
-
     // THEME TOGGLE
     const themeToggle = document.getElementById('themeToggle');
     if(localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i> Light mode'; }
@@ -1429,7 +1421,15 @@
       it: { title: "IT Support & CCTV", desc: "<p><b>What is it?</b><br>24/7 technical support for computers, networks, servers, and CCTV installation with remote access.</p><p><b>What you get:</b></p><ul><li>Proactive hardware & software maintenance</li><li>Network health checks and firewall protection</li><li>CCTV video monitoring, recording, and mobile alerts</li><li>Backup & disaster recovery planning</li><li>Helpdesk support for staff and customers</li></ul><p><b>Ideal for:</b> schools, clinics, banks, shops, and offices in Mzuzu who need uptime and security.</p>" },
       cloud: { title: "Cloud & DevOps", desc: "<p><b>What is it?</b><br>Scalable cloud hosting, automation pipelines, and secure infrastructure for growing businesses.</p><p><b>Why it matters:</b></p><ul><li>Cloud migration to AWS, Azure, or Google Cloud</li><li>Containerization with Docker + Kubernetes</li><li>Automated deployments via CI/CD pipelines</li><li>Infrastructure as code and monitoring alerts</li><li>Secure backups, failover, and auto-scaling</li></ul><p><b>Result:</b> faster releases, lower hosting costs, and trusted performance.</p>" },
       web: { title: "Web Development", desc: "<p><b>What is it?</b><br>Conversion-focused websites built to sell, educate, and generate leads.</p><p><b>Included:</b></p><ul><li>Responsive UI for desktop and mobile</li><li>Fast performance, SEO, and analytics setup</li><li>Custom CMS or admin dashboard</li><li>Payment gateway integration with Airtel Money and PayChangu</li><li>Local business listings and Google Maps integration</li></ul><p><b>Best for:</b> retail, services, education, and professional brands in Malawi.</p>" },
-      software: { title: "Software Solutions", desc: "<p><b>What is it?</b><br>Custom systems for school management, inventory, payroll, and point-of-sale.</p><p><b>What we build:</b></p><ul><li>ERP for finance and operations</li><li>POS systems for retail and hospitality</li><li>Student portals, attendance, and results</li><li>Inventory, procurement, and supplier tracking</li><li>Reporting dashboards for managers</li></ul><p><b>Outcome:</b> fewer errors, faster decisions, and better control.</p>" },
+      software: { title: "Software Solutions", desc: "<p>We have experienced software developers that have a track record of numerous software deployments.</p><p><b>Services include:</b></p><ul><li>Custom Software Development</li><li>Enterprise Applications</li><li>Web &amp; Mobile Solutions</li><li>System Integration</li><li>API Development</li></ul>" },
+      enterpriseCloud: { title: "Enterprise Cloud Services", desc: "<p>Transform your infrastructure with our comprehensive cloud solutions.</p><div class=\"cloud-subcards\"><div class=\"cloud-subcard\"><strong>IaaS</strong><span>Infrastructure as a Service</span></div><div class=\"cloud-subcard\"><strong>PaaS</strong><span>Platform as a Service</span></div><div class=\"cloud-subcard\"><strong>SaaS</strong><span>Software as a Service</span></div><div class=\"cloud-subcard\"><strong>BaaS</strong><span>Backup as a Service</span></div></div>" },
+      virtualization: { title: "Virtualization", desc: "<p>We are experts in virtualization solutions including VMware, IBM Power VM, Oracle VM, Windows Hypervisor and many more.</p><p><b>Solutions include:</b></p><ul><li>VMware vSphere</li><li>IBM PowerVM</li><li>Oracle VM Server</li><li>Microsoft Hyper-V</li><li>Virtual Desktop Infrastructure (VDI)</li></ul>" },
+      databases: { title: "Databases", desc: "<p>We provide expert database solutions backed by certified engineers, ensuring high performance, security, and reliability across your data platforms.</p><p><b>Services include:</b></p><ul><li>Oracle Database Solutions</li><li>Microsoft SQL Server Management</li><li>IBM DB2 Administration</li><li>Database Design &amp; Optimization</li><li>Backup, Recovery &amp; Performance Tuning</li></ul>" },
+      integration: { title: "Systems Integration", desc: "<p>We provide seamless integration of systems and technologies to improve efficiency, data flow, and business continuity across your organization.</p><p><b>Services include:</b></p><ul><li>Data Consolidation</li><li>System Virtualization</li><li>Data Replication</li><li>API &amp; Third-Party Integration</li><li>Disaster Recovery Solutions</li></ul>" },
+      endUser: { title: "End-User Computing", desc: "<p>We deliver secure and efficient end-user computing solutions that empower your workforce with reliable access to applications, data, and collaboration tools.</p><p><b>Services include:</b></p><ul><li>Virtual Desktop Infrastructure (VDI)</li><li>Device Management &amp; Support</li><li>Software Deployment &amp; Updates</li><li>Remote Work &amp; Mobility Solutions</li></ul>" },
+      exam: { title: "Exam Centre", desc: "<p>We provide secure and professional examination services as an accredited testing centre for leading global certification bodies, including Pearson VUE, Prometric, ICDL, and Microsoft Certification.</p><p><b>Services include:</b></p><ul><li>Computer-Based Testing (CBT) Delivery</li><li>Secure Exam Administration</li><li>Candidate Registration Support</li><li>Accredited Testing Environment</li><li>Support for International Certification Programs</li></ul>" },
+      security: { title: "IT Security", desc: "<p>We have a team of IT security experts experienced in all aspects of cyber security.</p><p><b>Services include:</b></p><ul><li>Perimeter Security &amp; Firewalls</li><li>Vulnerability Assessment</li><li>Penetration Testing</li><li>Security Audits</li><li>Zero-Day Protection</li></ul>" },
+      operatingSystems: { title: "Operating Systems Support", desc: "<p>Expert support and management for enterprise operating systems to keep your environment stable, secure, and optimized.</p><p><b>Services include:</b></p><ul><li>Windows Server Support</li><li>Linux Administration</li><li>Patch Management &amp; Updates</li><li>Performance Monitoring</li><li>OS Security Hardening</li></ul>" },
       network: { title: "Network Infrastructure", desc: "<p><b>What is it?</b><br>Reliable local network design for offices, schools, and retail sites.</p><p><b>Capabilities:</b></p><ul><li>Cisco, MikroTik, and fiber cabling setup</li><li>VPN for secure remote access</li><li>Firewall and WiFi hotspot management</li><li>Bandwidth optimization and guest networks</li></ul><p><b>Result:</b> fast, stable connectivity across your team and customers.</p>" },
       marketing: { title: "Digital Marketing", desc: "<p><b>What is it?</b><br>Growth marketing designed to get more leads, customers, and visibility.</p><p><b>Included:</b></p><ul><li>Social media strategy and ads</li><li>Search engine optimization (SEO)</li><li>Google Business and local listings</li><li>Brand identity and messaging</li><li>Performance reporting and campaign optimization</li></ul><p><b>Result:</b> stronger brand awareness, better sales, and measurable ROI.</p>" }
     };
@@ -1655,23 +1655,69 @@
     // ENROLL POPUP
     function openForm() { document.getElementById('enrollPopup').style.display = 'flex'; }
     function closeForm() { document.getElementById('enrollPopup').style.display = 'none'; }
-    document.getElementById('enrollForm').addEventListener('submit', function(e) {
+    async function submitPublicInquiry(form, successElement) {
+      const csrfResponse = await fetch('/api/csrf', { credentials: 'same-origin' });
+      if (!csrfResponse.ok) throw new Error('Could not prepare the enquiry form.');
+      const { csrfToken } = await csrfResponse.json();
+      const payload = Object.fromEntries(new FormData(form).entries());
+      if (!payload.phone && payload.whatsapp) payload.phone = payload.whatsapp;
+      if (!payload.service && payload.course) payload.service = payload.course;
+      const response = await fetch('/api/public-inquiries', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'content-type': 'application/json', 'x-csrf-token': csrfToken },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Could not send your enquiry.');
+      if (successElement) successElement.style.display = 'block';
+      form.reset();
+    }
+
+    document.getElementById('enrollForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      document.getElementById('successMsg').style.display = 'block';
-      setTimeout(() => { closeForm(); document.getElementById('successMsg').style.display = 'none'; }, 3000);
+      const success = document.getElementById('successMsg');
+      try {
+        await submitPublicInquiry(this, success);
+        setTimeout(() => { closeForm(); success.style.display = 'none'; }, 3000);
+      } catch (error) {
+        success.textContent = error.message;
+        success.style.color = '#ff8c8c';
+        success.style.display = 'block';
+      }
     });
 
     function openSignupModal() { document.getElementById('signupModal').style.display = 'block'; }
     function closeSignupModal() { document.getElementById('signupModal').style.display = 'none'; }
-    document.getElementById('signupForm').addEventListener('submit', function(e) {
-      setTimeout(() => {
-        document.getElementById('signupSuccess').style.display = 'block';
-      }, 150);
-      setTimeout(() => {
-        closeSignupModal();
-        document.getElementById('signupSuccess').style.display = 'none';
-        document.getElementById('signupForm').reset();
-      }, 3200);
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const success = document.getElementById('signupSuccess');
+      try {
+        await submitPublicInquiry(this, success);
+        setTimeout(() => { closeSignupModal(); success.style.display = 'none'; }, 3200);
+      } catch (error) {
+        success.textContent = error.message;
+        success.style.color = '#ff8c8c';
+        success.style.display = 'block';
+      }
+    });
+
+    document.querySelector('.contact-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const button = this.querySelector('button[type="submit"]');
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = 'Sending...';
+      try {
+        await submitPublicInquiry(this, null);
+        button.textContent = 'Enquiry sent';
+        this.reset();
+        setTimeout(() => { button.disabled = false; button.textContent = originalText; }, 3000);
+      } catch (error) {
+        button.disabled = false;
+        button.textContent = 'Try again';
+        alert(error.message);
+      }
     });
 
     function initMatrixLayer() {
@@ -2310,6 +2356,12 @@
         operationsPortalLink.href = `http://${window.location.hostname}:3000/ops`;
         operationsPortalLink.target = '_blank';
         operationsPortalLink.rel = 'noopener';
+    }
+    const analyticsPortalLink = document.getElementById('analyticsPortalLink');
+    if (analyticsPortalLink && window.location.port === '5500') {
+        analyticsPortalLink.href = '/public/admin-analytics.html';
+    } else if (analyticsPortalLink && window.location.protocol !== 'file:') {
+        analyticsPortalLink.href = '/admin-analytics';
     }
 </script>
 </body>
