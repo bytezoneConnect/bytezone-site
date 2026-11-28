@@ -101,8 +101,23 @@ test("authenticated rentals, encrypted ownership evidence, sales, and admin work
     return { response, body: responseBody };
   }
 
+  assert.equal(cookies.has("bzcsrf"), false);
   const csrfResponse = await call("/api/csrf");
   csrfToken = csrfResponse.body.csrfToken;
+  assert.match(csrfToken, /^[A-Za-z0-9_-]{43}$/);
+  assert.equal(cookies.get("bzcsrf"), csrfToken);
+
+  const repeatedCsrfResponse = await call("/api/csrf");
+  assert.equal(repeatedCsrfResponse.body.csrfToken, csrfToken);
+  assert.equal(cookies.get("bzcsrf"), csrfToken);
+
+  cookies.set("bzcsrf", "invalid-cookie-value");
+  const invalidCsrfResponse = await call("/api/csrf");
+  assert.match(invalidCsrfResponse.body.csrfToken, /^[A-Za-z0-9_-]{43}$/);
+  assert.notEqual(invalidCsrfResponse.body.csrfToken, "invalid-cookie-value");
+  assert.equal(cookies.get("bzcsrf"), invalidCsrfResponse.body.csrfToken);
+  csrfToken = invalidCsrfResponse.body.csrfToken;
+
   const contactInquiry = {
     type: "Website contact request",
     name: "Test Prospect",

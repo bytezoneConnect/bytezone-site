@@ -124,6 +124,12 @@ function cookieOptions(maxAge) {
   };
 }
 
+function isValidCsrfToken(token) {
+  if (typeof token !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(token)) return false;
+  const decoded = Buffer.from(token, "base64url");
+  return decoded.length === 32 && decoded.toString("base64url") === token;
+}
+
 function getGoogleOAuthConfiguration() {
   const clientId = getGoogleClientId();
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -369,7 +375,9 @@ const publicInquiryLimiter = rateLimit({
 });
 
 app.get("/api/csrf", (req, res) => {
-  const token = crypto.randomBytes(32).toString("base64url");
+  const token = isValidCsrfToken(req.cookies.bzcsrf)
+    ? req.cookies.bzcsrf
+    : crypto.randomBytes(32).toString("base64url");
   res.cookie("bzcsrf", token, { ...cookieOptions(24 * 60 * 60 * 1000), httpOnly: false });
   res.json({ csrfToken: token });
 });
